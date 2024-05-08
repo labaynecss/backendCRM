@@ -1,23 +1,20 @@
 import express, { Request, Response } from 'express';
-import {t} from './config/db'
-const app = express();
-const PORT = process.env.PORT || 3000
+import dotenv from "dotenv"
+import {database}  from "./config/db"
+dotenv.config();
+
+const app: express.Application = express();
+const port = process.env.PORT 
 
 app.use(express.json());
 
 //router routes
 
-t().then(() => {
-  console.log('Process completed.');
-  app.listen(PORT, () => {
-    console.log(`Connect on Port ${PORT}`);
+database.connect().then(() => {
+  console.log('Connected to the database');
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
   });
-}).catch((error) => {
-  console.error('An error occurred:', error);
+}).catch((err) => {
+  console.error('Error connecting to the database:', err);
 });
-
-app.get('/', (req: Request, res: Response) => {
-    res.send('Hello, TypeScript Express!');
-});
-  
-
