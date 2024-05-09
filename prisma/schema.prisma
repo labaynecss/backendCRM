@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "sqlserver"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+// Define the User model
+model User_Credentials {
+  id       Int     @id @default(autoincrement())
+  username String  @db.VarChar(15)
+  f_name   String  @db.VarChar(50)
+  l_name   String  @db.VarChar(50)
+  password String  @db.VarChar(50)
+  email    String  @db.VarChar(30)
+  mobile   Int     @db.Int
+  branch   String  @db.VarChar(50)
+  m_name   String? @db.VarChar(50)
+}

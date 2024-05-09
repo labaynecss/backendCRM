@@ -16,4 +16,4 @@ const config = {
 
 const connectionString = `Server=${config.server},${config.port};Database=${config.database};User Id=${config.user};Password=${config.password};Encrypt=false`;
 
-export const database = new db.ConnectionPool(connectionString);
+export const database = new db.ConnectionPool(connectionString); 
