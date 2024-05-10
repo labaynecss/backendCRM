@@ -1,25 +1,24 @@
-import { Request, Response, NextFunction } from "express";
+import {  Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { AuthRequest } from "../types/global";
 
 const verifyToken = (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
-    const token = req.cookies.token;
-
-    if (!token) {
+    const access_token = req.cookies.token;
+    if (!access_token) {
       return res
         .status(400)
-        .json({ message: "アクセストークンはありません。" });
+        .json({ message: "No Token Authorization has been denied." });
     }
 
     jwt.verify(
-      token,
+      access_token,
       process.env.JWT_SECRET_KEY as string,
       (err: any, decoded: any) => {
         if (err) {
-          return res.status(400).json({ message: "有効でないトークンです。" });
+          return res.status(400).json({ message: "The token is not valid." });
         } else {
-          req.email = decoded.email;
+          req.username = decoded.username;
           next();
         }
       }

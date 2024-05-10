@@ -8,15 +8,25 @@ datasource db {
   relationMode = "prisma"
 }
 
-// Define the User model
-model User_Credentials {
+model UserCredentials {
   id       Int     @id @default(autoincrement())
-  username String  @db.VarChar(15)
-  f_name   String  @db.VarChar(50)
-  l_name   String  @db.VarChar(50)
-  password String  @db.VarChar(50)
-  email    String  @db.VarChar(30)
+  username String  @unique @db.VarChar(15)
+  f_name   String  @db.VarChar(15)
+  l_name   String  @db.VarChar(15)
+  password String  @db.VarChar(255)
+  email    String  @db.VarChar(255)
   mobile   Int     @db.Int
-  branch   String  @db.VarChar(50)
-  m_name   String? @db.VarChar(50)
+  branch   String  @db.VarChar(10)
+  m_name   String  @db.VarChar(15)
+  tokens   Token[]
+}
+
+model Token {
+  id             Int             @id @default(autoincrement())
+  token          String          @unique
+  userId         Int
+  expirationTime DateTime
+  user           UserCredentials @relation(fields: [userId], references: [id])
+
+  @@index([userId])
 }

@@ -1,17 +1,19 @@
 import { Request } from "express"; 
 
 export interface UserCred {
-    id: number;
+   id: number;
     username: string;
     f_name: string;
     l_name: string;
-    mobile: number;
-    m_name: string ;
-    branch: string;
-    email: string;
     password: string;
+    email: string;
+    mobile: number;
+    branch: string;
+    m_name: string
 }
 
 export interface AuthRequest extends Request {
-    email?: string;
+    username ?: string;
   }
+
+
