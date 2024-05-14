@@ -5,14 +5,14 @@ BEGIN TRAN;
 -- CreateTable
 CREATE TABLE [dbo].[UserCredentials] (
     [id] INT NOT NULL IDENTITY(1,1),
-    [username] VARCHAR(15) NOT NULL,
-    [f_name] VARCHAR(15) NOT NULL,
-    [l_name] VARCHAR(15) NOT NULL,
-    [password] VARCHAR(255) NOT NULL,
-    [email] VARCHAR(255) NOT NULL,
-    [mobile] INT NOT NULL,
-    [branch] VARCHAR(10) NOT NULL,
-    [m_name] VARCHAR(15) NOT NULL,
+    [username] VARCHAR(20) NOT NULL,
+    [f_name] VARCHAR(20) NOT NULL,
+    [l_name] VARCHAR(20) NOT NULL,
+    [password] VARCHAR(100) NOT NULL,
+    [email] VARCHAR(100) NOT NULL,
+    [mobile] BIGINT NOT NULL,
+    [branch] VARCHAR(20) NOT NULL,
+    [m_name] VARCHAR(20) NOT NULL,
     CONSTRAINT [UserCredentials_pkey] PRIMARY KEY CLUSTERED ([id]),
     CONSTRAINT [UserCredentials_username_key] UNIQUE NONCLUSTERED ([username])
 );

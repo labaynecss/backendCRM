@@ -4,45 +4,67 @@ import { generateRefreshToken, generateToken } from "../utils/generateRefreshtok
 import {  AuthRequest, UserCred } from "../types/global";
 import { getExpirationTime } from "../utils/calcTime";
 import * as bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
+const register = async (req: Request, res: Response) => {
+  try {
+     
+    const { username, email, password, f_name, l_name, m_name, mobile, branch } = req.body
+    const salt = await bcrypt.genSalt();
+    const passwordHash = await bcrypt.hash(password, salt);
+    const existingUser = await prisma.userCredentials.findFirst({
+      where: {
+        OR: [
+          { username },
+          { email },
+        ],
+      },
+    });
 
- const register = async (req: Request, res: Response) => {
-   const { username, email, password, f_name, l_name, m_name, mobile, branch } = req.body
+    if (existingUser) {
+      return res.status(400).json({ error: "Username or email already exists." });
+    }
+
+    let signup: UserCred = await prisma.userCredentials.create({
+      data: {
+        username,
+        email,
+        password: passwordHash,
+        f_name,
+        l_name,
+        m_name,
+        mobile,
+        branch,
+      },
+    });
+    const access_token = generateToken(signup.username)
+    const refresh_token = generateRefreshToken(signup.username)
+    const expirationTime = getExpirationTime();
+    await prisma.token.create({
+      data: {
+        userId: signup.id,
+        token: refresh_token,
+        expirationTime: expirationTime,
+      },
+    });
    
-   const salt = await bcrypt.genSalt();
-   const passwordHash = await bcrypt.hash(password , salt);
-   
-   let signup : UserCred   = await prisma.userCredentials.create({
-     data: {
-       username,
-       email,
-       password: passwordHash,
-       f_name,
-       l_name,
-       m_name,
-       mobile,
-       branch,
-     },
-   });
-   const access_token = generateToken(signup.username)
-   const refresh_token = generateRefreshToken(signup.username)
-   const expirationTime = getExpirationTime();
-   await prisma.token.create({
-    data: {
-      userId: signup.id,
-      token: refresh_token,
-      expirationTime: expirationTime,
-    },
-   });
-   
-   res.cookie("token", access_token, { httpOnly: true });
-  res.cookie("refresh_token", refresh_token, { httpOnly: true });
-  return res
-  .status(201)
-  .json({ message: "Created User Successful", signup });
-}
+    res.cookie("token", access_token, { httpOnly: true });
+    res.cookie("refresh_token", refresh_token, { httpOnly: true });
+    return res
+      .status(201)
+      .json({ message: "Created User Successful", signup });
+  } catch (err) { 
+    
+    console.error(err);
+    return res.status(500).json({ message: "Internal Server Error" });
+  
+  }
+  }
+  
+
 
 const login = async (req: Request, res: Response) => {
+  try {
   const { username, password } = req.body
   
   const signin  = await prisma.userCredentials.findFirst({
@@ -75,8 +97,16 @@ const login = async (req: Request, res: Response) => {
   res.cookie("refresh_token", refresh_token, { httpOnly: true });
   return res
   .status(200)
-  .json({ message: "User are Created ", signin, access_token });
-};
+      .json({ message: "User are Created ", signin, access_token });
+    } catch (err) { 
+    
+      console.error(err);
+      return res.status(500).json({ message: "Internal Server Error" });
+    
+    }
+  }
+
+
 
 const user = async (req: AuthRequest, res: Response) => {
   const username = req.username;
@@ -92,14 +122,45 @@ const user = async (req: AuthRequest, res: Response) => {
   return res.status(200).json({ user });
 };
 
+const refreshToken = async (req: Request, res: Response) => {
+  const { refresh_token } = req.cookies;
+  const now = new Date(Date.now());
+  const PHExpirationDate = now.toLocaleString("en-US", {
+    timeZone: "Asia/Manila",
+  });
+  const currentTime = new Date(PHExpirationDate);
 
-const logout = async (req: Request, res: Response) => {
+  const token = await prisma.token.findFirst({
+    where: {
+      token: refresh_token,
+      expirationTime: {
+        gt: currentTime,
+      },
+    },
+  });
 
-  res.clearCookie("access_token");
-  res.clearCookie("refresh_token");
-  res.status(200).json({ message: "Cookies have been deleted" });
+  if (!token) {
+    return res.status(401).json({ message: "invalid token" });
+  }
+
+  jwt.verify(
+    refresh_token,
+    process.env.REFRESH_TOKEN_SECRET_KEY as string,
+    (err: any, decoded: any) => {
+      if (err) {
+        return res.status(401).json({ message: "the token is not valid" });
+      } else {
+        const username = decoded.username;
+        const refresh_token = generateToken(username);
+
+        return res
+          .status(201)
+          .json({ message: "Created a new access token ", refresh_token });
+      }
+    }
+  );
 };
 
 
 
-export {register, login, user, logout}
+export {register, login, user, refreshToken} 

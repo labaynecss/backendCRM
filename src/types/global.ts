@@ -5,9 +5,9 @@ export interface UserCred {
     username: string;
     f_name: string;
     l_name: string;
-    password: string;
+  password: string
     email: string;
-    mobile: number;
+    mobile: string;
     branch: string;
     m_name: string
 }

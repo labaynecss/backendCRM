@@ -10,14 +10,14 @@ datasource db {
 
 model UserCredentials {
   id       Int     @id @default(autoincrement())
-  username String  @unique @db.VarChar(15)
-  f_name   String  @db.VarChar(15)
-  l_name   String  @db.VarChar(15)
-  password String  @db.VarChar(255)
-  email    String  @db.VarChar(255)
-  mobile   Int     @db.Int
-  branch   String  @db.VarChar(10)
-  m_name   String  @db.VarChar(15)
+  username String  @unique @db.VarChar(20)
+  f_name   String  @db.VarChar(20)
+  l_name   String  @db.VarChar(20)
+  password String  @db.VarChar(100)
+  email    String  @db.VarChar(100)
+  mobile   String  @db.VarChar(20)
+  branch   String  @db.VarChar(20)
+  m_name   String  @db.VarChar(20)
   tokens   Token[]
 }
 
