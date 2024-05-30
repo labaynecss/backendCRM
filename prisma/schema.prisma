@@ -3,30 +3,60 @@ generator client {
 }
 
 datasource db {
-  provider     = "sqlserver"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
 }
 
-model UserCredentials {
-  id       Int     @id @default(autoincrement())
-  username String  @unique @db.VarChar(20)
-  f_name   String  @db.VarChar(20)
-  l_name   String  @db.VarChar(20)
-  password String  @db.VarChar(100)
-  email    String  @db.VarChar(100)
-  mobile   String  @db.VarChar(20)
-  branch   String  @db.VarChar(20)
-  m_name   String  @db.VarChar(20)
-  tokens   Token[]
+model users {
+  ID           Int     @id(map: "PK_users_ID") @default(autoincrement())
+  USERNAME     String? @db.NVarChar(30)
+  password     String? @map("_PASSWORD") @db.NVarChar(64)
+  salt         String  @map("_SALT") @db.NVarChar(3)
+  VOICELINK    String  @db.NVarChar(125)
+  AVATAR       String  @map("_AVATAR") @db.NVarChar(Max)
+  FIRSTNAME    String? @db.NVarChar(100)
+  LASTNAME     String? @db.NVarChar(100)
+  COMETNAME    String  @db.NVarChar(125)
+  EMAIL        String? @db.NVarChar(100)
+  address      String? @map("_ADDRESS") @db.NVarChar(255)
+  telecom      String? @map("_TELECOM") @db.NVarChar(30)
+  MOBILE       String? @db.NVarChar(100)
+  birthdate    String? @map("_BIRTHDATE") @db.NVarChar(100)
+  civilstatus  String? @map("_CIVILSTATUS") @db.NVarChar(100)
+  age          String? @map("_AGE") @db.NVarChar(2)
+  city         String? @map("_CITY") @db.NVarChar(100)
+  area         String? @map("_AREA") @db.NVarChar(100)
+  province     String? @map("_PROVINCE") @db.NVarChar(100)
+  country      String? @map("_COUNTRY") @db.NVarChar(100)
+  level        Int?    @map("_LEVEL")
+  secondlevel  Int     @map("_SECONDLEVEL")
+  groupe       String? @map("_GROUPE") @db.NVarChar(50)
+  BRANCH       String  @db.NVarChar(Max)
+  regdate      String? @map("_REGDATE") @db.NVarChar(100)
+  logged       Int?    @map("_LOGGED")
+  lastlogin    String? @map("LASTLOGIN") @db.NVarChar(50)
+  lastlogout   String? @map("LASTLOGOUT") @db.NVarChar(50)
+  lastactivity Int     @map("_LASTACTIVITY")
+  usesms       Int?    @map("_USESMS")
+  session      String? @map("_SESSION") @db.NVarChar(100)
+  sessiondata  String? @map("_SESSIONDATA") @db.NVarChar(255)
+  deleted      String  @default("N'0'", map: "DF__users___DELETED__3414ACBA") @map("_DELETED") @db.NVarChar(1)
+  activation   String? @map("_ACTIVATION") @db.NVarChar(255)
+  SYNC         Int     @default(0, map: "DF__users__SYNC__35FCF52C")
+  userIdNumber String  @default("N'0'", map: "DF__users__USER_ID_N__36F11965") @map("USER_ID_NUMBER") @db.NVarChar(60)
+
+  @@index([ID], map: "ID")
+  @@index([ID], map: "ID_2")
 }
 
-model Token {
-  id             Int             @id @default(autoincrement())
-  token          String          @unique
-  userId         Int
-  expirationTime DateTime
-  user           UserCredentials @relation(fields: [userId], references: [id])
+model branch {
+  ID      Int      @id(map: "PK_branch_ID") @default(autoincrement())
+  branch  String   @map("BRANCH") @db.NVarChar(45)
+  area    String   @default("N'0'", map: "DF__branch__AREA__4C364F0E") @map("AREA") @db.NVarChar(45)
+  info    String   @map("INFO") @db.NVarChar(45)
+  owner   String   @map("_OWNER") @db.NVarChar(45)
+  deleted Int      @map("_DELETED")
+  date    DateTime @default(now(), map: "DF__branch___DATE__4D2A7347") @map("_DATE") @db.DateTime
 
-  @@index([userId])
+  @@index([ID], map: "ID")
 }
