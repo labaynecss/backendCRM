@@ -11,7 +11,7 @@ class BorrowerController {
       console.log("Fetch success", borrowers);
       res.status(200).json(borrowers);
     } catch (err) {
-      console.error('Error retrieving branches:', err);
+      console.error('Error retrieving borrowers:', err);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   }

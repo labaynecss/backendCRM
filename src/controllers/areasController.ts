@@ -55,9 +55,9 @@ class AreaController {
         }
       });
 
-      res.status(201).json({ message: "Branch created successfully", newArea });
+      res.status(201).json({ message: "Areas created successfully", newArea });
     } catch (err) {
-      console.error('Error creating branch:', err);
+      console.error('Error creating areas:', err);
       res.status(500).json({ message: "Internal Server Error" });
     }
   }

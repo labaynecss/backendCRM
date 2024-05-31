@@ -4,7 +4,11 @@ import  {Request , Response } from "express"
 
 const allbranches = async (req: Request, res: Response): Promise<void> => {
     try {
-        const branches = await prisma.branch.findMany();
+        const branches = await prisma.branch.findMany({
+            orderBy: {
+                branch: "asc"
+            }
+        });
         console.log("fetch success",allbranches);
         res.status(200).json(branches);
     } catch (err) {

@@ -7,11 +7,13 @@ const prisma = new PrismaClient();
 class ClientController {
   async allclients(req: Request, res: Response): Promise<void> {
     try {
-      const clients = await prisma.crm_clients.findMany();
+      const clients = await prisma.crm_clients.findMany({
+        take: 500,
+      });
       console.log("Fetch success", clients);
       res.status(200).json(clients);
     } catch (err) {
-      console.error('Error retrieving branches:', err);
+      console.error('Error retrieving clients:', err);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   }

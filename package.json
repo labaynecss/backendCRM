@@ -24,6 +24,7 @@
     "mssql": "^10.0.2"
   },
   "devDependencies": {
+    "@mermaid-js/mermaid-cli": "^10.9.1",
     "@types/bcrypt": "^5.0.2",
     "@types/bcryptjs": "^2.4.6",
     "@types/cookie-parser": "^1.4.7",
@@ -37,6 +38,7 @@
     "express": "^4.19.2",
     "nodemon": "^3.1.0",
     "prisma": "^5.14.0",
+    "prisma-erd-generator": "^1.11.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   }

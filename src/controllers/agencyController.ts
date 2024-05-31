@@ -4,12 +4,12 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-class AgentController {
-  async listagents(req: Request, res: Response): Promise<void> {
+class AgencyController {
+  async listagency(req: Request, res: Response): Promise<void> {
     try {
-      const agents = await prisma.crm_agents.findMany();
-      console.log("Fetch success", agents);
-      res.status(200).json(agents);
+      const agency = await prisma.crm_agency.findMany();
+      console.log("Fetch success", agency);
+      res.status(200).json(agency);
     } catch (err) {
       console.error('Error retrieving agents:', err);
       res.status(500).json({ error: 'Internal Server Error' });
@@ -25,4 +25,4 @@ class AgentController {
 
 
 
-export default new AgentController();
+export default new AgencyController();

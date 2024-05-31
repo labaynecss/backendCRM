@@ -8,6 +8,13 @@ import session from "express-session";
 import { userRoutes } from './routes/userRoutes';
 import { credentialRoutes } from './routes/credentialRoutes';
 import { branchRoutes } from './routes/branchRoutes';
+import { borrowersRoutes } from './routes/borrowerRoutes';
+import { clientRoutes } from './routes/clientRoutes';
+import { agentRoutes } from './routes/agentRoutes';
+import { addressRoutes } from './routes/addressRoutes';
+import { schoolRoutes } from './routes/schoolRoutes';
+import { agencyRoutes } from './routes/agencyRoutes';
+import { loansRoutes } from './routes/loansRoutes';
 //configure env;
 dotenv.config();
 
@@ -27,7 +34,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(session({
   secret: process.env.SESSION_SECRET as string,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: true, 
   cookie: { secure: false }
 }));
 
@@ -50,7 +57,18 @@ database.connect().then(() => {
 //Routes
 app.use("/api/crmv2", credentialRoutes)
 app.use("/api/crmv2", userRoutes)
+app.use("/api/crmv2", borrowersRoutes)
 app.use("/api/crmv2", branchRoutes)
+app.use("/api/crmv2", clientRoutes)
+app.use("/api/crmv2", agentRoutes)
+app.use("/api/crmv2", addressRoutes)
+app.use("/api/crmv2", schoolRoutes)
+app.use("/api/crmv2", agencyRoutes)
+app.use("/api/crmv2", loansRoutes)
+
+
+
+
 
 
 
