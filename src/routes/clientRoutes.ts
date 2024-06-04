@@ -1,7 +1,6 @@
 import { Router } from "express";
 
 import ClientController from "../controllers/clientController";
-// import { checkClientValidationRules, validate} from "../validations/clientValidation";
 
     
 
@@ -11,7 +10,9 @@ const router = Router();
 
 
 router.get("/clients", ClientController.allclients)
-router.post("/clients", ClientController.checkclient)
+router.get("/clients/tele", ClientController.getTelemarketer)
+router.post("/clients", ClientController.createClient)
+
 
 
 
