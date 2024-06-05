@@ -61,7 +61,7 @@ class AreaController {
       const newArea = await prisma.areas.create({
         data: {
           ZONE_AREACODE: zone ?? "",
-          area:area ,
+          area: area ,
           deleted: deleted ?? false
         }
       });

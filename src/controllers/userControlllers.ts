@@ -8,7 +8,7 @@ import { generateRefreshToken, generateToken } from "../utils/generateRefreshtok
 class UserController {
   public async createUser(req: Request, res: Response): Promise<void> {
     try {
-      const { USERNAME, EMAIL, password, lastactivity, FIRSTNAME, LASTNAME, MOBILE, address, BRANCH, level, secondlevel, VOICELINK, AVATAR, salt, COMETNAME, deleted } = req.body;
+      const { USERNAME, EMAIL, password, lastactivity, FIRSTNAME, LASTNAME, MOBILE, address, BRANCH, level, secondlevel, VOICELINK, AVATAR, SALT, COMETNAME, deleted } = req.body;
       const salted = await bcrypt.genSalt();
       const passwordHash = await bcrypt.hash(password, salted);
       const existingUser = await prisma.users.findFirst({
@@ -28,7 +28,7 @@ class UserController {
         data: {
           USERNAME, EMAIL, password: passwordHash, lastactivity: lastactivity ?? 0, FIRSTNAME, LASTNAME, MOBILE,
           address, BRANCH, level, secondlevel, VOICELINK: VOICELINK ?? '', AVATAR: AVATAR ?? '',
-          salt: salt ?? '', COMETNAME: COMETNAME ?? '', deleted: deleted ?? '',
+          salt: SALT ?? '', COMETNAME: COMETNAME ?? '', deleted: deleted ?? '',
         },
       });
 

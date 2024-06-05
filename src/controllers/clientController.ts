@@ -159,15 +159,13 @@ async createClient(req: Request, res: Response): Promise<void> {
     pi_remarks,
     udate,
     date,
-    courseID
     
   } = req.body;
 
   
     try {
-    const profile = generateProfile();
-  
 
+    const profile = generateProfile();
         const newClient = await prisma.crm_clients.create({
           data: {
             profile: profile,
@@ -184,18 +182,12 @@ async createClient(req: Request, res: Response): Promise<void> {
             civil_status: civil_status,
             education:  education,
             other_education: other_education ?? '',
-            course: {
-              connect: { id: courseID ?? 0 } 
-            },
-            last_school: {
-              connect: { id: last_school?? '' }
-            },
+            course: course ?? '',
+            last_school:  last_school ?? '',
             additional_information: additional_information ?? '',
             year_graduated : year_graduated ?? '',
             address: address ?? '',
-            area: {
-              connect: { id: area?? 0 }
-            },
+            area: area ?? '',
             home_owner: home_owner,
             home_owner_rent : home_owner_rent ?? '',
             home_owner_free: home_owner_free ?? '',
