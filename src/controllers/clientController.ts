@@ -59,7 +59,7 @@ class ClientController {
             res.status(200).json({ message: 'Client exists, proceed with renewal', client });
         } else {
             console.log("Client doesn't exist, proceed with new application");
-            res.status(200).json({ message: " New application" });
+            res.status(200).json({ message: "New application" });
         }
     } catch (err) {
         console.error('Error retrieving client:', err);
@@ -158,7 +158,8 @@ async createClient(req: Request, res: Response): Promise<void> {
     spouse_business_stay,
     pi_remarks,
     udate,
-    date
+    date,
+    courseID
     
   } = req.body;
 
@@ -166,9 +167,6 @@ async createClient(req: Request, res: Response): Promise<void> {
     try {
     const profile = generateProfile();
   
-
-
-
 
         const newClient = await prisma.crm_clients.create({
           data: {
@@ -186,12 +184,18 @@ async createClient(req: Request, res: Response): Promise<void> {
             civil_status: civil_status,
             education:  education,
             other_education: other_education ?? '',
-           course : course ?? '',
-            last_school: last_school??'none',
+            course: {
+              connect: { id: courseID ?? 0 } 
+            },
+            last_school: {
+              connect: { id: last_school?? '' }
+            },
             additional_information: additional_information ?? '',
             year_graduated : year_graduated ?? '',
             address: address ?? '',
-            area: area ?? '',
+            area: {
+              connect: { id: area?? 0 }
+            },
             home_owner: home_owner,
             home_owner_rent : home_owner_rent ?? '',
             home_owner_free: home_owner_free ?? '',

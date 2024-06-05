@@ -15,6 +15,7 @@ import { addressRoutes } from './routes/addressRoutes';
 import { schoolRoutes } from './routes/schoolRoutes';
 import { agencyRoutes } from './routes/agencyRoutes';
 import { loansRoutes } from './routes/loansRoutes';
+import { areaRoutes } from './routes/areasRoutes';
 //configure env;
 dotenv.config();
 
@@ -65,6 +66,8 @@ app.use("/api/crmv2", addressRoutes)
 app.use("/api/crmv2", schoolRoutes)
 app.use("/api/crmv2", agencyRoutes)
 app.use("/api/crmv2", loansRoutes)
+app.use("/api/crmv2", areaRoutes)
+
 
 
 

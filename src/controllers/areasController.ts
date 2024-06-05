@@ -16,6 +16,17 @@ class AreaController {
     }
   }
 
+  async collectionArea(req: Request, res: Response): Promise<void> {
+    try {
+      const area = await prisma.crm_collection_area.findMany();
+      console.log("Fetch success", area);
+      res.status(200).json(area);
+    } catch (err) {
+      console.error('Error retrieving branches:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+
   async areas (req: Request, res: Response): Promise<void> {
     const page = parseInt(req.query.page as string, 10) || 1;
     const perPage = 15;

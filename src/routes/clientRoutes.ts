@@ -11,7 +11,8 @@ const router = Router();
 
 router.get("/clients", ClientController.allclients)
 router.get("/clients/tele", ClientController.getTelemarketer)
-router.post("/clients", ClientController.createClient)
+router.post("/Createclients", ClientController.createClient)
+router.post("/Checkclients", ClientController.checkclient)
 
 
 

@@ -13,7 +13,7 @@ export const generateProfile = (): string => {
     return `CRM-${randomString}-${dateString}`;
   };
   
-  // Example usage
-  const profile = generateProfile();
-  console.log(profile);
+  // // Example usage
+  // const profile = generateProfile();
+  // console.log(profile);
   
