@@ -265,6 +265,10 @@ model crm_clients {
   pi_remarks                            String   @map("pi_remarks") @db.NVarChar(Max)
   udate                                 Int      @map("udate")
   date                                  DateTime @default(now(), map: "DF__crm_client__date__2D7CBDC4") @map("date") @db.DateTime
+  personal_loan                         String?  @map("personal_loan") @db.NVarChar(65)
+  loan_terms                            String?  @map("loan_terms") @db.NVarChar(45)
+  payment_mode                          String?  @map("payment_mode") @db.NVarChar(45)
+  amount_applied                        String?  @map("amount_applied") @db.NVarChar(45)
 
   @@index([cid], map: "cid")
   @@index([cid], map: "cid_2")
@@ -517,4 +521,16 @@ model crm_business_type {
 
   @@index([ID], map: "ID")
   @@index([ID], map: "ID_2")
+}
+
+model crm_product {
+  pid          Int     @id(map: "PK_crm_product_pid") @default(autoincrement()) @map("pid")
+  product_name String? @map("product_name") @db.VarChar(255)
+  product_type String? @map("product_type") @db.VarChar(255)
+  cam          Int     @default(0, map: "DF__crm_product__cam__1C1D2798") @map("cam")
+  active       String? @map("active") @db.VarChar(255)
+  company      String? @map("company") @db.VarChar(255)
+
+  @@index([pid], map: "pid")
+  @@index([pid], map: "pid_2")
 }

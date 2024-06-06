@@ -17,6 +17,7 @@ import { agencyRoutes } from './routes/agencyRoutes';
 import { loansRoutes } from './routes/loansRoutes';
 import { areaRoutes } from './routes/areasRoutes';
 import { businessRoutes } from './routes/businessRoutes';
+import { productRoutes } from './routes/productRoutes';
 //configure env;
 dotenv.config();
 
@@ -70,6 +71,7 @@ app.use("/api/crmv2", loansRoutes)
 app.use("/api/crmv2", areaRoutes)
 app.use("/api/crmv2", businessRoutes)
 app.use("/api/crmv2", areaRoutes)
+app.use("/api/crmv2", productRoutes)
 
 
 
