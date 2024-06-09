@@ -9,3 +9,5 @@ export const getExpirationTime = (): Date => {
   const expirationTime = new Date(phExpirationDate);
   return expirationTime;
 };
+
+export const currentTimestamp = Math.floor(Date.now() / 1000);

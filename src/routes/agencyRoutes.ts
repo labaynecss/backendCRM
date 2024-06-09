@@ -1,13 +1,13 @@
-import { Router } from "express";
+// import { Router } from "express";
 
-import AgencyController from  "../controllers/agencyController"
-
-
-
-const router = Router();
+// import AgencyController from  "../controllers/agencyController"
 
 
-router.get("/agency", AgencyController.listagency)
+
+// const router = Router();
 
 
-export const agencyRoutes = router
+// router.get("/agency", AgencyController.listagency)
+
+
+// export const agencyRoutes = router
