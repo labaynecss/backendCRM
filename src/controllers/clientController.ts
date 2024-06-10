@@ -10,7 +10,7 @@ class ClientController {
     const { profile } = req.params;
 
     try {
-      const profileGet = await prisma.crm_borrowers_test.findUnique({
+      const profileGet = await prisma.crm_client.findUnique({
         where: { profile: profile },
       });
 
@@ -27,7 +27,7 @@ class ClientController {
   }
   async allclients(req: Request, res: Response): Promise<void> {
     try {
-      const clients = await prisma.crm_borrowers_test.findMany({
+      const clients = await prisma.crm_client.findMany({
         take: 500,
       });
       console.log("Fetch success", clients);
@@ -57,7 +57,7 @@ class ClientController {
   async checkclient(req: Request, res: Response): Promise<void> {
     const { firstname, middlename, lastname, suffix } = req.body;
     try {
-      const client = await prisma.crm_borrowers_test.findFirst({
+      const client = await prisma.crm_client.findFirst({
         where: {
           firstname: firstname,
           middlename: middlename,
@@ -86,117 +86,282 @@ class ClientController {
       res.status(500).json({ error: "Internal Server Error" });
     }
   }
+
   async createClient(req: Request, res: Response): Promise<void> {
- try {
-  const { profile } = req.params;
-  const {facebook,
-    viber_skype,
-    mobile2,
-    mobile3,
-    telephone2,
-    telephone3,
-    roaming_no,
-    father_name,
-    father_age,
-    mother_name,
-    mother_age,
-    home_owner,
-    home_owner_rent,
-    home_owner_free,
-    residence_remarks,
-    dti_sec_reg,
-    pro_license,
-    pi_remarks,
-    area,
-    date,
-    siblings_name,
-    siblings_age,
-    siblings_type,
-    siblings_school,
-    Product,address_stay} = req.body;
+    try {
+      const profile = generateProfile();
+      const {
+        personal_loan,
+        loan_terms,
+        payment_mode,
+        amount_applied,
+        agent_type,
+        branch,
+        lastname,
+        firstname,
+        middlename,
+        suffix,
+        birthday,
+        age,
+        gender,
+        religion,
+        email,
+        maiden,
+        last_school,
+        education,
+        other_education,
+        course,
+        source_of_income,
+        spouse_lastname,
+        spouse_firstname,
+        spouse_middlename,
+        spouse_suffix,
+        spouse_gender,
+        spouse_birthday,
+        spouse_age,
+        spouse_mobile_no,
+        spouse_tel_no,
+        spouse_provincial_address,
+        spouse_education,
+        spouse_other_education,
+        spouse_course,
+        spouse_last_school,
+        spouse_additional_information,
+        spouse_year_graduated,
+        spouse_source_of_income,
+        spouse_employment_details,
+        spouse_employ_status,
+        spouse_employer_business_address,
+        spouse_employer_business_name,
+        spouse_monthly_income,
+        spouse_other_income,
+        spouse_dti_sec_reg,
+        spouse_pro_license,
+        spouse_sss,
+        spouse_tin,
+        spouse_prev_business_stay,
+        spouse_prev_employer,
+        spouse_prev_employer_business_address,
+        spouse_business_contact,
+        spouse_business_position,
+        spouse_business_stay,
+        present_address,
+        present_address_zipcode,
+        present_address_stay,
+        permanent_address,
+        permanent_address_zipcode,
+        permanent_address_stay,
+        provincial_address,
+        provincial_address_zipcode,
+        provincial_address_stay,
+        residence_status,
+        area,
+        business_type,
+        business_name,
+        dti_sec_reg,
+        business_address,
+        business_stay,
+        business_contact,
+        tin,
+        sss,
+        position,
+        compay_rank,
+        reference,
+        refer_address,
+        refer_contact,
+        refer_relation,
+        reference1,
+        refer_address1,
+        refer_contact1,
+        refer_relation1,
+        bank_branch,
+        tel_no,
+        account_name,
+        account_type,
+        dateOpen,
+        informant_position,
+        monthly_cred1,
+        monthly_cred2,
+        monthly_cred3,
+        employer_business,
+        employer_business_address,
+        nature_business,
+        length_business_stay,
+        owned_rented,
+        contact_number,
+        monthly_income,
+        facebook,
+        viber_skype,
+        mobile1,
+        mobile2,
+        mobile3,
+        telephone2,
+        telephone3,
+        roaming_no,
+        father_name,
+        father_age,
+        mother_name,
+        mother_age,
+        home_owner,
+        home_owner_rent,
+        home_owner_free,
+        residence_remarks,
+        pi_remarks,
+        date,
+        siblings_name,
+        siblings_age,
+        siblings_type,
+        siblings_school,
+        Product,
+      } = req.body;
 
+      const currentTimestamp = Math.floor(Date.now() / 1000);
 
+      const createClient = await prisma.crm_client.create({
+        data: {
+          profile: profile ?? "",
+          personal_loan: personal_loan ?? "",
+          loan_terms: loan_terms ?? "",
+          payment_mode: payment_mode ?? "",
+          amount_applied: amount_applied ?? "",
+          agent_type: agent_type ?? "",
+          branch: branch ?? "",
+          lastname: lastname ?? "",
+          firstname: firstname ?? "",
+          middlename: middlename ?? "",
+          suffix: suffix ?? "",
+          birthday: birthday ?? "",
+          age: age ?? "",
+          gender: gender ?? "",
+          religion: religion ?? "",
+          email: email ?? "",
+          maiden: maiden ?? "",
+          last_school: last_school ?? "",
+          education: education ?? "",
+          other_education: other_education ?? "",
+          course: course ?? "",
+          source_of_income: source_of_income ?? "",
+          spouse_lastname: spouse_lastname ?? "",
+          spouse_firstname: spouse_firstname ?? "",
+          spouse_middlename: spouse_middlename ?? "",
+          spouse_suffix: spouse_suffix ?? "",
+          spouse_gender: spouse_gender ?? "",
+          spouse_birthday: spouse_birthday ?? "",
+          spouse_age: spouse_age ?? "",
+          spouse_mobile_no: spouse_mobile_no ?? "",
+          spouse_tel_no: spouse_tel_no ?? "",
+          spouse_provincial_address: spouse_provincial_address ?? "",
+          spouse_education: spouse_education ?? "",
+          spouse_other_education: spouse_other_education ?? "",
+          spouse_course: spouse_course ?? "",
+          spouse_last_school: spouse_last_school ?? "",
+          spouse_additional_information: spouse_additional_information ?? "",
+          spouse_year_graduated: spouse_year_graduated ?? "",
+          spouse_source_of_income: spouse_source_of_income ?? "",
+          spouse_employment_details: spouse_employment_details ?? "",
+          spouse_employ_status: spouse_employ_status ?? "",
+          spouse_employer_business_address:
+            spouse_employer_business_address ?? "",
+          spouse_employer_business_name: spouse_employer_business_name ?? "",
+          spouse_monthly_income: spouse_monthly_income ?? "",
+          spouse_other_income: spouse_other_income ?? "",
+          spouse_dti_sec_reg: spouse_dti_sec_reg ?? "",
+          spouse_pro_license: spouse_pro_license ?? "",
+          spouse_sss: spouse_sss ?? "",
+          spouse_tin: spouse_tin ?? "",
+          spouse_prev_business_stay: spouse_prev_business_stay ?? "",
+          spouse_prev_employer: spouse_prev_employer ?? "",
+          spouse_prev_employer_business_address:
+            spouse_prev_employer_business_address ?? "",
+          spouse_business_contact: spouse_business_contact ?? "",
+          spouse_business_position: spouse_business_position ?? "",
+          spouse_business_stay: spouse_business_stay ?? "",
+          present_address: present_address ?? "",
+          present_address_zipcode: present_address_zipcode ?? "",
+          present_address_stay: present_address_stay ?? "",
+          permanent_address: permanent_address ?? "",
+          permanent_address_zipcode: permanent_address_zipcode ?? "",
+          permanent_address_stay: permanent_address_stay ?? "",
+          provincial_address: provincial_address ?? "",
+          provincial_address_zipcode: provincial_address_zipcode ?? "",
+          provincial_address_stay: provincial_address_stay ?? "",
+          residence_status: residence_status ?? "",
+          area: area ?? "",
+          business_type: business_type ?? "",
+          business_name: business_name ?? "",
+          dti_sec_reg: dti_sec_reg ?? "",
+          business_address: business_address ?? "",
+          business_stay: business_stay ?? "",
+          business_contact: business_contact ?? "",
+          tin: tin ?? "",
+          sss: sss ?? "",
+          position: position ?? "",
+          compay_rank: compay_rank ?? "",
+          reference: reference ?? "",
+          refer_address: refer_address ?? "",
+          refer_contact: refer_contact ?? "",
+          refer_relation: refer_relation ?? "",
+          reference1: reference1 ?? "",
+          refer_address1: refer_address1 ?? "",
+          refer_contact1: refer_contact1 ?? "",
+          refer_relation1: refer_relation1 ?? "",
+          bank_branch: bank_branch ?? "",
+          tel_no: tel_no ?? "",
+          account_name: account_name ?? "",
+          account_type: account_type ?? "",
+          dateOpen: dateOpen ?? new Date(),
+          informant_position: informant_position ?? "",
+          monthly_cred1: monthly_cred1 ?? "",
+          monthly_cred2: monthly_cred2 ?? "",
+          monthly_cred3: monthly_cred3 ?? "",
+          employer_business: employer_business ?? "",
+          employer_business_address: employer_business_address ?? "",
+          nature_business: nature_business ?? "",
+          length_business_stay: length_business_stay ?? "",
+          owned_rented: owned_rented ?? "",
+          contact_number: contact_number ?? "",
+          monthly_income: monthly_income ?? "",
+          facebook: facebook ?? "",
+          viber_skype: viber_skype ?? "",
+          mobile2: mobile2 ?? "",
+          mobile3: mobile3 ?? "",
+          telephone2: telephone2 ?? "",
+          telephone3: telephone3 ?? "",
+          roaming_no: roaming_no ?? "",
+          father_name: father_name ?? "",
+          father_age: father_age ?? "",
+          mother_name: mother_name ?? "",
+          mother_age: mother_age ?? "",
+          home_owner: home_owner ?? "",
+          home_owner_rent: home_owner_rent ?? "",
+          home_owner_free: home_owner_free ?? "",
+          residence_remarks: residence_remarks ?? "",
+          pi_remarks: pi_remarks ?? "",
+          udate: currentTimestamp,
+          date: date ?? new Date(),
+          siblings_name: siblings_name ?? "",
+          siblings_age: siblings_age ?? "",
+          siblings_type: siblings_type ?? "",
+          siblings_school: siblings_school ?? "",
+          Product: {
+            create: Product,
+          },
+        },
+      });
 
-  const borrower = await prisma.crm_borrowers_test.findUnique({
-    where: {
-      id: Number(profile)
-    },
-  });
-
-  if (!borrower) {
-    res.status(404).json({ message: 'Borrower not found' });
-  }
-
-  const createClient  = await prisma.crm_client_test.create ({
-    data: {
-borrowerId: Number(profile), 
-profile  : borrower?.profile  ?? '',
-firstname: borrower?.firstname ?? '',
-lastname : borrower ?. lastname ?? '',
-middlename : borrower?.middlename ?? "",
-suffix : borrower?.suffix ?? "",
-birthday : borrower?.birthday ?? '',
-age :borrower?.age ?? '',
-gender: borrower?.gender ?? '',
-email : borrower ?.email ?? '',
-facebook: facebook ?? '',
-viber_skype: viber_skype ?? '',
-civil_status: borrower?.civil_status ?? '',
-sss: borrower?.sss ?? '',
-tin : borrower?.tin ?? '',
-address_stay: address_stay ?? '',
-present_address: borrower?.permanent_address ?? '',
-present_address_zipcode: borrower?.permanent_address_zipcode ?? '',
-present_address_stay: borrower?.permanent_address_stay ?? "",
-permanent_address: borrower?.permanent_address ?? '',
-permanent_address_zipcode: borrower?.permanent_address_zipcode ?? '',
-permanent_address_stay: borrower?.permanent_address_stay ?? '',
-provincial_address: borrower?.provincial_address ?? '',
-provincial_address_zipcode: borrower?.provincial_address_zipcode ?? '',
-provincial_address_stay : borrower?.provincial_address_stay ?? '',
-area: area ?? '',
-mobile1: borrower?.mobile1 ?? '',
-mobile2: mobile2 ?? '',
-mobile3: mobile3 ?? '',
-telephone1: borrower?.telephone1 ?? "",
-telephone2: telephone2 ?? "",
-telephone3: telephone3 ?? "",
-roaming_no: roaming_no ?? "",
-father_name: father_name ?? "",
-father_age: father_age ?? "",
-mother_name: mother_name ?? "",
-mother_age: mother_age?? "",
-home_owner: home_owner ?? "",
-home_owner_rent: home_owner_rent ?? "",
-home_owner_free: home_owner_free ?? "",
-residence_remarks: residence_remarks ?? "",
-dti_sec_reg: dti_sec_reg ?? "",
-pro_license: pro_license ?? "",
-pi_remarks: pi_remarks ?? "",
-//dependents Siblings 
-siblings_name: siblings_name ?? "",
-siblings_age: siblings_age ?? "",
-siblings_type: siblings_type ?? "",
-siblings_school: siblings_school ?? "",
-Product: Product ?? "",
-udate: currentTimestamp ?? 0, // Assuming udate is an integer
-date: date ?? new Date()
-
+      res
+        .status(201)
+        .json({ message: "Client created successfully", createClient });
+    } catch (err) {
+      console.error("Error creating client:", err);
+      if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        // Handle known Prisma errors
+        res.status(400).json({ message: "Bad Request", error: err.message });
+      } else {
+        // Handle other errors
+        res.status(500).json({ message: "Internal Server Error" });
+      }
     }
-
-    
-  })
-  res.status(201).json({ message: 'Client created successfully', createClient });
- } catch (err) {
-  console.error("Error creating borrower:", err);
-  if (err instanceof Prisma.PrismaClientKnownRequestError) {
-    // Handle known Prisma errors
-    res.status(400).json({ message: "Bad Request", error: err.message });
-  } else {
-    // Handle other errors
-    res.status(500).json({ message: "Internal Server Error" });
   }
- }
-}
 }
 export default new ClientController();
