@@ -61,7 +61,7 @@ database
 app.use("/api/crmv2", credentialRoutes);
 app.use("/api/crmv2", userRoutes);
 app.use("/api/crmv2", branchRoutes);
-// app.use("/api/crmv2", clientRoutes);
+app.use("/api/crmv2", clientRoutes);
 app.use("/api/crmv2", agentRoutes);
 app.use("/api/crmv2", addressRoutes);
 app.use("/api/crmv2", schoolRoutes);

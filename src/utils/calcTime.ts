@@ -11,3 +11,8 @@ export const getExpirationTime = (): Date => {
 };
 
 export const currentTimestamp = Math.floor(Date.now() / 1000);
+
+const currentDate = new Date();
+
+// Convert to ISO-8601 format
+export const isoDate = currentDate.toISOString();

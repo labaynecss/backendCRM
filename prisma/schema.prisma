@@ -75,142 +75,134 @@ model areas {
   @@index([ID], map: "ID")
 }
 model crm_client {
-  id                                      Int       @default(autoincrement()) @id
-  profile                                 String    @unique
-  personal_loan                           String    @db.NVarChar(65)
-  loan_terms                              String    @db.NVarChar(45)
-  payment_mode                            String    @db.NVarChar(45)
-  amount_applied                          String    @db.NVarChar(45)
-  agent_type                              String    @db.NVarChar(45)
-  branch                                  String    @db.NVarChar(45)
-  lastname                                String    @db.NVarChar(180)
-  firstname                               String    @db.NVarChar(180)
-  middlename                              String    @db.NVarChar(180)
-  suffix                                  String?   @db.NVarChar(20)
-  birthday                                String    @db.NVarChar(45)
-  age                                     String    @db.NVarChar(45)
-  gender                                  String    @db.NVarChar(180)
-  mobile1                                 String    @db.NVarChar(20)
-  a_code1                                 String?   @db.NVarChar(20)
-  telephone1                              String?   @db.NVarChar(20)
-  civil_status                            String    @db.NVarChar(65)
-  religion                                String    @db.NVarChar(45)
-  email                                   String    @db.NVarChar(145)
-  facebook                                String    @db.NVarChar(145)
-  viber_skype                             String    @db.NVarChar(145)
-  maiden                                  String    @db.NVarChar(180)
-     //education Information
-  last_school                           String?   @db.NVarChar(200)
-   education                             String   @db.NVarChar(45)
-   other_education                       String   @db.NVarChar(180)
-  course                                String   @db.NVarChar(200)
-    //SPOUSE INFORMATION
-  source_of_income                      String?   @db.NVarChar(Max)
-  spouse_lastname                       String    @db.NVarChar(65) 
-  spouse_firstname                      String    @db.NVarChar(65) 
-  spouse_middlename                     String    @db.NVarChar(65) 
-  spouse_suffix                         String    @db.NVarChar(55)
-  spouse_gender                         String    @db.NVarChar(6)
-  spouse_birthday                       String   @db.NVarChar(65)
-  spouse_age                            String   @db.NVarChar(25)
-  spouse_mobile_no                      String    @db.NVarChar(255)
-  spouse_tel_no                         String    @db.NVarChar(255)
-  spouse_provincial_address             String   @db.NVarChar(Max)
-  spouse_education                      String    @db.NVarChar(65) 
-  spouse_other_education                String    @db.NVarChar(65) 
-  spouse_course                         String    @db.NVarChar(200)
-  spouse_last_school                    String   @db.NVarChar(200)
-  spouse_additional_information         String   @db.NVarChar(255)
-  spouse_year_graduated                 String    @db.NVarChar(65) 
-  spouse_source_of_income               String?   @db.NVarChar(Max)
-  spouse_employment_details             String    @db.NVarChar(255)
-  spouse_employ_status                  String    @db.NVarChar(65) 
-  spouse_employer_business_address      String    @db.NVarChar(Max)
-  spouse_employer_business_name         String    @db.NVarChar(255)
-  spouse_monthly_income                 String   @db.NVarChar(255)
-  spouse_other_income                   String?    @db.NVarChar(255)
-  spouse_dti_sec_reg                    String    @db.NVarChar(65) 
-  spouse_pro_license                    String    @db.NVarChar(65)
-  spouse_sss                            String    @db.NVarChar(65) 
-  spouse_tin                            String    @db.NVarChar(65) 
-  spouse_prev_business_stay             String    @db.NVarChar(65) 
-  spouse_prev_employer                  String    @db.NVarChar(65) 
-  spouse_prev_employer_business_address String   @db.NVarChar(Max)
-  spouse_business_contact               String    @db.NVarChar(65) 
-  spouse_business_position              String    @db.NVarChar(65) 
-  spouse_business_stay                  String    @db.NVarChar(65) 
-//address Details
-present_address                        String    @db.NVarChar(255)
-   present_address_zipcode               String    @db.NVarChar(255)
-  present_address_stay                  String   @db.NVarChar(255)
-  permanent_address                     String    @db.NVarChar(Max)
-  permanent_address_zipcode             String   @db.NVarChar(255)
-  permanent_address_stay                String    @db.NVarChar(255)
-  provincial_address                    String   @db.NVarChar(Max)
-  provincial_address_zipcode            String    @db.NVarChar(255)
-  provincial_address_stay               String    @db.NVarChar(255)
-  residence_status                        String    @db.NVarChar(255) 
-    area                                  String   @db.NVarChar(255)
-    //work information
-    business_type                       String   @db.NVarChar(255)
-    business_name                       String   @db.NVarChar(255)
-     dti_sec_reg                           String    @db.NVarChar(255)
-     business_address                      String   @db.NVarChar(255)
-     business_stay                      String   @db.NVarChar(255)
-      business_contact                      String   @db.NVarChar(255)
-       tin                                   String    @db.NVarChar(65) 
-       sss                                   String    @db.NVarChar(65) 
-       position                                      String    @db.NVarChar(65) 
-       //character reference
-  compay_rank                             String?   @db.NVarChar(255)
-  reference                               String?    @db.VarChar(60)
-  refer_address                           String    @db.VarChar(70)
-  refer_contact                           String    @db.VarChar(70)
-  refer_relation                          String    @db.VarChar(70)
-  reference1                              String    @db.VarChar(60)
-  refer_address1                          String    @db.VarChar(70)
-  refer_contact1                          String    @db.VarChar(70)
-  refer_relation1                         String    @db.VarChar(70)
-  bank_branch                             String?   @db.NVarChar(255)
-  tel_no                                  String?   @db.NVarChar(255)
-  account_name                            String?   @db.NVarChar(255)
-  account_type                            String?   @db.NVarChar(255)
-  dateOpen                                DateTime? @db.DateTime
-  informant_position                      String?   @db.NVarChar(255)
-  monthly_cred1                           String?   @db.NVarChar(255)
-  monthly_cred2                           String?   @db.NVarChar(255)
-  monthly_cred3                           String?   @db.NVarChar(255)
-  employer_business                       String?   @db.NVarChar(255)
-  employer_business_address               String?   @db.NVarChar(255)
-  nature_business                         String?   @db.NVarChar(255)
-  length_business_stay                    String?   @db.NVarChar(255)
-  owned_rented                            String?   @db.NVarChar(255)
-  contact_number                          String?   @db.NVarChar(255)
-  monthly_income                          String?   @db.NVarChar(255)
-  udate                                   Int
-  date                                    DateTime  @db.DateTime
-  siblings_name                           String    @db.NVarChar(45)
-  siblings_age                            String    @db.NVarChar(45)
-  siblings_type                           String    @db.NVarChar(45)
-  siblings_school                         String    @db.NVarChar(45)
-  roaming_no                             String    @db.NVarChar(45)
-  father_name                                 String    @db.NVarChar(70)
-  father_age                        String @db.NVarChar()
-home_owner                              String    @db.NVarChar(70)
-home_owner_rent String    @db.NVarChar(70)
-home_owner_free  String   @db.NVarChar(70)
-residence_remarks     String   @db.NVarChar(70)
-pi_remarks     String   @db.NVarChar(70)
-
-  mother_name                              String    @db.NVarChar(70)
-  mother_age                           String    @db.NVarChar(70)
-  mobile3  String    @db.NVarChar(45)
-  telephone2   String    @db.NVarChar(45)
-  telephone3  String    @db.NVarChar(45)
-  Product                                 crm_product_test[]
-  loans                                   crm_loans_test[]
+  id                       Int      @id @default(autoincrement())
+  profile                  String  @unique
+  personal_loan            String?
+  loan_terms               String?
+  payment_mode             String?
+  amount_applied           String?
+  agent_type               String?
+  branch                   String?
+  lastname                 String
+  firstname                String
+  middlename               String?
+  suffix                   String?
+  birthday                 String
+  age                      String?
+  gender                   String
+  religion                 String?
+  email                    String
+  maiden                   String?
+  last_school              String?
+  education                String?
+  other_education          String?
+  course                   String?
+  source_of_income         String?
+  spouse_lastname          String?
+  spouse_firstname         String?
+  spouse_middlename        String?
+  spouse_suffix            String?
+  spouse_gender            String?
+  spouse_birthday          String?
+  spouse_age               String?
+  spouse_mobile_no         String?
+  spouse_tel_no            String?
+  spouse_provincial_address String?
+  spouse_education         String?
+  spouse_other_education   String?
+  spouse_course            String?
+  spouse_last_school       String?
+  spouse_additional_information String?
+  spouse_year_graduated    String?
+  spouse_source_of_income  String?
+  spouse_employment_details String?
+  spouse_employ_status     String?
+  spouse_employer_business_address String?
+  spouse_employer_business_name String?
+  spouse_monthly_income    String?
+  spouse_other_income      String?
+  spouse_dti_sec_reg       String?
+  spouse_pro_license       String?
+  spouse_sss               String?
+  spouse_tin               String?
+  spouse_prev_business_stay String?
+  spouse_prev_employer     String?
+  spouse_prev_employer_business_address String?
+  spouse_business_contact  String?
+  spouse_business_position String?
+  spouse_business_stay     String?
+  present_address          String
+  present_address_zipcode  String
+  present_address_stay     String?
+  permanent_address        String
+  permanent_address_zipcode String
+  permanent_address_stay   String?
+  provincial_address       String?
+  provincial_address_zipcode String?
+  provincial_address_stay  String?
+  residence_status         String?
+  area                     String?
+  business_type            String?
+  business_name            String?
+  dti_sec_reg              String?
+  business_address         String?
+  business_stay            String?
+  business_contact         String?
+  tin                      String
+  sss                      String?
+  position                 String?
+  compay_rank              String?
+  reference                String?
+  refer_address            String?
+  refer_contact            String?
+  refer_relation           String?
+  reference1               String?
+  refer_address1           String?
+  refer_contact1           String?
+  refer_relation1          String?
+  bank_branch              String?
+  tel_no                   String?
+  account_name             String?
+  account_type             String?
+  dateOpen                 DateTime @default(now())
+  informant_position       String?
+  monthly_cred1            String?
+  monthly_cred2            String?
+  monthly_cred3            String?
+  employer_business        String?
+  employer_business_address String?
+  nature_business          String?
+  length_business_stay     String?
+  owned_rented             String?
+  contact_number           String?
+  monthly_income           String?
+  facebook                 String?
+  viber_skype              String?
+  mobile1                  String?
+  mobile2                  String?
+  mobile3                  String?
+  telephone1               String?
+  telephone2               String?
+  telephone3               String?
+  roaming_no               String?
+  father_name              String?
+  father_age               String?
+  mother_name              String?
+  mother_age               String?
+  home_owner               String?
+  home_owner_rent          String?
+  home_owner_free          String?
+  residence_remarks        String?
+  pi_remarks               String?
+  udate                    Int
+  date                     DateTime @default(now())
+  siblings_name            String?
+  siblings_age             String?
+  siblings_type            String?
+  siblings_school          String?
+  Product                  crm_product_test[]
+  loans                 crm_loans_test[]
 }
-
 
 model crm_product_test {
   id                      Int                  @id @default(autoincrement())

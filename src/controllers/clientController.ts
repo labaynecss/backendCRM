@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { generateProfile } from "../utils/generateProfile";
-import { currentTimestamp } from "../utils/calcTime";
+import { currentTimestamp, isoDate } from "../utils/calcTime";
 
 const prisma = new PrismaClient();
 
@@ -89,7 +89,6 @@ class ClientController {
 
   async createClient(req: Request, res: Response): Promise<void> {
     try {
-      const profile = generateProfile();
       const {
         personal_loan,
         loan_terms,
@@ -214,8 +213,7 @@ class ClientController {
         siblings_school,
         Product,
       } = req.body;
-
-      const currentTimestamp = Math.floor(Date.now() / 1000);
+      const profile = generateProfile();
 
       const createClient = await prisma.crm_client.create({
         data: {
@@ -323,6 +321,7 @@ class ClientController {
           monthly_income: monthly_income ?? "",
           facebook: facebook ?? "",
           viber_skype: viber_skype ?? "",
+          mobile1: mobile1 ?? "",
           mobile2: mobile2 ?? "",
           mobile3: mobile3 ?? "",
           telephone2: telephone2 ?? "",
@@ -338,7 +337,7 @@ class ClientController {
           residence_remarks: residence_remarks ?? "",
           pi_remarks: pi_remarks ?? "",
           udate: currentTimestamp,
-          date: date ?? new Date(),
+          date: isoDate ?? date,
           siblings_name: siblings_name ?? "",
           siblings_age: siblings_age ?? "",
           siblings_type: siblings_type ?? "",
