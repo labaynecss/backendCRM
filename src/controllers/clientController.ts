@@ -90,6 +90,8 @@ class ClientController {
   async createClient(req: Request, res: Response): Promise<void> {
     try {
       const {
+        prodid,
+        sourceofincome,
         personal_loan,
         loan_terms,
         payment_mode,
@@ -347,10 +349,23 @@ class ClientController {
           },
         },
       });
+      console.log("Fetch success", createClient);
+      const createloan = await prisma.crm_loans.create({
+        data: {
+          profile: profile,
+          prodid: prodid,
+          sourceofincome: sourceofincome,
+        },
+      });
+      console.log("Fetch success", createloan);
 
       res
         .status(201)
-        .json({ message: "Client created successfully", createClient });
+        .json({
+          message: "Client created successfully",
+          createClient,
+          createloan,
+        });
     } catch (err) {
       console.error("Error creating client:", err);
       if (err instanceof Prisma.PrismaClientKnownRequestError) {

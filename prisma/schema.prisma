@@ -74,403 +74,381 @@ model areas {
 
   @@index([ID], map: "ID")
 }
+
 model crm_client {
-  id                       Int      @id @default(autoincrement())
-  profile                  String  @unique
-  personal_loan            String?
-  loan_terms               String?
-  payment_mode             String?
-  amount_applied           String?
-  agent_type               String?
-  branch                   String?
-  lastname                 String
-  firstname                String
-  middlename               String?
-  suffix                   String?
-  birthday                 String
-  age                      String?
-  gender                   String
-  religion                 String?
-  email                    String
-  maiden                   String?
-  last_school              String?
-  education                String?
-  other_education          String?
-  course                   String?
-  source_of_income         String?
-  spouse_lastname          String?
-  spouse_firstname         String?
-  spouse_middlename        String?
-  spouse_suffix            String?
-  spouse_gender            String?
-  spouse_birthday          String?
-  spouse_age               String?
-  spouse_mobile_no         String?
-  spouse_tel_no            String?
-  spouse_provincial_address String?
-  spouse_education         String?
-  spouse_other_education   String?
-  spouse_course            String?
-  spouse_last_school       String?
-  spouse_additional_information String?
-  spouse_year_graduated    String?
-  spouse_source_of_income  String?
-  spouse_employment_details String?
-  spouse_employ_status     String?
-  spouse_employer_business_address String?
-  spouse_employer_business_name String?
-  spouse_monthly_income    String?
-  spouse_other_income      String?
-  spouse_dti_sec_reg       String?
-  spouse_pro_license       String?
-  spouse_sss               String?
-  spouse_tin               String?
-  spouse_prev_business_stay String?
-  spouse_prev_employer     String?
+  id                                    Int                @id @default(autoincrement())
+  profile                               String             @unique
+  personal_loan                         String?
+  loan_terms                            String?
+  payment_mode                          String?
+  amount_applied                        String?
+  agent_type                            String?
+  branch                                String?
+  lastname                              String
+  firstname                             String
+  middlename                            String?
+  suffix                                String?
+  birthday                              String
+  age                                   String?
+  gender                                String
+  mobile1                               String?
+  telephone1                            String?
+  religion                              String?
+  email                                 String
+  facebook                              String?
+  viber_skype                           String?
+  maiden                                String?
+  last_school                           String?
+  education                             String?
+  other_education                       String?
+  course                                String?
+  source_of_income                      String?
+  spouse_lastname                       String?
+  spouse_firstname                      String?
+  spouse_middlename                     String?
+  spouse_suffix                         String?
+  spouse_gender                         String?
+  spouse_birthday                       String?
+  spouse_age                            String?
+  spouse_mobile_no                      String?
+  spouse_tel_no                         String?
+  spouse_provincial_address             String?
+  spouse_education                      String?
+  spouse_other_education                String?
+  spouse_course                         String?
+  spouse_last_school                    String?
+  spouse_additional_information         String?
+  spouse_year_graduated                 String?
+  spouse_source_of_income               String?
+  spouse_employment_details             String?
+  spouse_employ_status                  String?
+  spouse_employer_business_address      String?
+  spouse_employer_business_name         String?
+  spouse_monthly_income                 String?
+  spouse_other_income                   String?
+  spouse_dti_sec_reg                    String?
+  spouse_pro_license                    String?
+  spouse_sss                            String?
+  spouse_tin                            String?
+  spouse_prev_business_stay             String?
+  spouse_prev_employer                  String?
   spouse_prev_employer_business_address String?
-  spouse_business_contact  String?
-  spouse_business_position String?
-  spouse_business_stay     String?
-  present_address          String
-  present_address_zipcode  String
-  present_address_stay     String?
-  permanent_address        String
-  permanent_address_zipcode String
-  permanent_address_stay   String?
-  provincial_address       String?
-  provincial_address_zipcode String?
-  provincial_address_stay  String?
-  residence_status         String?
-  area                     String?
-  business_type            String?
-  business_name            String?
-  dti_sec_reg              String?
-  business_address         String?
-  business_stay            String?
-  business_contact         String?
-  tin                      String
-  sss                      String?
-  position                 String?
-  compay_rank              String?
-  reference                String?
-  refer_address            String?
-  refer_contact            String?
-  refer_relation           String?
-  reference1               String?
-  refer_address1           String?
-  refer_contact1           String?
-  refer_relation1          String?
-  bank_branch              String?
-  tel_no                   String?
-  account_name             String?
-  account_type             String?
-  dateOpen                 DateTime @default(now())
-  informant_position       String?
-  monthly_cred1            String?
-  monthly_cred2            String?
-  monthly_cred3            String?
-  employer_business        String?
-  employer_business_address String?
-  nature_business          String?
-  length_business_stay     String?
-  owned_rented             String?
-  contact_number           String?
-  monthly_income           String?
-  facebook                 String?
-  viber_skype              String?
-  mobile1                  String?
-  mobile2                  String?
-  mobile3                  String?
-  telephone1               String?
-  telephone2               String?
-  telephone3               String?
-  roaming_no               String?
-  father_name              String?
-  father_age               String?
-  mother_name              String?
-  mother_age               String?
-  home_owner               String?
-  home_owner_rent          String?
-  home_owner_free          String?
-  residence_remarks        String?
-  pi_remarks               String?
-  udate                    Int
-  date                     DateTime @default(now())
-  siblings_name            String?
-  siblings_age             String?
-  siblings_type            String?
-  siblings_school          String?
-  Product                  crm_product_test[]
-  loans                 crm_loans_test[]
+  spouse_business_contact               String?
+  spouse_business_position              String?
+  spouse_business_stay                  String?
+  present_address                       String
+  present_address_zipcode               String
+  present_address_stay                  String?
+  permanent_address                     String
+  permanent_address_zipcode             String
+  permanent_address_stay                String?
+  provincial_address                    String?
+  provincial_address_zipcode            String?
+  provincial_address_stay               String?
+  residence_status                      String?
+  area                                  String?
+  business_type                         String?
+  business_name                         String?
+  dti_sec_reg                           String?
+  business_address                      String?
+  business_stay                         String?
+  business_contact                      String?
+  tin                                   String
+  sss                                   String?
+  position                              String?
+  compay_rank                           String?
+  reference                             String?
+  refer_address                         String?
+  refer_contact                         String?
+  refer_relation                        String?
+  reference1                            String?
+  refer_address1                        String?
+  refer_contact1                        String?
+  refer_relation1                       String?
+  bank_branch                           String?
+  tel_no                                String?
+  account_name                          String?
+  account_type                          String?
+  dateOpen                              DateTime           @default(now())
+  informant_position                    String?
+  monthly_cred1                         String?
+  monthly_cred2                         String?
+  monthly_cred3                         String?
+  employer_business                     String?
+  employer_business_address             String?
+  nature_business                       String?
+  length_business_stay                  String?
+  owned_rented                          String?
+  contact_number                        String?
+  monthly_income                        String?
+  udate                                 Int
+  date                                  DateTime           @default(now())
+  siblings_name                         String?
+  siblings_age                          String?
+  siblings_type                         String?
+  siblings_school                       String?
+  roaming_no                            String?
+  father_name                           String?
+  father_age                            String?
+  home_owner                            String?
+  home_owner_rent                       String?
+  home_owner_free                       String?
+  residence_remarks                     String?
+  pi_remarks                            String?
+  mother_name                           String?
+  mother_age                            String?
+  mobile3                               String?
+  telephone2                            String?
+  telephone3                            String?
+  mobile2                               String?
+  loans                                 crm_loans_test[]
+  Product                               crm_product_test[]
 }
 
 model crm_product_test {
-  id                      Int                  @id @default(autoincrement())
-  clientId               Int
-  client                 crm_client @relation(fields: [clientId], references: [id])
-   profile                               String @unique 
-   company                          String  @db.NVarChar(45)
-   product_name                    String  @db.NVarChar(45)
-   soi                           String  @db.NVarChar(65)
+  id           Int        @id @default(autoincrement())
+  clientId     Int
+  profile      String     @unique
+  company      String     @db.NVarChar(45)
+  product_name String     @db.NVarChar(45)
+  soi          String     @db.NVarChar(65)
+  client       crm_client @relation(fields: [clientId], references: [id])
 }
 
-
-
-
-model crm_loans_test { 
-  lid                                  Int     @id @default(autoincrement())
-  clientId               Int
-  client                 crm_client  @relation(fields: [clientId], references: [id])
-  profile                               String @unique 
-  loan_profile                          String @unique
-  branch                               String  @db.NVarChar(65)
-  assigned_ao                          String  @db.NVarChar(255)
-  action_bm_name                       String  @db.NVarChar(255)
-  agent                                String  @db.NVarChar(135)
-  telemarketer                         String  @db.NVarChar(135)
-  // loan applied/request
-  loan_type                            String  @db.NVarChar(135)
-  prev_amount                          String  @db.NVarChar(65)
-  prev_pn                              String  @db.NVarChar(65)
-  payment_history                      String  @db.NVarChar(Max)
-  amount_applied                       String  @db.NVarChar(65)
-  loan_terms                           String  @db.NVarChar(65)
-  loan_purpose                         String  @db.NVarChar(45)
-  loan_recommendation                  String  @db.NVarChar(45)
-  crd_remarks                          String  @db.NVarChar(Max)
-  crecom_remarks                       String  @db.NVarChar(Max)
-  // salary information
-  soiID           Int
-  soi           crm_soi_test  @relation(fields: [soiID], references: [id])
-  employer                             String  @db.NVarChar(65)
-  employment                           String  @db.NVarChar(65)
-  employment_status                    String  @db.NVarChar(65)
-  nature_of_company                    String  @db.NVarChar(65)
-  company_rank                         String  @db.NVarChar(65)
-  contact_no                           String  @db.NVarChar(65)
-  address                              String  @db.NVarChar(65)
-  business_existence                   String  @db.NVarChar(65)
-  department                           String  @db.NVarChar(65)
-  years_employed                       String  @db.NVarChar(65)
-  status                               String  @db.NVarChar(65)
-  employment_position                  String  @db.NVarChar(65)
-  salary_head                          String  @db.NVarChar(65)
-  gross_salary                         String  @db.NVarChar(65)
-  net_salary                           String  @db.NVarChar(65)
-  // details of verification 
-  informant                            String  @db.NVarChar(65)
-  detail_position                      String @db.NVarChar(65)
-  detail_contact_no                    String @db.NVarChar(65)
-  detail_department                    String  @db.NVarChar(65)
-  detail_remarks                       String  @db.NVarChar(65)
-  // monthly cash flow 
-  salary               String?  @db.NVarChar(65)
-  other_income String?  @db.NVarChar(65)
-  total_income String?  @db.NVarChar(65)
-  amortisation_rentals                 String?  @db.NVarChar(65)
-  food                 String?  @db.NVarChar(65)
-elecric                 String?  @db.NVarChar(65)
-education                 String?  @db.NVarChar(65)
-others                 String?  @db.NVarChar(65)
-  total_expense                        String?  @db.NVarChar(65)
-  net_income                           String?  @db.NVarChar(65)
-  net_disposal_income                   String?  @db.NVarChar(65)
-  approximate_amort                    String?  @db.NVarChar(65)
-  // vehicle details
-  make                                 String  @db.NVarChar(65)
-  variant                              String  @db.NVarChar(65)
-  mv_file_no                           String  @db.NVarChar(65)
-  plate_no                             String  @db.NVarChar(65)
-  engine_no                            String  @db.NVarChar(65)
-  chassis_no                           String  @db.NVarChar(65)
-  wheel_class                          String?  @db.NVarChar(65)
-  year_model                           String  @db.NVarChar(65)
-  v_reference                          String?  @db.NVarChar(65)
-  used_class                           String?  @db.NVarChar(65)
-  conduction_sticker                   String  @db.NVarChar(65)
-  year_acquired                        String?  @db.NVarChar(65)
-  items_goods_loaded                   String?  @db.NVarChar(65)
-  crecom_valuation                           String?  @db.NVarChar(65)
-  ao_valuation                               String?  @db.NVarChar(65)
-  loaded_weight  String?  @db.NVarChar(65)
-  color                                String  @db.NVarChar(65)
-  mileage                            String  @db.NVarChar(65)
-  registered_in_lto                    String?  @db.NVarChar(65)
-  loanable_amount                      String?  @db.NVarChar(65)
-  percentage                           String?  @db.NVarChar(65)
-  accessories                          String  @db.NVarChar(65)
-  agreed_price                         String?  @db.NVarChar(65)
-  engine_condition                     String  @db.NVarChar(65)
-  body_condition                       String  @db.NVarChar(65)
-  electrical_condition                 String  @db.NVarChar(65)
-  // inspection details   
-  transmission_fule                         String  @db.NVarChar(65)
-  air_conditioned                      String  @db.NVarChar(65)
-  fuel                                 String  @db.NVarChar(65)
-  power_window                         String  @db.NVarChar(65)
-  power_lock                           String  @db.NVarChar(65)
-  power_side_mirror                    String  @db.NVarChar(65)
-  power_steering                       String  @db.NVarChar(65)
-  four_wheel_drive                     String  @db.NVarChar(65)
-  remarks_road_test                    String  @db.NVarChar(65)
-  // employment history
-  company_agency                       String?  @db.NVarChar(65)
-  e_position                             String?  @db.NVarChar(65)
-  start_date                           String?  @db.NVarChar(65)
-  end_date                             String?  @db.NVarChar(65)
-  // bank account
-  bankBranch                           String?  @db.NVarChar(65)
-  telNumber                            String?  @db.NVarChar(65)
-  monthlyCredits                       String?  @db.NVarChar(65)
-  acctName                             String?  @db.NVarChar(65)
-  acctTypeNo                           String?  @db.NVarChar(65)
-  dateOpened                           String?  @db.NVarChar(65)
-  informantPosition                    String?  @db.NVarChar(65)
-  total                                String?  @db.NVarChar(65)
-  // court cases
-  caseFiled                            String?  @db.NVarChar(65)
-  name                                 String?  @db.NVarChar(65)
-  dateFiled                            String?  @db.NVarChar(65)
-  c_status                             String?  @db.NVarChar(65)
-  remarks                              String?  @db.NVarChar(65)
-  // assets
-  assets_make                          String?  @db.NVarChar(65)
-  yearModel                            String?  @db.NVarChar(65)
-  plateNo                              String?  @db.NVarChar(65)
-  bankFinancing                        String?  @db.NVarChar(65)
-  amortization                         String?
-  // other properties
-  other_properties                      String?  @db.NVarChar(65)
-  type                                 String?  @db.NVarChar(65)
-  op_address                           String?  @db.NVarChar(65)
-  // character reference
-  c_name                               String  @db.NVarChar(65)
-  c_address                            String  @db.NVarChar(65)
-  contactNo                            String  @db.NVarChar(65)
-  relation                             String  @db.NVarChar(65)
-  verified                             String  @db.NVarChar(65)
-  // barangay checking
-  nameOfInformant                      String?  @db.NVarChar(65)
-  bc_contactNo                         String?  @db.NVarChar(65)
-  positionInBarangay                   String?  @db.NVarChar(65)
-  directionRemarks                     String?  @db.NVarChar(65)
-  bc_remarks                           String?  @db.NVarChar(65)
-  // neighbourhood checking 
-  nc_nameOfInformant                   String?  @db.NVarChar(65)
-  nc_contactNo                         String?  @db.NVarChar(65)
-  relationToBorrower                   String?  @db.NVarChar(65)
-  bc_directionRemarks                  String?  @db.NVarChar(65)
-  nc_remarks                           String?  @db.NVarChar(65)
-  // co-borrowers
-  lastname                             String?  @db.NVarChar(65)
-  firstname                            String?  @db.NVarChar(65)
-  middleName                           String?  @db.NVarChar(65)
-  suffix                               String?  @db.NVarChar(65)
-  co_relation                          String?  @db.NVarChar(65)
-  co_contactNo                         String?  @db.NVarChar(65)
-  birthDate                            String?  @db.NVarChar(65)
-  age                                  String?  @db.NVarChar(65)
-  streetAddress                        String?  @db.NVarChar(65)
-  province                             String?  @db.NVarChar(65)
-  brgyMunicipalityCity                 String?  @db.NVarChar(65)
-  sourceOfIncome                       String?  @db.NVarChar(65)
-  otherInformation                     String?  @db.NVarChar(65)
-  udate                                Int     @map("udate")
-  date                                 DateTime @db.DateTime
+model crm_loans_test {
+  lid                  Int          @id @default(autoincrement())
+  clientId             Int
+  profile              String       @unique
+  loan_profile         String       @unique
+  branch               String       @db.NVarChar(65)
+  assigned_ao          String       @db.NVarChar(255)
+  action_bm_name       String       @db.NVarChar(255)
+  agent                String       @db.NVarChar(135)
+  telemarketer         String       @db.NVarChar(135)
+  loan_type            String       @db.NVarChar(135)
+  prev_amount          String       @db.NVarChar(65)
+  prev_pn              String       @db.NVarChar(65)
+  payment_history      String       @db.NVarChar(Max)
+  amount_applied       String       @db.NVarChar(65)
+  loan_terms           String       @db.NVarChar(65)
+  loan_purpose         String       @db.NVarChar(45)
+  loan_recommendation  String       @db.NVarChar(45)
+  crd_remarks          String       @db.NVarChar(Max)
+  crecom_remarks       String       @db.NVarChar(Max)
+  soiID                Int
+  employer             String       @db.NVarChar(65)
+  employment           String       @db.NVarChar(65)
+  employment_status    String       @db.NVarChar(65)
+  nature_of_company    String       @db.NVarChar(65)
+  company_rank         String       @db.NVarChar(65)
+  contact_no           String       @db.NVarChar(65)
+  address              String       @db.NVarChar(65)
+  business_existence   String       @db.NVarChar(65)
+  department           String       @db.NVarChar(65)
+  years_employed       String       @db.NVarChar(65)
+  status               String       @db.NVarChar(65)
+  employment_position  String       @db.NVarChar(65)
+  salary_head          String       @db.NVarChar(65)
+  gross_salary         String       @db.NVarChar(65)
+  net_salary           String       @db.NVarChar(65)
+  informant            String       @db.NVarChar(65)
+  detail_position      String       @db.NVarChar(65)
+  detail_contact_no    String       @db.NVarChar(65)
+  detail_department    String       @db.NVarChar(65)
+  detail_remarks       String       @db.NVarChar(65)
+  salary               String?      @db.NVarChar(65)
+  other_income         String?      @db.NVarChar(65)
+  total_income         String?      @db.NVarChar(65)
+  amortisation_rentals String?      @db.NVarChar(65)
+  food                 String?      @db.NVarChar(65)
+  elecric              String?      @db.NVarChar(65)
+  education            String?      @db.NVarChar(65)
+  others               String?      @db.NVarChar(65)
+  total_expense        String?      @db.NVarChar(65)
+  net_income           String?      @db.NVarChar(65)
+  net_disposal_income  String?      @db.NVarChar(65)
+  approximate_amort    String?      @db.NVarChar(65)
+  make                 String       @db.NVarChar(65)
+  variant              String       @db.NVarChar(65)
+  mv_file_no           String       @db.NVarChar(65)
+  plate_no             String       @db.NVarChar(65)
+  engine_no            String       @db.NVarChar(65)
+  chassis_no           String       @db.NVarChar(65)
+  wheel_class          String?      @db.NVarChar(65)
+  year_model           String       @db.NVarChar(65)
+  v_reference          String?      @db.NVarChar(65)
+  used_class           String?      @db.NVarChar(65)
+  conduction_sticker   String       @db.NVarChar(65)
+  year_acquired        String?      @db.NVarChar(65)
+  items_goods_loaded   String?      @db.NVarChar(65)
+  crecom_valuation     String?      @db.NVarChar(65)
+  ao_valuation         String?      @db.NVarChar(65)
+  loaded_weight        String?      @db.NVarChar(65)
+  color                String       @db.NVarChar(65)
+  mileage              String       @db.NVarChar(65)
+  registered_in_lto    String?      @db.NVarChar(65)
+  loanable_amount      String?      @db.NVarChar(65)
+  percentage           String?      @db.NVarChar(65)
+  accessories          String       @db.NVarChar(65)
+  agreed_price         String?      @db.NVarChar(65)
+  engine_condition     String       @db.NVarChar(65)
+  body_condition       String       @db.NVarChar(65)
+  electrical_condition String       @db.NVarChar(65)
+  transmission_fule    String       @db.NVarChar(65)
+  air_conditioned      String       @db.NVarChar(65)
+  fuel                 String       @db.NVarChar(65)
+  power_window         String       @db.NVarChar(65)
+  power_lock           String       @db.NVarChar(65)
+  power_side_mirror    String       @db.NVarChar(65)
+  power_steering       String       @db.NVarChar(65)
+  four_wheel_drive     String       @db.NVarChar(65)
+  remarks_road_test    String       @db.NVarChar(65)
+  company_agency       String?      @db.NVarChar(65)
+  e_position           String?      @db.NVarChar(65)
+  start_date           String?      @db.NVarChar(65)
+  end_date             String?      @db.NVarChar(65)
+  bankBranch           String?      @db.NVarChar(65)
+  telNumber            String?      @db.NVarChar(65)
+  monthlyCredits       String?      @db.NVarChar(65)
+  acctName             String?      @db.NVarChar(65)
+  acctTypeNo           String?      @db.NVarChar(65)
+  dateOpened           String?      @db.NVarChar(65)
+  informantPosition    String?      @db.NVarChar(65)
+  total                String?      @db.NVarChar(65)
+  caseFiled            String?      @db.NVarChar(65)
+  name                 String?      @db.NVarChar(65)
+  dateFiled            String?      @db.NVarChar(65)
+  c_status             String?      @db.NVarChar(65)
+  remarks              String?      @db.NVarChar(65)
+  assets_make          String?      @db.NVarChar(65)
+  yearModel            String?      @db.NVarChar(65)
+  plateNo              String?      @db.NVarChar(65)
+  bankFinancing        String?      @db.NVarChar(65)
+  amortization         String?
+  other_properties     String?      @db.NVarChar(65)
+  type                 String?      @db.NVarChar(65)
+  op_address           String?      @db.NVarChar(65)
+  c_name               String       @db.NVarChar(65)
+  c_address            String       @db.NVarChar(65)
+  contactNo            String       @db.NVarChar(65)
+  relation             String       @db.NVarChar(65)
+  verified             String       @db.NVarChar(65)
+  nameOfInformant      String?      @db.NVarChar(65)
+  bc_contactNo         String?      @db.NVarChar(65)
+  positionInBarangay   String?      @db.NVarChar(65)
+  directionRemarks     String?      @db.NVarChar(65)
+  bc_remarks           String?      @db.NVarChar(65)
+  nc_nameOfInformant   String?      @db.NVarChar(65)
+  nc_contactNo         String?      @db.NVarChar(65)
+  relationToBorrower   String?      @db.NVarChar(65)
+  bc_directionRemarks  String?      @db.NVarChar(65)
+  nc_remarks           String?      @db.NVarChar(65)
+  lastname             String?      @db.NVarChar(65)
+  firstname            String?      @db.NVarChar(65)
+  middleName           String?      @db.NVarChar(65)
+  suffix               String?      @db.NVarChar(65)
+  co_relation          String?      @db.NVarChar(65)
+  co_contactNo         String?      @db.NVarChar(65)
+  birthDate            String?      @db.NVarChar(65)
+  age                  String?      @db.NVarChar(65)
+  streetAddress        String?      @db.NVarChar(65)
+  province             String?      @db.NVarChar(65)
+  brgyMunicipalityCity String?      @db.NVarChar(65)
+  sourceOfIncome       String?      @db.NVarChar(65)
+  otherInformation     String?      @db.NVarChar(65)
+  udate                Int          @map("udate")
+  date                 DateTime     @db.DateTime
+  client               crm_client   @relation(fields: [clientId], references: [id])
+  soi                  crm_soi_test @relation(fields: [soiID], references: [id])
 }
 
 model crm_soi_test {
-  id                                   Int     @id @default(autoincrement())
-loan_profile                          String @unique
-employer                                        String  @db.NVarChar(255)
- nature_of_company        String?    @db.NVarChar(255)
-  yrs_in_operation         String?   @db.NVarChar(255)
-  rent_expense_lessor      String?   @db.NVarChar(255)
-  nature_of_clinic         String?   @db.NVarChar(255)
-  other_nature_clinic      String?   @db.NVarChar(255)
-  specialization           String?   @db.NVarChar(255)
-  other_specialization     String?    @db.NVarChar(255)
-  prc_no                   String?     @db.NVarChar(255)
-  ave_patient_per_day      String?     @db.NVarChar(255)
-  ave_rate_per_patient     String?     @db.NVarChar(255)
-  ave_monthly_income       String?      @db.NVarChar(255)
-  other_clinic_affil       String?      @db.NVarChar(255)
-  contact_no               String?       @db.NVarChar(255)
-  company_rank             String?     @db.NVarChar(255)
-  company_existence        String?      @db.NVarChar(255)
-  address                  String?      @db.NVarChar(255)
-  bussiness_existence      String?      @db.NVarChar(255)
-  existance                String?     @db.NVarChar(255)
-  department               String?      @db.NVarChar(255)
-  years_employed           String?      @db.NVarChar(255)
-  status                   String?      @db.NVarChar(255)
-  position                 String?       @db.NVarChar(255)
-  rank                     String?        @db.NVarChar(255)
-  category                 String?       @db.NVarChar(255)
-  gross_salary             String?     @db.NVarChar(255)
-  net_salary               String?        @db.NVarChar(255)
-  dov_informant            String?       @db.NVarChar(255)
-  dov_position             String?      @db.NVarChar(255)
-  dov_contact_no           String?      @db.NVarChar(255)
-  dov_department           String?      @db.NVarChar(255)
-  dov_remarks              String?       @db.NVarChar(255)
-  agency                   String?        @db.NVarChar(255)
-  license_validity         String?       @db.NVarChar(255)
-  contact_person           String?  @db.NVarChar(255)
-  designation              String?   @db.NVarChar(255)
-  country_destination      String?   @db.NVarChar(255)
-  cd_contract_date         String?   @db.NVarChar(255)
-  cd_contract_terms        String?   @db.NVarChar(255)
-  cd_position              String?   @db.NVarChar(255)
-  cd_position_sub          String?   @db.NVarChar(255)
-  cd_position_others       String?   @db.NVarChar(255)
-  cd_yrs_as_seaman         String?   @db.NVarChar(255)
-  cd_contact_person        String?   @db.NVarChar(255)
-  cd_designation           String?   @db.NVarChar(255)
-  cd_salary                String?   @db.NVarChar(255)
-  cd_peso_conversion       String?   @db.NVarChar(255)
-  cd_allotment_amnt        String?   @db.NVarChar(255)
-  cd_allotment_sched       String?   @db.NVarChar(255)
-  cd_alottee               String?   @db.NVarChar(255)
-  cd_type_of_vessel        String?   @db.NVarChar(255)
-  cd_name_of_vessel        String?   @db.NVarChar(255)
-  cd_departure_date        String?   @db.NVarChar(255)
-  cd_employer              String?   @db.NVarChar(255)
-  cd_nature_of_company     String?   @db.NVarChar(255)
-  cd_contract_duration     String?   @db.NVarChar(255)
-  cd_yrs_in_present_company String?   @db.NVarChar(255)
-  cd_remmit_amnt           String?   @db.NVarChar(255)
-  cd_remmit_sched          String?   @db.NVarChar(255)
-  cd_country               String?   @db.NVarChar(255)
-  cd_other_country         String?   @db.NVarChar(255)
-  cd_beneficiary           String?   @db.NVarChar(255)
-  cd_yrs_as_ofw            String?   @db.NVarChar(255)
-  business_name            String?   @db.NVarChar(255)
-  registered_owner         String?   @db.NVarChar(255)
-  type_of_ownership        String?   @db.NVarChar(255)
-  nature_of_business       String?   @db.NVarChar(255)
-  products                 String?   @db.NVarChar(255)
-  ave_weekly_purchases     String?   @db.NVarChar(255)
-  rent_expenses            String?   @db.NVarChar(255)
-  est_daily_sales          String?   @db.NVarChar(255)
-  no_of_employees          String?   @db.NVarChar(255)
-  no_of_days_mo            String?   @db.NVarChar(255)
-  salary_head              String?   @db.NVarChar(255)
-  est_monthly_sales        String?   @db.NVarChar(255)
-  est_monthly_expense      String?   @db.NVarChar(255)
-  est_inventory            String?   @db.NVarChar(255)
-  mark_up                  String?   @db.NVarChar(255)
-  complete_business_info   String?   @db.NVarChar(255)
-  est_monthly_income       String?   @db.NVarChar(255)
-  UDATE                    Int   
-  DATE                     DateTime
-loans  crm_loans_test[]
-
+  id                        Int              @id @default(autoincrement())
+  loan_profile              String           @unique
+  employer                  String           @db.NVarChar(255)
+  nature_of_company         String?          @db.NVarChar(255)
+  yrs_in_operation          String?          @db.NVarChar(255)
+  rent_expense_lessor       String?          @db.NVarChar(255)
+  nature_of_clinic          String?          @db.NVarChar(255)
+  other_nature_clinic       String?          @db.NVarChar(255)
+  specialization            String?          @db.NVarChar(255)
+  other_specialization      String?          @db.NVarChar(255)
+  prc_no                    String?          @db.NVarChar(255)
+  ave_patient_per_day       String?          @db.NVarChar(255)
+  ave_rate_per_patient      String?          @db.NVarChar(255)
+  ave_monthly_income        String?          @db.NVarChar(255)
+  other_clinic_affil        String?          @db.NVarChar(255)
+  contact_no                String?          @db.NVarChar(255)
+  company_rank              String?          @db.NVarChar(255)
+  company_existence         String?          @db.NVarChar(255)
+  address                   String?          @db.NVarChar(255)
+  bussiness_existence       String?          @db.NVarChar(255)
+  existance                 String?          @db.NVarChar(255)
+  department                String?          @db.NVarChar(255)
+  years_employed            String?          @db.NVarChar(255)
+  status                    String?          @db.NVarChar(255)
+  position                  String?          @db.NVarChar(255)
+  rank                      String?          @db.NVarChar(255)
+  category                  String?          @db.NVarChar(255)
+  gross_salary              String?          @db.NVarChar(255)
+  net_salary                String?          @db.NVarChar(255)
+  dov_informant             String?          @db.NVarChar(255)
+  dov_position              String?          @db.NVarChar(255)
+  dov_contact_no            String?          @db.NVarChar(255)
+  dov_department            String?          @db.NVarChar(255)
+  dov_remarks               String?          @db.NVarChar(255)
+  agency                    String?          @db.NVarChar(255)
+  license_validity          String?          @db.NVarChar(255)
+  contact_person            String?          @db.NVarChar(255)
+  designation               String?          @db.NVarChar(255)
+  country_destination       String?          @db.NVarChar(255)
+  cd_contract_date          String?          @db.NVarChar(255)
+  cd_contract_terms         String?          @db.NVarChar(255)
+  cd_position               String?          @db.NVarChar(255)
+  cd_position_sub           String?          @db.NVarChar(255)
+  cd_position_others        String?          @db.NVarChar(255)
+  cd_yrs_as_seaman          String?          @db.NVarChar(255)
+  cd_contact_person         String?          @db.NVarChar(255)
+  cd_designation            String?          @db.NVarChar(255)
+  cd_salary                 String?          @db.NVarChar(255)
+  cd_peso_conversion        String?          @db.NVarChar(255)
+  cd_allotment_amnt         String?          @db.NVarChar(255)
+  cd_allotment_sched        String?          @db.NVarChar(255)
+  cd_alottee                String?          @db.NVarChar(255)
+  cd_type_of_vessel         String?          @db.NVarChar(255)
+  cd_name_of_vessel         String?          @db.NVarChar(255)
+  cd_departure_date         String?          @db.NVarChar(255)
+  cd_employer               String?          @db.NVarChar(255)
+  cd_nature_of_company      String?          @db.NVarChar(255)
+  cd_contract_duration      String?          @db.NVarChar(255)
+  cd_yrs_in_present_company String?          @db.NVarChar(255)
+  cd_remmit_amnt            String?          @db.NVarChar(255)
+  cd_remmit_sched           String?          @db.NVarChar(255)
+  cd_country                String?          @db.NVarChar(255)
+  cd_other_country          String?          @db.NVarChar(255)
+  cd_beneficiary            String?          @db.NVarChar(255)
+  cd_yrs_as_ofw             String?          @db.NVarChar(255)
+  business_name             String?          @db.NVarChar(255)
+  registered_owner          String?          @db.NVarChar(255)
+  type_of_ownership         String?          @db.NVarChar(255)
+  nature_of_business        String?          @db.NVarChar(255)
+  products                  String?          @db.NVarChar(255)
+  ave_weekly_purchases      String?          @db.NVarChar(255)
+  rent_expenses             String?          @db.NVarChar(255)
+  est_daily_sales           String?          @db.NVarChar(255)
+  no_of_employees           String?          @db.NVarChar(255)
+  no_of_days_mo             String?          @db.NVarChar(255)
+  salary_head               String?          @db.NVarChar(255)
+  est_monthly_sales         String?          @db.NVarChar(255)
+  est_monthly_expense       String?          @db.NVarChar(255)
+  est_inventory             String?          @db.NVarChar(255)
+  mark_up                   String?          @db.NVarChar(255)
+  complete_business_info    String?          @db.NVarChar(255)
+  est_monthly_income        String?          @db.NVarChar(255)
+  UDATE                     Int
+  DATE                      DateTime
+  loans                     crm_loans_test[]
 }
-
-
-
-
 
 model crm_course {
   id          Int    @id(map: "PK_crm_course_id") @default(autoincrement())
@@ -544,149 +522,6 @@ model crm_schools {
   @@index([id], map: "id_3")
 }
 
-// model crm_loans {
-//   lid                         Int      @id(map: "PK_crm_loans_lid") @default(autoincrement()) @map("lid")
-//   directory                   String   @map("directory") @db.NVarChar(Max)
-//   profile                     String   @map("profile") @db.NVarChar(25)
-//   cloud_profile               String   @default("N'0'", map: "DF__crm_loans__cloud__00750D23") @map("cloud_profile") @db.NVarChar(100)
-//   loan_profile                String   @unique(map: "crm_loans$loan_profile_3") @map("loan_profile") @db.NVarChar(45)
-//   mobile_app                  Int      @default(0, map: "DF__crm_loans__mobil__0169315C") @map("mobile_app")
-//   create_by_cloud             Int      @default(0, map: "DF__crm_loans__CREAT__025D5595") @map("CREATE_BY_CLOUD")
-//   file_created                Int      @default(0, map: "DF__crm_loans__FILE___035179CE") @map("FILE_CREATED")
-//   leads                       Int      @default(0, map: "DF__crm_loans__leads__04459E07") @map("leads")
-//   loan_active                 Int      @map("loan_active")
-//   branch                      String   @map("branch") @db.NVarChar(45)
-//   agent                       String   @map("agent") @db.NVarChar(135)
-//   app_type                    Int      @map("app_type")
-//   pn_number                   String   @map("pn_number") @db.NVarChar(100)
-//   personal_loan               String   @map("personal_loan") @db.NVarChar(65)
-//   prev_approval               String   @map("prev_approval") @db.NVarChar(65)
-//   prev_amount                 String   @map("prev_amount") @db.NVarChar(65)
-//   payment_history             String   @map("payment_history") @db.NVarChar(Max)
-//   loan_terms                  String   @map("loan_terms") @db.NVarChar(45)
-//   amount_applied              String   @map("amount_applied") @db.NVarChar(45)
-//   amount_recommended          String   @map("amount_recommended") @db.NVarChar(45)
-//   amount_approved             String   @map("amount_apporved") @db.NVarChar(45)
-//   term_rate                   String   @map("term_rate") @db.NVarChar(255)
-//   interest_rate               String   @map("interest_rate") @db.NVarChar(45)
-//   purpose                     String   @map("purpose") @db.NVarChar(45)
-//   payment_mode                String   @map("payment_mode") @db.NVarChar(45)
-//   other_income                String   @map("other_income") @db.NVarChar(45)
-//   pro_license                 String   @map("pro_license") @db.NVarChar(45)
-//   loan_recommendation         String   @map("loan_recommendation") @db.NVarChar(45)
-//   loan_final_approval         String   @map("loan_final_approval") @db.NVarChar(45)
-//   loan_approved_term          String   @map("loan_approved_term") @db.NVarChar(45)
-//   loan_interest_rate          String   @map("loan_interest_rate") @db.NVarChar(45)
-//   loan_gp                     String   @map("loan_gp") @db.NVarChar(45)
-//   scorecard                   String   @map("scorecard") @db.NVarChar(45)
-//   other_text                  String   @map("other_text") @db.NVarChar(255)
-//   added_score                 String   @map("added_score") @db.NVarChar(45)
-//   monthly_amort               String   @map("monthly_amort") @db.NVarChar(45)
-//   estimated_amort_terms       String   @map("estimated_amort_terms") @db.NVarChar(45)
-//   doc_submitted               String   @map("doc_submitted") @db.NVarChar(45)
-//   security_support            String   @map("security_support") @db.NVarChar(45)
-//   released                    Int      @map("released")
-//   release_udate               Int      @map("release_udate")
-//   owner                       Int      @map("owner")
-//   telemarketer                Int      @map("telemarketer")
-//   src                         Int      @map("src")
-//   active_department           String   @map("active_department") @db.NVarChar(45)
-//   department_status           String   @map("department_status") @db.NVarChar(45)
-//   remarks_crd_require_1       Int      @map("remarks_crd_require_1")
-//   remarks_crd_require_2       Int      @map("remarks_crd_require_2")
-//   remarks_crd_require_3       Int      @map("remarks_crd_require_3")
-//   remarks_crd_require_4       Int      @map("remarks_crd_require_4")
-//   remarks_crd_require_5       Int      @map("remarks_crd_require_5")
-//   remarks_crd_require_6       Int      @map("remarks_crd_require_6")
-//   remarks_crd_confirm_1       Int      @map("remarks_crd_confirm_1")
-//   remarks_crd_confirm_2       Int      @map("remarks_crd_confirm_2")
-//   remarks_crd_confirm_3       Int      @map("remarks_crd_confirm_3")
-//   remarks_crd_confirm_4       Int      @map("remarks_crd_confirm_4")
-//   remarks_crd_confirm_5       Int      @map("remarks_crd_confirm_5")
-//   remarks_crd_confirm_6       Int      @map("remarks_crd_confirm_6")
-//   remarks_crd_confirm_7       Int      @map("remarks_crd_confirm_7")
-//   remarks_crd_confirm_8       Int      @map("remarks_crd_confirm_8")
-//   company_background          String   @map("company_background") @db.NVarChar(Max)
-//   other_source_name           String   @map("other_source_name") @db.NVarChar(255)
-//   other_source_nature         String   @map("other_source_nature") @db.NVarChar(255)
-//   other_source_address        String   @map("other_source_address") @db.NVarChar(255)
-//   other_source_length         String   @map("other_source_length") @db.NVarChar(255)
-//   other_source_ownrented      String   @map("other_source_ownrented") @db.NVarChar(255)
-//   other_source_contract       String   @map("other_source_contract") @db.NVarChar(255)
-//   other_source_monthlyincome  String   @map("other_source_monthlyincome") @db.NVarChar(255)
-//   other_source_of_income      String   @map("other_source_of_income") @db.NVarChar(Max)
-//   collateral_registered_owner String   @map("collateral_registered_owner") @db.NVarChar(255)
-//   collateral_tct              String   @map("collateral_tct") @db.NVarChar(255)
-//   collateral_location         String   @map("collateral_location") @db.NVarChar(255)
-//   collateral_locality         String   @map("collateral_locality") @db.NVarChar(255)
-//   collateral_land_value       String   @map("collateral_land_value") @db.NVarChar(255)
-//   collateral_spouse_name      String   @map("collateral_spouse_name") @db.NVarChar(255)
-//   collateral_improvements     String   @map("collateral_improvements") @db.NVarChar(255)
-//   collateral_total_appraised  String   @map("collateral_total_appraised") @db.NVarChar(255)
-//   collateral_30_appraised     String   @map("collateral_30_appraised") @db.NVarChar(255)
-//   collateral_reference        String   @map("collateral_reference") @db.NVarChar(255)
-//   collateral_remarks          String   @map("collateral_remarks") @db.NVarChar(255)
-//   court_checking              String   @map("court_checking") @db.NVarChar(Max)
-//   bank_checking_branch        String   @map("bank_checking_branch") @db.NVarChar(255)
-//   bank_checking_tel           String   @map("bank_checking_tel") @db.NVarChar(255)
-//   bank_checking_sa            String   @map("bank_checking_sa") @db.NVarChar(255)
-//   bank_checking_remarks       String   @map("bank_checking_remarks") @db.NVarChar(255)
-//   residence                   String   @map("residence") @db.NVarChar(Max)
-//   neighbourhood_checking      String   @map("neighbourhood_checking") @db.NVarChar(Max)
-//   other_information           String   @map("other_information") @db.NVarChar(Max)
-//   assets                      String   @map("assets") @db.NVarChar(Max)
-//   strength                    String   @map("strength") @db.NVarChar(Max)
-//   weakness                    String   @map("weakness") @db.NVarChar(Max)
-//   crd_remarks                 String   @map("crd_remarks") @db.NVarChar(Max)
-//   crecom_remarks              String   @map("crecom_remarks") @db.NVarChar(Max)
-//   action_ao_name              String   @map("action_ao_name") @db.NVarChar(255)
-//   action_ao_mobile            String   @map("action_ao_mobile") @db.NVarChar(255)
-//   action_ao_date              String   @map("action_ao_date") @db.NVarChar(255)
-//   action_bm_name              String   @map("action_bm_name") @db.NVarChar(255)
-//   action_bm_mobile            String   @map("action_bm_mobile") @db.NVarChar(255)
-//   action_bm_date              String   @map("action_bm_date") @db.NVarChar(255)
-//   action_crecom               String   @map("action_crecom") @db.NVarChar(255)
-//   action_crecom_final         String   @map("action_crecom_final") @db.NVarChar(255)
-//   action_crd                  String   @map("action_crd") @db.NVarChar(255)
-//   assigned_ao                 String   @map("assigned_ao") @db.NVarChar(255)
-//   waivers_remarks             String   @map("waivers_remarks") @db.NVarChar(Max)
-//   dep_stat                    String   @default("N'1;0;0;0;0;0;0;0;0'", map: "DF__crm_loans__DEP_S__0539C240") @map("DEP_STAT") @db.NVarChar(35)
-//   com_prod                    String   @default("N'0;0;0'", map: "DF__crm_loans__COM_P__062DE679") @map("COM_PROD") @db.NVarChar(25)
-//   company                     Int      @map("COMPANY")
-//   product                     Int      @map("PRODUCT")
-//   raw_product                 String   @map("RAW_PRODUCT") @db.NVarChar(10)
-//   cam                         Int      @map("CAM")
-//   soi                         Int      @map("SOI")
-//   raw_soi                     String   @map("RAW_SOI") @db.NVarChar(10)
-//   state                       Int      @default(0, map: "DF__crm_loans__STATE__07220AB2") @map("STATE")
-//   access_by                   String   @map("ACCESS_BY") @db.NVarChar(255)
-//   lock_access                 String   @map("LOCK_ACCESS") @db.NVarChar(255)
-//   lock_head                   String   @map("LOCK_HEAD") @db.NVarChar(255)
-//   crecom_access               Int?     @default(0, map: "DF__crm_loans__CRECO__08162EEB") @map("CRECOM_ACCESS")
-//   excom_access                Int      @default(0, map: "DF__crm_loans__EXCOM__090A5324") @map("EXCOM_ACCESS")
-//   access_tool                 Int      @default(0, map: "DF__crm_loans__ACCES__09FE775D") @map("ACCESS_TOOL")
-//   crd_access                  String   @map("CRD_ACCESS") @db.NVarChar(255)
-//   udate                       Int      @map("udate")
-//   date                        DateTime @default(now(), map: "DF__crm_loans__date__0AF29B96") @map("date") @db.DateTime
-
-//   @@index([access_by], map: "ACCESS_BY")
-//   @@index([cloud_profile], map: "cloud_profile")
-//   @@index([com_prod], map: "COM_PROD")
-//   @@index([lid], map: "lid")
-//   @@index([lid], map: "lid_2")
-//   @@index([lid], map: "lid_3")
-//   @@index([lid], map: "lid_4")
-//   @@index([loan_profile], map: "loan_profile")
-//   @@index([loan_profile], map: "loan_profile_2")
-//   @@index([loan_profile], map: "loan_profile_4")
-//   @@index([loan_profile], map: "loan_profile_5")
-//   @@index([profile], map: "profile")
-//   @@index([profile], map: "profile_2")
-//   @@index([profile], map: "profile_3")
-//   @@index([profile], map: "profile_4")
-//   @@index([state], map: "STATE")  
-// }
-
 model crm_collection_area {
   id            Int    @id(map: "PK_crm_collection_area_id") @default(autoincrement())
   zond_code     String @map("ZOND_CODE") @db.VarChar(255)
@@ -722,5 +557,13 @@ model crm_product {
   @@index([pid], map: "pid_2")
 }
 
-
-
+model crm_loans {
+  id              Int       @id(map: "PK_crm_loans") @default(autoincrement()) @map("id")
+  profile         String?   @map("profile") @db.NVarChar(50)
+  prodid          String?   @map("prodid") @db.NVarChar(50)
+  sourceofincome  String?   @map("sourceofincome") @db.NVarChar(50)
+  createdby       String?   @db.NVarChar(50)
+  createddatetime DateTime? @db.DateTime
+  updatedby       String?   @db.NVarChar(50)
+  updateddatetime DateTime? @db.DateTime
+}
