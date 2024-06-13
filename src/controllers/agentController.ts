@@ -72,20 +72,20 @@ class AgentController {
       const { lastname, firstname, middlename } = req.body;
       const agents = await prisma.crm_agents.findMany({
         where: {
-          lastname: {
+          a_lastname: {
             contains: lastname,
           },
-          firstname: {
+          a_firstname: {
             contains: firstname,
           },
-          middlename: {
+          a_middlename: {
             contains: middlename,
           },
         },
         select: {
-          lastname: true,
-          firstname: true,
-          middlename: true,
+          a_address: true,
+          a_firstname: true,
+          a_middlename: true,
         },
       });
       res.status(200).json(agents);

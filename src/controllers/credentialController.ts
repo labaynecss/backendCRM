@@ -1,27 +1,29 @@
 import { Request, Response } from "express";
 import prisma from "../utils/db";
-import { generateRefreshToken, generateToken } from "../utils/generateRefreshtoken";
+import {
+  generateRefreshToken,
+  generateToken,
+} from "../utils/generateRefreshtoken";
 import { getExpirationTime } from "../utils/calcTime";
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 import * as bcrypt from "bcrypt";
-
 
 class UserController {
   async login(req: Request, res: Response): Promise<void> {
     try {
-      const { USERNAME, password } = req.body;
-      let signin = await prisma.users.findFirst({
-        where: { USERNAME: USERNAME }
+      const { USERNAME, PASSWORD } = req.body;
+      let signin = await prisma.crm_users.findFirst({
+        where: { USERNAME: USERNAME },
       });
 
       if (!signin) {
         res.status(400).json({ message: "Invalid Credentials!" });
         return;
       }
-      console.log(`Stored password: ${signin.password}`);
+      console.log(`Stored password: ${signin.PASSWORD}`);
 
       // Compare passwords
-      const match = await bcrypt.compare(password, signin.password!);
+      const match = await bcrypt.compare(PASSWORD, signin.PASSWORD!);
       if (!match) {
         console.log("Password comparison failed");
         res.status(400).json({ message: "Password incorrect" });
@@ -37,7 +39,9 @@ class UserController {
       res.cookie("refresh_token", refresh_token, { httpOnly: true });
 
       // Return success response
-      res.status(200).json({ message: "User is authenticated", signin, access_token });
+      res
+        .status(200)
+        .json({ message: "User is authenticated", signin, access_token });
     } catch (err) {
       console.error(err);
       res.status(500).json({ message: "Internal Server Error" });
@@ -83,7 +87,5 @@ class UserController {
 //     }
 //   );
 // };
-
-
 
 export default new UserController();

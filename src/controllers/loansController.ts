@@ -17,18 +17,35 @@ class LoansController {
     }
   }
 
-  async createloans(req: Request, res: Response): Promise<void> {
+  async updateloans(req: Request, res: Response): Promise<void> {
     try {
-      const { profile, prodid, sourceofincome } = req.body;
-      const createloan = await prisma.crm_loans.create({
-        data: {
-          profile: profile,
-          prodid: prodid,
-          sourceofincome: sourceofincome,
+      // const { id, profile, prodid, sourceofincome } = req.body;
+      // const updatedLoan = await prisma.crm_loans.update({
+      //   where: { id: parseInt(id, 10) },
+      //   data: {
+      //     profile: profile ?? undefined,
+      //     prodid: prodid ?? undefined,
+      //     sourceofincome: sourceofincome ?? undefined,
+      //   },
+      // });
+      // console.log("Update success", updatedLoan);
+      // res.status(200).json(updatedLoan);
+    } catch (err) {
+      console.error("Error retrieving loans:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+
+  async clientjoinloans(req: Request, res: Response): Promise<void> {
+    try {
+      const loansClient = await prisma.crm_loans.findMany({
+        include: {
+          client: true,
+          product: true,
         },
       });
-      console.log("Fetch success", createloan);
-      res.status(200).json(createloan);
+      console.log("join success", loansClient);
+      res.status(200).json(loansClient);
     } catch (err) {
       console.error("Error retrieving loans:", err);
       res.status(500).json({ error: "Internal Server Error" });
