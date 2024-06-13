@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 class LoansController {
   async listofLoans(req: Request, res: Response): Promise<void> {
     try {
-      const loans = await prisma.crm_loans.findMany({
+      const loans = await prisma.crm_loan_hdr.findMany({
         take: 10,
       });
       console.log("Fetch success", loans);
@@ -30,22 +30,6 @@ class LoansController {
       // });
       // console.log("Update success", updatedLoan);
       // res.status(200).json(updatedLoan);
-    } catch (err) {
-      console.error("Error retrieving loans:", err);
-      res.status(500).json({ error: "Internal Server Error" });
-    }
-  }
-
-  async clientjoinloans(req: Request, res: Response): Promise<void> {
-    try {
-      const loansClient = await prisma.crm_loans.findMany({
-        include: {
-          client: true,
-          product: true,
-        },
-      });
-      console.log("join success", loansClient);
-      res.status(200).json(loansClient);
     } catch (err) {
       console.error("Error retrieving loans:", err);
       res.status(500).json({ error: "Internal Server Error" });

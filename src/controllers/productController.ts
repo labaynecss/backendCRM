@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 class ProductController {
   async productlist(req: Request, res: Response): Promise<void> {
     try {
-      const products = await prisma.crm_product.findMany();
+      const products = await prisma.crm_products.findMany();
       console.log("Fetch success", products);
       res.status(200).json(products);
     } catch (err) {
