@@ -206,7 +206,7 @@ class ClientController {
             firstname,
             middlename: middlename ?? "",
             suffix,
-            birthday: new Date(birthday),
+            birthday: birthday ?? '',
             age,
             gender,
             mobile,
