@@ -8,17 +8,14 @@ import session from "express-session";
 import { userRoutes } from "./routes/userRoutes";
 import { credentialRoutes } from "./routes/credentialRoutes";
 import { branchRoutes } from "./routes/branchRoutes";
-// import { clientRoutes } from './routes/clientRoutes';
 import { agentRoutes } from "./routes/agentRoutes";
 import { addressRoutes } from "./routes/addressRoutes";
 import { schoolRoutes } from "./routes/schoolRoutes";
-// import { agencyRoutes } from './routes/agencyRoutes';
-// import { loansRoutes } from './routes/loansRoutes';
-import { areaRoutes } from "./routes/areasRoutes";
 import { businessRoutes } from "./routes/businessRoutes";
 import { productRoutes } from "./routes/productRoutes";
 import { clientRoutes } from "./routes/clientRoutes";
 import { loansRoutes } from "./routes/loansRoutes";
+import { assetsRoutes } from "./routes/assetsRoutes";
 //configure env;
 dotenv.config();
 
@@ -61,14 +58,13 @@ database
 //Routes
 app.use("/api/crmv2", credentialRoutes);
 app.use("/api/crmv2", userRoutes);
-// app.use("/api/crmv2", branchRoutes);
-// app.use("/api/crmv2", clientRoutes);
+app.use("/api/crmv2", branchRoutes);
+app.use("/api/crmv2", clientRoutes);
 app.use("/api/crmv2", agentRoutes);
-//app.use("/api/crmv2", addressRoutes);
-// app.use("/api/crmv2", schoolRoutes);
-// app.use("/api/crmv2", agencyRoutes)
-// app.use("/api/crmv2", loansRoutes);
-// app.use("/api/crmv2", areaRoutes);
-// app.use("/api/crmv2", businessRoutes);
-// app.use("/api/crmv2", areaRoutes);
-// app.use("/api/crmv2", productRoutes);
+app.use("/api/crmv2", addressRoutes);
+app.use("/api/crmv2", schoolRoutes);
+app.use("/api/crmv2", agentRoutes)
+app.use("/api/crmv2", loansRoutes);
+app.use("/api/crmv2", businessRoutes);
+app.use("/api/crmv2", productRoutes);
+app.use("/api/crmv2", assetsRoutes);

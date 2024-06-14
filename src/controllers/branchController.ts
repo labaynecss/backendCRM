@@ -4,9 +4,9 @@ import  {Request , Response } from "express"
 
 const allbranches = async (req: Request, res: Response): Promise<void> => {
     try {
-        const branches = await prisma.branch.findMany({
+        const branches = await prisma.crm_branch.findMany({
             orderBy: {
-                branch: "asc"
+                branch_code: "asc"
             }
         });
         console.log("fetch success",allbranches);
@@ -29,12 +29,12 @@ const branches = async (req: Request, res: Response): Promise<void> => {
     }
 
     try {
-        const count  = await prisma.branch.count();
-     const response = await prisma.branch.findMany({
+        const count  = await prisma.crm_branch.count();
+     const response = await prisma.crm_branch.findMany({
          take: perPage,
          skip: skip,    
          orderBy: {
-             ID: "desc"
+             id: "desc"
          }
          
      });
@@ -47,16 +47,16 @@ const branches = async (req: Request, res: Response): Promise<void> => {
 };
 const createBranch = async (req: Request, res: Response): Promise<void> => {
 
-    const {branch, area, info, deleted, date } = req.body 
+    const {branch_code, areaid, branch_description, branch_status, createdBy } = req.body 
     try {
-        const create = prisma.branch.create({
+        const create = prisma.crm_branch.create({
             data: {
-                branch: branch,
-                area: area,
-                info: info,
-                owner: '',
-                deleted: deleted ?? 0,
-                date: date ?? new Date()
+                branch_code: branch_code,
+                branch_description: branch_description,
+                areaid: areaid,
+                branch_status: branch_status,
+                createdBy: createdBy ?? 0,
+                createddatetime :  new Date()
 
             }
             

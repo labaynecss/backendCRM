@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import { Prisma, PrismaClient } from "@prisma/client";
-import { generateProfile } from "../utils/generateProfile";
+import { generateAssetId, generateProfile } from "../utils/generateProfile";
 import { currentTimestamp, isoDate } from "../utils/calcTime";
+import { create } from "domain";
+import { generateloanProfileId } from "../utils/generateLoanProfile";
 
 const prisma = new PrismaClient();
 
@@ -12,6 +14,13 @@ class ClientController {
     try {
       const profileGet = await prisma.crm_client.findUnique({
         where: { profile: profile },
+        include: {
+          crm_allottee: true,
+          crm_clientEducation: true,
+          crm_clientId: true,
+          crm_spouse: true,
+        crm_address_citymunicipality: true
+        },
       });
 
       if (!profileGet) {
@@ -30,11 +39,10 @@ class ClientController {
       const allclients = await prisma.crm_client.findMany({
         include: {
           crm_allottee: true,
-          crm_assets: true,
           crm_clientEducation: true,
-          crm_loan_hdr: true,
-          crm_soiBusiness: true,
-          crm_soiOccupation: true,
+          crm_clientId: true,
+          crm_spouse: true,
+        crm_address_citymunicipality: true
         },
       });
       console.log("join success", allclients);
@@ -93,6 +101,8 @@ class ClientController {
       res.status(500).json({ error: "Internal Server Error" });
     }
   }
+
+
   async createClient(req: Request, res: Response): Promise<void> {
     try {
       const {
@@ -105,7 +115,6 @@ class ClientController {
         gender,
         mobile,
         telephone,
-        area,
         civilstatus,
         religion,
         mothersname,
@@ -117,10 +126,7 @@ class ClientController {
         allottee_contactnumber,
         allottee_netsalaryincome,
         verified,
-        assetid,
         totalfair_marketvalue,
-        crm_assetsAuto,
-        crm_assetsRealstate,
         educ_level,
         educ_school,
         loantype,
@@ -140,101 +146,216 @@ class ClientController {
         employer_address,
         employer_contact,
         net_salaryincome,
-      } = req.body;
-      const profile = generateProfile();
-      const createClient = await prisma.crm_client.create({
-        data: {
-          profile: profile,
-          lastname: lastname,
-          firstname: firstname,
-          middlename: middlename ?? "",
-          suffix: suffix,
-          birthday: birthday,
-          age: age,
-          gender: gender,
-          mobile: mobile,
-          telephone: telephone,
-          area: area,
-          civilstatus: civilstatus,
-          religion: religion,
-          email: email,
-          mothersname: mothersname,
-          createdby: createdby ?? "",
-          createddatetime: new Date(),
-          crm_allottee: {
-            create: {
-              allottee_principalemployer: allottee_principalemployer,
-              allottee_agency: allottee_agency,
-              allottee_address: allottee_address,
-              allottee_contactnumber: allottee_contactnumber,
-              allottee_netsalaryincome: allottee_netsalaryincome,
-              verified: verified,
-              createdby: createdby,
-              createddatetime: new Date(),
-            },
-          },
-          crm_assets: {
-            create: {
-              assetid: assetid,
-              totalfair_marketvalue: totalfair_marketvalue,
-              crm_assetsAuto: crm_assetsAuto,
-              crm_assetsRealstate: crm_assetsRealstate,
-            },
-          },
-          crm_clientEducation: {
-            create: {
-              educ_level: educ_level,
-              educ_school: educ_school,
-              course: course,
-            },
-          },
-          crm_loan_hdr: {
-            // create: {
-            //   loantype: loantype,
-            //   terms: terms,
-            //   modeofpayment: modeofpayment,
-            //   amountapplied: amountapplied,
-            //   productid: productid,
-            //   agentid: agentid,
-            //   createdby: createdby ?? "",
-            //   createddatetime: new Date(),
-            // },
-          },
-          crm_soiBusiness: {
-            create: {
-              business_name: business_name,
-              business_nature: business_nature,
-              business_address: business_address,
-              business_contact: business_contact,
-              net_income: net_income,
-            },
-          },
-          crm_soiOccupation: {
-            create: {
-              employer_company: employer_company,
-              employer_nature: employer_nature,
-              employer_address: employer_address,
-              employer_contact: employer_contact,
-              net_salaryincome: net_salaryincome,
-            },
-          },
-          // crm_soiOfw: {
-          //   create: {
-          //     ofw_principalemployer: ofw_principalemployer,
-          //     ofw_agency: ofw_agency,
-          //     ofw_address: ofw_address,
-          //     ofw_contactnumber: ofw_contactnumber,
-          //     ofw_netsalaryincome: ofw_netsalaryincome,
-          //   },
-          // },
-        },
-      });
+        s_lastname,
+        s_firstname,
+        s_middlename,
+        s_suffix,
+        s_birthdate,
+        s_gender,
+        s_address,
+        s_mobile,
+        s_telephone,
+        s_educLevel,
+        s_educCourse,
+        bank_name,
+        s_educSchool,
+        b_telno,
+        accountname,
+        accountno,
+        dateopened,
+        handling,
+        monthlycredit_month2,
+        monthlycredit_month1,
+        monthlycredit_month3,
+        monthlycredit_value1,
+        monthlycredit_value3,
+        monthlycredit_value2,
+        charref_name,
+        charref_address,
+        charref_contactno,
+        charref_verified,
+        charref_relationship,
+        id_type,
+        bankname,
+        id_no,
+        assetremarks, 
+        b_expiry,
+        citymuncode,
+        id_expiration
 
+      } = req.body;
+  
+      const profile = generateProfile();
+      const loanprofile = generateloanProfileId();
+      const spouseprofile = generateProfile();
+      const assetid = generateAssetId()
+
+      const cityMunicipality = 
+      await prisma.crm_address_citymunicipality.findUnique({
+        where: { citymuncode },
+        
+      });
+      if (!cityMunicipality) {
+        throw new Error(`City municipality with code ${citymuncode} not found.`);
+      }
+      const [createClient, loans] = await prisma.$transaction([
+        prisma.crm_client.create({
+          data: {
+            profile,
+            lastname,
+            firstname,
+            middlename: middlename ?? "",
+            suffix,
+            birthday: new Date(birthday),
+            age,
+            gender,
+            mobile,
+            telephone,
+            civilstatus,
+            religion,
+            email,
+            mothersname,
+            createdby: createdby ?? "",
+            createddatetime: new Date(),
+            crm_clientEducation: {
+              create: {
+                educ_level,
+                educ_school,
+                course,
+              },
+            },
+            crm_spouse: {
+              create: {
+                spouseprofile,
+                s_lastname,
+                s_firstname,
+                s_middlename,
+                s_suffix,
+                s_birthdate: new Date(s_birthdate),
+                gender: s_gender,
+                address: s_address,
+                mobile: s_mobile,
+                telephone: s_telephone,
+                crm_spouseEducation: {
+                  create: {
+                    s_educLevel,
+                    s_educCourse,
+                    s_educSchool,
+                  },
+                },
+              },
+            },
+         
+            crm_clientId: {
+              create: {
+                id_type: id_type,
+                id_no,
+                b_expiry,
+                id_expiration,
+                verified,
+                createdby: createdby ?? '',
+                createddatetime: new Date(),
+              },
+            },
+            crm_address_citymunicipality: {
+              connect: {
+                citymuncode
+              }
+            }
+          },
+        }),
+        prisma.crm_loan_hdr.create({
+          data: {
+            profile,
+            loanprofile,
+            loantype,
+            terms,
+            modeofpayment,
+            amountapplied,
+            productid,
+            agentid,
+            createdby,
+            createddatetime: new Date(),
+            
+            crm_assets: {
+              create: {
+                assetid,
+                assetremarks,
+                totalfair_marketvalue,
+              },
+            },
+            crm_allottee: {
+              create: {
+                profile,
+                allottee_address,
+                allottee_contactnumber,
+                allottee_principalemployer,
+                allottee_agency,
+                allottee_netsalaryincome,
+                verified,
+                createdby,
+                createddatetime: new Date(),
+              },
+            },
+            crm_characterReference: {
+              create: {
+                charref_name,
+                charref_address,
+                charref_contactno,
+                charref_relationship,
+                charref_verified,
+                createdby,
+                createddatetime: new Date(),
+              },
+            },
+            crm_soiBusiness: {
+              create: {
+                business_name,
+                business_nature,
+                business_address,
+                business_contact,
+                net_income,
+              },
+            },
+            crm_soiOccupation: {
+           
+                create: {
+                 
+                  employer_company,
+                  employer_nature,
+                  employer_address,
+                  employer_contact,
+                  net_salaryincome,
+                },
+            },
+            crm_bankAccount: {
+              create: {
+                bankname,
+                b_telno,
+                accountname,
+                accountno,
+                dateopened: new Date(dateopened),
+                handling,
+                monthlycredit_month1,
+                monthlycredit_month2,
+                monthlycredit_month3,
+                monthlycredit_value1,
+                monthlycredit_value2,
+                monthlycredit_value3,
+                createdby,
+                createddatetime: new Date(),
+              },
+            },
+          },
+        }),
+      ]);
+  
       res.status(201).json({
         message: "Client created successfully",
+        loans,
         createClient,
       });
-
+  
       console.log("Fetch success", createClient);
     } catch (err) {
       console.error("Error creating client:", err);
@@ -247,8 +368,7 @@ class ClientController {
       }
     }
   }
-
-  async updateClient(req: Request, res: Response): Promise<void> {
+  async updatebyProfile(req: Request, res: Response): Promise<void> {
     const { profile } = req.params;
     try {
       const {
@@ -267,7 +387,28 @@ class ClientController {
         mothersname,
         email,
         updatedby,
-        crm_allottee,
+        assetremarks,
+        educ_level,
+        totalfair_marketvalue,
+        educ_school,
+        course,
+        id_type,
+        id_no,
+        b_expiry,
+        id_expiration,
+        s_lastname,
+        verified,
+        s_firstname,
+        s_middlename,
+        s_suffix,
+        s_birthdate,
+        s_gender,
+        s_address,
+        s_mobile,
+        s_telephone
+
+
+     
       } = req.body;
 
       let existingClient = await prisma.crm_client.findUnique({
@@ -297,46 +438,72 @@ class ClientController {
           mothersname,
           updatedby: updatedby ?? "",
           updateddatetime: new Date(),
-          crm_allottee: {
-            updateMany: {
-              where: { profile: profile },
-              data: {},
-            },
-          },
           crm_assets: {
             updateMany: {
               where: { profile: profile },
-              data: {},
+              data: {
+                assetremarks: assetremarks,
+                totalfair_marketvalue: totalfair_marketvalue
+              },
             },
           },
           crm_clientEducation: {
             updateMany: {
               where: { profile: profile },
-              data: {},
+              data: {
+                educ_level : educ_level,
+                educ_school: educ_school,
+                course: course,
+              },
             },
           },
-          crm_loan_hdr: {
+          crm_clientId: {
             updateMany: {
               where: { profile: profile },
-              data: {},
+              data: {
+                id_type: id_type,
+                id_no: id_no,
+                b_expiry: b_expiry,
+                id_expiration: id_expiration,
+                verified: verified,
+                updatedby: updatedby ?? "",
+                updateddatetime: new Date(),
+              },
             },
           },
-          crm_soiBusiness: {
+          // crm_soiBusiness: {
+          //   updateMany: {
+          //     where: { profile: profile },
+          //     data: {},
+          //   },
+          // },
+          // crm_soiOccupation: {
+          //   updateMany: {
+          //     where: { profile: profile },
+          //     data: {},
+          //   },
+          // },
+          // crm_soiOfw: {
+          //   updateMany: {
+          //     where: { profile: profile },
+          //     data: {},
+          //   },
+          // },
+          crm_spouse: {
             updateMany: {
               where: { profile: profile },
-              data: {},
-            },
-          },
-          crm_soiOccupation: {
-            updateMany: {
-              where: { profile: profile },
-              data: {},
-            },
-          },
-          crm_soiOfw: {
-            updateMany: {
-              where: { profile: profile },
-              data: {},
+              data: {
+                s_lastname: s_lastname,
+                s_firstname: s_firstname,
+                s_middlename: s_middlename,
+                s_suffix: s_suffix,
+                s_birthdate: new Date(s_birthdate),
+                gender: s_gender,
+                address: s_address,
+                mobile: s_mobile,
+                telephone: s_telephone,
+
+              },
             },
           },
         },
