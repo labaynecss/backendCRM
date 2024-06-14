@@ -15,7 +15,7 @@ class ClientController {
       const profileGet = await prisma.crm_client.findUnique({
         where: { profile: profile },
         include: {
-          crm_allottee: true,
+          crm_allottee: {},
           crm_clientEducation: true,
           crm_clientId: true,
           crm_spouse: true,
@@ -42,7 +42,9 @@ class ClientController {
           crm_clientEducation: true,
           crm_clientId: true,
           crm_spouse: true,
-        crm_address_citymunicipality: true
+        crm_address_citymunicipality: true,
+        crm_loan_hdr: true
+        
         },
       });
       console.log("join success", allclients);
@@ -317,7 +319,7 @@ class ClientController {
                 net_income,
               },
             },
-            crm_soiOccupation: {
+            crm_soiEmployment: {
            
                 create: {
                  

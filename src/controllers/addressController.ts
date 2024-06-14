@@ -7,7 +7,9 @@ class AddressController {
   async addressList(req: Request, res: Response): Promise<void> {
     try {
       const address = await prisma.crm_address_citymunicipality.findMany({
-        take: 500,
+       select:{
+        citymunDesc: true
+       }
       });
       console.log("Fetch success", address);
       res.status(200).json(address);
