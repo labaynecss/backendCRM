@@ -4,6 +4,6 @@ import LoansController from "../controllers/loansController";
 const router = Router();
 
 router.get("/loans", LoansController.listofLoans);
-// router.get("/clientjoinloans", LoansController.clientjoinloans);
+router.patch("/clients/:profile", LoansController.updateProduct);
 
 export const loansRoutes = router;

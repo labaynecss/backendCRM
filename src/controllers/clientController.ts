@@ -544,23 +544,24 @@ class ClientController {
           agentid: agentid,
           crm_products: {
             update: {
-              // where: { loanprofile: loanprofile },
+              where: { id: productid },
               data: {
                 productid: productid,
               },
             },
           },
-          // crm_soiBusiness: {
-          //   update: {
-          //     data: {
-          //       business_name: business_name,
-          //       business_nature: business_nature,
-          //       business_address: business_address,
-          //       business_contact: business_contact,
-          //       net_income: net_income,
-          //     },
-          //   },
-          // }
+          crm_soiBusiness: {
+            updateMany: {
+              where: { profile: profile },
+              data: {
+                business_name: business_name,
+                business_nature: business_nature,
+                business_address: business_address,
+                business_contact: business_contact,
+                net_income: net_income,
+              },
+            },
+          }
         }
       })
 

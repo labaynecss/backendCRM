@@ -17,19 +17,18 @@ class LoansController {
     }
   }
 
-  async updateloans(req: Request, res: Response): Promise<void> {
+  async updateProduct(req: Request, res: Response): Promise<void> {
     try {
-      // const { id, profile, prodid, sourceofincome } = req.body;
-      // const updatedLoan = await prisma.crm_loans.update({
-      //   where: { id: parseInt(id, 10) },
-      //   data: {
-      //     profile: profile ?? undefined,
-      //     prodid: prodid ?? undefined,
-      //     sourceofincome: sourceofincome ?? undefined,
-      //   },
-      // });
-      // console.log("Update success", updatedLoan);
-      // res.status(200).json(updatedLoan);
+      const { productid } = req.body;  
+    const { profile } = req.params;
+    const updatedLoan = await prisma.crm_loan_hdr.update({
+      where: { loanprofile: profile },
+      data: {
+       productid: productid
+      } 
+    });
+      console.log("Update success", updatedLoan);
+      res.status(200) .json(updatedLoan);
     } catch (err) {
       console.error("Error retrieving loans:", err);
       res.status(500).json({ error: "Internal Server Error" });
