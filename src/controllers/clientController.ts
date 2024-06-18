@@ -192,14 +192,14 @@ class ClientController {
       const spouseprofile = generateProfile();
       const assetid = generateAssetId()
 
-      const cityMunicipality = 
-      await prisma.crm_address_citymunicipality.findUnique({
-        where: { citymuncode },
+      // const cityMunicipality = 
+      // await prisma.crm_address_citymunicipality.findUnique({
+      //   where: { citymuncode },
         
-      });
-      if (!cityMunicipality) {
-        throw new Error(`City municipality with code ${citymuncode} not found.`);
-      }
+      // });
+      // if (!cityMunicipality) {
+      //   throw new Error(`City municipality with code ${citymuncode} not found.`);
+      // }
       const [createClient, loans] = await prisma.$transaction([
         prisma.crm_client.create({
           data: {
@@ -228,21 +228,21 @@ class ClientController {
             },
             crm_spouse: {
               create: {
-                spouseprofile,
-                s_lastname,
-                s_firstname,
-                s_middlename,
-                s_suffix,
-                s_birthdate: new Date(s_birthdate),
-                gender: s_gender,
-                address: s_address,
-                mobile: s_mobile,
-                telephone: s_telephone,
+                spouseprofile : spouseprofile ?? '',
+                s_lastname: s_lastname ?? "",
+                s_firstname: s_firstname ?? '',
+                s_middlename: s_middlename ?? '',
+                s_suffix : s_suffix ?? '',
+                s_birthdate: s_birthdate ?? new Date,
+                gender: s_gender ?? '',
+                address: s_address ?? '',
+                mobile: s_mobile ?? '',
+                telephone: s_telephone ?? '',
                 crm_spouseEducation: {
                   create: {
-                    s_educLevel,
-                    s_educCourse,
-                    s_educSchool,
+                    s_educLevel: s_educLevel ?? '',
+                    s_educCourse: s_educCourse ?? '',
+                    s_educSchool: s_educSchool ?? '',
                   },
                 },
               },
@@ -259,11 +259,11 @@ class ClientController {
                 createddatetime: new Date(),
               },
             },
-            crm_address_citymunicipality: {
-              connect: {
-                citymuncode
-              }
-            }
+            // crm_address_citymunicipality: {
+            //   connect: {
+            //     citymuncode: citymuncode ?? '',
+            //   }
+            // }
           },
         }),
         prisma.crm_loan_hdr.create({
@@ -278,7 +278,6 @@ class ClientController {
             agentid,
             createdby,
             createddatetime: new Date(),
-            
             crm_assets: {
               create: {
                 assetid,
@@ -323,7 +322,7 @@ class ClientController {
            
                 create: {
                  
-                  employer_company,
+                  employer_company ,
                   employer_nature,
                   employer_address,
                   employer_contact,
@@ -336,7 +335,7 @@ class ClientController {
                 b_telno,
                 accountname,
                 accountno,
-                dateopened: new Date(dateopened),
+                dateopened: dateopened ,
                 handling,
                 monthlycredit_month1,
                 monthlycredit_month2,
@@ -371,7 +370,7 @@ class ClientController {
     }
   }
   async updatebyProfile(req: Request, res: Response): Promise<void> {
-    const { profile } = req.params;
+    const { profile, loanprofile } = req.params;
     try {
       const {
         lastname,
@@ -407,7 +406,22 @@ class ClientController {
         s_gender,
         s_address,
         s_mobile,
-        s_telephone
+        s_telephone,
+        loantype,
+        terms,
+        amountapplied,
+        modeofpayment,
+        productid,
+        agentid,
+        business_name,
+        business_nature,
+        business_address,
+        business_contact,
+        net_income
+
+
+
+
 
 
      
@@ -421,6 +435,13 @@ class ClientController {
         res.status(404).json({ message: "Existing client not found" });
       }
 
+      let existingProduct = await prisma.crm_products.findUnique({
+        where: {productid: productid}
+      })
+      if (!existingProduct) {
+        res.status(404).json({ message: "Existing product not found" });
+
+      }
       const updateClient = await prisma.crm_client.update({
         where: { profile: profile },
         data: {
@@ -499,7 +520,7 @@ class ClientController {
                 s_firstname: s_firstname,
                 s_middlename: s_middlename,
                 s_suffix: s_suffix,
-                s_birthdate: new Date(s_birthdate),
+                s_birthdate: s_birthdate,
                 gender: s_gender,
                 address: s_address,
                 mobile: s_mobile,
@@ -510,6 +531,36 @@ class ClientController {
           },
         },
       });
+
+  await  prisma.crm_loan_hdr.update({
+        where: { loanprofile: loanprofile },
+        data: {
+          loantype: loantype,
+          terms: terms,
+          modeofpayment: modeofpayment,
+          amountapplied:amountapplied ,
+          agentid: agentid,
+          crm_products:{
+            update: {
+              data: {
+                productid: productid,
+              },
+            },
+          
+          },
+          // crm_soiBusiness: {
+          //   update: {
+          //     data: {
+          //       business_name: business_name,
+          //       business_nature: business_nature,
+          //       business_address: business_address,
+          //       business_contact: business_contact,
+          //       net_income: net_income,
+          //     },
+          //   },
+          // }
+        }
+      })
 
       res.status(200).json({
         message: "Client updated successfully",

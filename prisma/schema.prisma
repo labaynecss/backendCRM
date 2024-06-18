@@ -214,6 +214,7 @@ model crm_client {
   crm_address_citymunicipality crm_address_citymunicipality? @relation(fields: [area], references: [citymuncode], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_client_crm_address_citymunicipality")
   crm_clientEducation          crm_clientEducation[]
   crm_clientId                 crm_clientId[]
+  crm_clientSocials            crm_clientSocials[]
   crm_loan_hdr                 crm_loan_hdr[]
   crm_soiBusiness              crm_soiBusiness[]
   crm_soiEmployment            crm_soiEmployment[]
@@ -275,6 +276,7 @@ model crm_loan_hdr {
   crm_bankAccount        crm_bankAccount[]
   crm_characterReference crm_characterReference[]
   crm_client             crm_client               @relation(fields: [profile], references: [profile], onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_client1")
+  crm_products           crm_products?            @relation(fields: [productid], references: [productid], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_products")
   crm_monthlycashflow    crm_monthlycashflow[]
   crm_soiBusiness        crm_soiBusiness[]
   crm_soiEmployment      crm_soiEmployment[]
@@ -291,13 +293,14 @@ model crm_monthlycashflow {
 }
 
 model crm_products {
-  id               Int      @default(autoincrement())
-  productid        String   @id(map: "PK_crm_products") @db.NVarChar(50)
-  prod_description String?  @db.NVarChar(50)
-  prod_type        String?  @db.NVarChar(50)
-  cam              String?  @db.NVarChar(50)
+  id               Int            @default(autoincrement())
+  productid        String         @id(map: "PK_crm_products") @db.NVarChar(50)
+  prod_description String?        @db.NVarChar(50)
+  prod_type        String?        @db.NVarChar(50)
+  cam              String?        @db.NVarChar(50)
   active           Boolean?
-  company          String?  @db.NVarChar(50)
+  company          String?        @db.NVarChar(50)
+  crm_loan_hdr     crm_loan_hdr[]
 }
 
 model crm_soi {
@@ -389,4 +392,25 @@ model crm_soiEmployment {
   net_salaryincome Decimal?      @db.Decimal(18, 0)
   crm_client       crm_client?   @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_soiOccupation_crm_client")
   crm_loan_hdr     crm_loan_hdr? @relation(fields: [loanprofile], references: [loanprofile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_soiOccupation_crm_loan_hdr")
+}
+
+model crm_clientSocials {
+  id                  Int         @id(map: "PK_crm_clientSocials") @default(autoincrement())
+  profile             String?     @db.NVarChar(50)
+  socialmedia_type    String?     @db.NVarChar(50)
+  socialmedia_account String?     @db.NVarChar(50)
+  crm_client          crm_client? @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_clientSocials_crm_client")
+}
+
+model crm_systemdefinition {
+  id              Int       @id(map: "PK_crm_systemdefinition") @default(autoincrement())
+  sys_id          String?   @db.NVarChar(50)
+  sys_listindex   String?   @db.NVarChar(50)
+  sys_description String?   @db.NVarChar(50)
+  sys_value       String?   @db.NVarChar(50)
+  sys_status      String?   @db.NVarChar(50)
+  createdby       String?   @db.NVarChar(50)
+  createddatetime DateTime? @db.DateTime
+  updatedby       String?   @db.NVarChar(50)
+  updateddatetime DateTime? @db.DateTime
 }

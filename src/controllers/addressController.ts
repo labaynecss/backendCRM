@@ -8,7 +8,7 @@ class AddressController {
     try {
       const address = await prisma.crm_address_citymunicipality.findMany({
        select:{
-        citymunDesc: true
+        citymunDesc: true,
        }
       });
       console.log("Fetch success", address);
@@ -22,8 +22,13 @@ class AddressController {
     try {
       const addresslist = await prisma.crm_address_province.findMany({
         include: {
-          crm_address_region: true,
+          crm_address_region: {
+            select: {
+              regdescription: true,
+            },
+          }
         },
+      
       });
       console.log("Fetch success", addresslist);
       res.status(200).json(addresslist);
