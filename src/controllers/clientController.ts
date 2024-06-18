@@ -19,7 +19,9 @@ class ClientController {
           crm_clientEducation: true,
           crm_clientId: true,
           crm_spouse: true,
-        crm_address_citymunicipality: true
+        crm_address_citymunicipality: true,
+        crm_loan_hdr: true
+
         },
       });
 
@@ -42,8 +44,8 @@ class ClientController {
           crm_clientEducation: true,
           crm_clientId: true,
           crm_spouse: true,
-        crm_address_citymunicipality: true,
-        crm_loan_hdr: true
+          crm_address_citymunicipality: true,
+          crm_loan_hdr: true
         
         },
       });
@@ -540,13 +542,13 @@ class ClientController {
           modeofpayment: modeofpayment,
           amountapplied:amountapplied ,
           agentid: agentid,
-          crm_products:{
+          crm_products: {
             update: {
+              // where: { loanprofile: loanprofile },
               data: {
                 productid: productid,
               },
             },
-          
           },
           // crm_soiBusiness: {
           //   update: {
