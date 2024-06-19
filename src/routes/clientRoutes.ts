@@ -9,6 +9,6 @@ router.get("/clients", ClientController.clientjoinData);
 router.get("/clients/tele", ClientController.getTelemarketer);
 router.post("/createClients", ClientController.createClient);
 router.post("/Checkclients", ClientController.checkclient);
-router.put("/clients/:profile", ClientController.updatebyProfile);
+//router.put("/clients/:profile", ClientController.updatebyProfile);
 
 export const clientRoutes = router;

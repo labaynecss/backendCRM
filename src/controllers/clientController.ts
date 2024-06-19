@@ -197,14 +197,6 @@ class ClientController {
       const spouseprofile = generateProfile();
       const assetid = generateAssetId()
 
-      // const cityMunicipality = 
-      // await prisma.crm_address_citymunicipality.findUnique({
-      //   where: { citymuncode },
-        
-      // });
-      // if (!cityMunicipality) {
-      //   throw new Error(`City municipality with code ${citymuncode} not found.`);
-      // }
       const [createClient, loans] = await prisma.$transaction([
         prisma.crm_client.create({
           data: {
@@ -219,7 +211,6 @@ class ClientController {
             mobile,
             telephone,
             address,
-            area,
             civilstatus,
             religion,
             email,
