@@ -10,6 +10,7 @@ class AddressController {
        
         select: {
           citymunDesc: true,
+          citymuncode:true,
           crm_address_province: {
             select: {
               provDesc: true,

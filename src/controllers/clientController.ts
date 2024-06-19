@@ -214,6 +214,7 @@ class ClientController {
             civilstatus,
             religion,
             email,
+            area,
             mothersname,
             createdby: createdby ?? "",
             createddatetime: new Date(),
