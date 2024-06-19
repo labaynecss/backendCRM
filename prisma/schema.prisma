@@ -214,6 +214,7 @@ model crm_client {
   updateddatetime              DateTime?                     @db.DateTime
   crm_allottee                 crm_allottee[]
   crm_assets                   crm_assets[]
+  crm_barangayChecking         crm_barangayChecking[]        @ignore
   crm_address_citymunicipality crm_address_citymunicipality? @relation(fields: [area], references: [citymuncode], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_client_crm_address_citymunicipality")
   crm_clientEducation          crm_clientEducation[]
   crm_clientId                 crm_clientId[]
@@ -278,6 +279,7 @@ model crm_loan_hdr {
   crm_allottee           crm_allottee[]
   crm_assets             crm_assets[]
   crm_bankAccount        crm_bankAccount[]
+  crm_barangayChecking   crm_barangayChecking[]   @ignore
   crm_characterReference crm_characterReference[]
   crm_agents             crm_agents?              @relation(fields: [agentid], references: [agentid], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_agents")
   crm_client             crm_client               @relation(fields: [profile], references: [profile], onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_client1")
@@ -354,10 +356,10 @@ model crm_spouse {
   s_middlename        String?               @db.NVarChar(50)
   s_suffix            String?               @db.NVarChar(50)
   s_birthdate         DateTime?             @db.Date
-  gender              String?               @db.NVarChar(50)
-  address             String?               @db.NVarChar(50)
-  mobile              String?               @db.NVarChar(50)
-  telephone           String?               @db.NVarChar(50)
+  s_gender            String?               @db.NVarChar(50)
+  s_address           String?               @db.NVarChar(50)
+  s_mobile            String?               @db.NVarChar(50)
+  s_telephone         String?               @db.NVarChar(50)
   crm_client          crm_client            @relation(fields: [profile], references: [profile], onUpdate: NoAction, map: "FK_crm_spouse_crm_client")
   crm_spouseEducation crm_spouseEducation[]
 }
@@ -421,4 +423,20 @@ model crm_systemdefinition {
   createddatetime DateTime? @db.DateTime
   updatedby       String?   @db.NVarChar(50)
   updateddatetime DateTime? @db.DateTime
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model crm_barangayChecking {
+  id                  Int
+  profile             String?       @db.NVarChar(50)
+  loanprofile         String?       @db.NVarChar(50)
+  informant           String?       @db.NVarChar(50)
+  informant_contactno String?       @db.NVarChar(50)
+  brgy_position       String?       @db.NVarChar(50)
+  remarks             String?       @db.NVarChar(50)
+  date                DateTime?     @db.DateTime
+  crm_client          crm_client?   @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_barangayChecking_crm_client")
+  crm_loan_hdr        crm_loan_hdr? @relation(fields: [loanprofile], references: [loanprofile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_barangayChecking_crm_loan_hdr")
+
+  @@ignore
 }
