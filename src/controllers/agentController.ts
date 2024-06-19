@@ -14,6 +14,27 @@ class AgentController {
       res.status(500).json({ error: "Internal Server Error" });
     }
   }
+
+async agentjoinagentId  (req: Request, res: Response): Promise<void> {
+  try {
+
+    const allagents = await prisma.crm_loan_hdr.findMany({
+      include: {
+         crm_agents: {
+          select: {
+            agentid: true
+          }
+         }
+      },
+      
+    });
+    console.log("join success", allagents);
+    res.status(200).json(allagents);
+  } catch (err) {
+    console.error("Error retrieving agents:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+}
  
   async filterAgents(req: Request, res: Response): Promise<void> {
     try {

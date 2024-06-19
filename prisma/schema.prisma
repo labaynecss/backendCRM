@@ -42,23 +42,24 @@ model crm_address_region {
 }
 
 model crm_agents {
-  id              Int       @default(autoincrement())
-  agentid         String    @id(map: "PK_crm_agents") @db.NVarChar(50)
-  a_lastname      String?   @db.NVarChar(50)
-  a_firstname     String?   @db.NVarChar(50)
-  a_middlename    String?   @db.NVarChar(50)
-  a_suffix        String?   @db.NVarChar(50)
-  a_birthday      String?   @db.NVarChar(50)
-  a_gender        String?   @db.NVarChar(50)
-  a_mobile        String?   @db.NVarChar(50)
-  a_telephone     String?   @db.NVarChar(50)
-  a_addresscode   String?   @db.NVarChar(50)
-  a_address       String?   @db.NVarChar(50)
+  id              Int            @default(autoincrement())
+  agentid         String         @id(map: "PK_crm_agents") @db.NVarChar(50)
+  a_lastname      String?        @db.NVarChar(50)
+  a_firstname     String?        @db.NVarChar(50)
+  a_middlename    String?        @db.NVarChar(50)
+  a_suffix        String?        @db.NVarChar(50)
+  a_birthday      String?        @db.NVarChar(50)
+  a_gender        String?        @db.NVarChar(50)
+  a_mobile        String?        @db.NVarChar(50)
+  a_telephone     String?        @db.NVarChar(50)
+  a_addresscode   String?        @db.NVarChar(50)
+  a_address       String?        @db.NVarChar(50)
   a_status        Boolean?
-  createdby       String?   @db.NVarChar(50)
-  createddatetime DateTime? @db.DateTime
-  updatedby       String?   @db.NVarChar(50)
-  updateddatetime DateTime? @db.DateTime
+  createdby       String?        @db.NVarChar(50)
+  createddatetime DateTime?      @db.DateTime
+  updatedby       String?        @db.NVarChar(50)
+  updateddatetime DateTime?      @db.DateTime
+  crm_loan_hdr    crm_loan_hdr[]
 }
 
 model crm_allottee {
@@ -278,6 +279,7 @@ model crm_loan_hdr {
   crm_assets             crm_assets[]
   crm_bankAccount        crm_bankAccount[]
   crm_characterReference crm_characterReference[]
+  crm_agents             crm_agents?              @relation(fields: [agentid], references: [agentid], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_agents")
   crm_client             crm_client               @relation(fields: [profile], references: [profile], onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_client1")
   crm_products           crm_products?            @relation(fields: [productid], references: [productid], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_products")
   crm_monthlycashflow    crm_monthlycashflow[]
