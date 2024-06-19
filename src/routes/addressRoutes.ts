@@ -7,8 +7,7 @@ import AddressController from "../controllers/addressController";
 
 const router = Router();
 
-
-router.get("/address", AddressController.getAddressList)
+router.get("/address", AddressController.Address)
 router.post("/address", AddressController.createAddress)
 
 

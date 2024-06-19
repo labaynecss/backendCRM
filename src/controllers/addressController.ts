@@ -4,12 +4,26 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 class AddressController {
-  async addressList(req: Request, res: Response): Promise<void> {
+  async Address(req: Request, res: Response): Promise<void> {
     try {
       const address = await prisma.crm_address_citymunicipality.findMany({
-       select:{
-        citymunDesc: true,
-       }
+       
+        select: {
+          citymunDesc: true,
+          crm_address_province: {
+            select: {
+              provDesc: true,
+              crm_address_region: {
+                select: {
+                  regdescription: true,
+                },
+              },
+            },
+          },
+        },
+        orderBy:{
+          citymunDesc: 'asc'
+        }
       });
       console.log("Fetch success", address);
       res.status(200).json(address);
@@ -18,13 +32,14 @@ class AddressController {
       res.status(500).json({ error: "Internal Server Error" });
     }
   }
-  async getAddressList(req: Request, res: Response): Promise<void> {
+  async ProviceAddress(req: Request, res: Response): Promise<void> {
     try {
       const addresslist = await prisma.crm_address_province.findMany({
         include: {
           crm_address_region: {
             select: {
               regdescription: true,
+              
             },
           }
         },

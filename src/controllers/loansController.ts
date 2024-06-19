@@ -16,7 +16,6 @@ class LoansController {
       res.status(500).json({ error: "Internal Server Error" });
     }
   }
-
   async updateProduct(req: Request, res: Response): Promise<void> {
     try {
       const { productid } = req.body;  

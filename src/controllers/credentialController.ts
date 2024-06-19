@@ -5,7 +5,7 @@ import {
   generateToken,
 } from "../utils/generateRefreshtoken";
 import { getExpirationTime } from "../utils/calcTime";
-import jwt from "jsonwebtoken";
+
 import * as bcrypt from "bcrypt";
 
 class UserController {

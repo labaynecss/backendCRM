@@ -542,14 +542,6 @@ class ClientController {
           modeofpayment: modeofpayment,
           amountapplied:amountapplied ,
           agentid: agentid,
-          crm_products: {
-            update: {
-              where: { id: productid },
-              data: {
-                productid: productid,
-              },
-            },
-          },
           crm_soiBusiness: {
             updateMany: {
               where: { profile: profile },
