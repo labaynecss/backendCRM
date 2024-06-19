@@ -38,26 +38,21 @@ async agentjoinagentId  (req: Request, res: Response): Promise<void> {
  
   async filterAgents(req: Request, res: Response): Promise<void> {
     try {
-      const { lastname, firstname, middlename } = req.body;
       const agents = await prisma.crm_agents.findMany({
-        where: {
-          a_lastname: {
-            contains: lastname,
-          },
-          a_firstname: {
-            contains: firstname,
-          },
-          a_middlename: {
-            contains: middlename,
-          },
-        },
+       
         select: {
-          a_address: true,
           a_firstname: true,
           a_middlename: true,
+          a_lastname: true
         },
       });
-      res.status(200).json(agents);
+      const formattedAgents = agents.map(agent => {
+        return {
+          name: `${agent.a_lastname}, ${agent.a_firstname} ${agent.a_middlename}`
+        };
+      });
+      
+      res.status(200).json(formattedAgents);
       console.log("Fetch success", agents);
     } catch (err) {
       console.log(err);
