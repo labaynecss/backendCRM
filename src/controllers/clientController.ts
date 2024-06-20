@@ -46,24 +46,39 @@ class ClientController {
           crm_spouse: true,
           crm_address_citymunicipality: true,
           crm_loan_hdr: {
-         select:{
-          crm_products: {
-            select: {
-              prod_description: true
+            include: {
+              crm_products: {
+                select: {
+                  prod_description: true
+                }
+              }
             }
           }
-         }
-          }
-        },
+        }
       });
-      console.log("join success", allclients);
-      res.status(200).json(allclients);
+  
+   
+      const Clients = allclients.flatMap(client => 
+        client.crm_loan_hdr.map(loan => ({
+          client: client,
+          allottee: client?.crm_allottee,
+          crm_clientEducation: client?.crm_clientEducation,
+          client_id_details: client?.crm_clientId,
+          spouse: client?.crm_spouse,
+          address: client?.crm_address_citymunicipality,
+          ProductID: loan.productid,
+          ProductLoan: loan.crm_products?.prod_description
+        }))
+      );
+  
+      console.log("join success", Clients);
+      res.status(200).json(Clients);
     } catch (err) {
       console.error("Error retrieving loans:", err);
       res.status(500).json({ error: "Internal Server Error" });
     }
   }
-
+  
   async getTelemarketer(req: Request, res: Response): Promise<void> {
     try {
       const tele = await prisma.crm_users.findMany({
@@ -270,8 +285,14 @@ class ClientController {
               socialmedia_account,
               socialmedia_type,
             }
-           }
+           },
+          //  crm_employmentHistory:{
+          //   create: {
+          //    company_agencyid
+          //   }
+          //  }
           },
+        
         }),
         prisma.crm_loan_hdr.create({
           data: {

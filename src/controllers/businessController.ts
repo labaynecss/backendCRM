@@ -6,7 +6,12 @@ const prisma = new PrismaClient();
 class BusinessController {
   async businessTypes(req: Request, res: Response): Promise<void> {
     try {
-      const businessType = await prisma.crm_soiBusiness.findMany();
+      const businessType = await prisma.crm_businessType.findMany({
+        select:{
+          busines_type: true,
+          
+        }
+      });
       console.log("Fetch success", businessType);
       res.status(200).json(businessType);
     } catch (err) {
@@ -14,5 +19,8 @@ class BusinessController {
       res.status(500).json({ error: "Internal Server Error" });
     }
   }
+
+
+
 }
 export default new BusinessController();

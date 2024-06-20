@@ -13,14 +13,17 @@ datasource db {
 }
 
 model crm_address_citymunicipality {
-  id                   Int                  @default(autoincrement())
-  psgcCode             String               @db.NVarChar(50)
-  citymunDesc          String               @db.NVarChar(50)
-  regCode              String               @db.NVarChar(50)
-  provCode             String               @db.NVarChar(50)
-  citymuncode          String               @id(map: "PK_crm_address_citymunicipality") @db.NVarChar(50)
-  crm_address_province crm_address_province @relation(fields: [provCode], references: [provCode], onUpdate: NoAction, map: "FK_crm_address_citymunicipality_crm_address_citymunicipality")
-  crm_client           crm_client[]
+  id                                 Int                           @default(autoincrement())
+  psgcCode                           String                        @db.NVarChar(50)
+  citymunDesc                        String                        @db.NVarChar(50)
+  regCode                            String                        @db.NVarChar(50)
+  provCode                           String                        @db.NVarChar(50)
+  citymuncode                        String                        @id(map: "PK_crm_address_citymunicipality") @db.NVarChar(50)
+  crm_address_province               crm_address_province          @relation(fields: [provCode], references: [provCode], onUpdate: NoAction, map: "FK_crm_address_citymunicipality_crm_address_citymunicipality")
+  crm_address_citymunicipality       crm_address_citymunicipality  @relation("crm_address_citymunicipalityTocrm_address_citymunicipality", fields: [citymuncode], references: [citymuncode], onUpdate: NoAction, map: "FK_crm_address_citymunicipality_crm_address_citymunicipality1")
+  other_crm_address_citymunicipality crm_address_citymunicipality? @relation("crm_address_citymunicipalityTocrm_address_citymunicipality")
+  crm_client                         crm_client[]
+  crm_collectionArea                 crm_collectionArea?
 }
 
 model crm_address_province {
@@ -195,6 +198,15 @@ model crm_branch {
   updateddatetime    DateTime? @db.DateTime
 }
 
+model crm_businessType {
+  id              Int               @default(autoincrement())
+  business_id     String            @id(map: "PK_crm_businessType") @db.NVarChar(50)
+  refe_code       String?           @db.VarChar(50)
+  busines_type    String?           @db.VarChar(50)
+  business_status Boolean?
+  crm_soiBusiness crm_soiBusiness[]
+}
+
 model crm_characterReference {
   id                   Int          @id(map: "PK_crm_characterReference") @default(autoincrement())
   loanprofile          String       @db.NVarChar(50)
@@ -292,6 +304,23 @@ model crm_clientSocials {
   crm_client          crm_client? @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_clientSocials_crm_client")
 }
 
+model crm_collectionArea {
+  id                           Int                          @default(autoincrement())
+  area_id                      String                       @id(map: "PK_crm_collectionArea") @db.NVarChar(50)
+  collection_id                String?                      @db.NVarChar(50)
+  crm_address_citymunicipality crm_address_citymunicipality @relation(fields: [area_id], references: [citymuncode], onUpdate: NoAction, map: "FK_crm_collectionArea_crm_address_citymunicipality")
+  crm_collectionCompany        crm_collectionCompany?       @relation(fields: [collection_id], references: [collection_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_collectionArea_crm_collectionCompany")
+}
+
+model crm_collectionCompany {
+  id                          Int                    @default(autoincrement())
+  collection_id               String                 @id(map: "PK_crm_collectionCompany") @db.NVarChar(50)
+  collection_company          String                 @db.NVarChar(50)
+  crm_collectionArea          crm_collectionArea[]
+  crm_collectionCompany       crm_collectionCompany  @relation("crm_collectionCompanyTocrm_collectionCompany", fields: [collection_id], references: [collection_id], onUpdate: NoAction, map: "FK_crm_collectionCompany_crm_collectionCompany")
+  other_crm_collectionCompany crm_collectionCompany? @relation("crm_collectionCompanyTocrm_collectionCompany")
+}
+
 model crm_course {
   id                 Int     @id(map: "PK_crm_course") @default(autoincrement())
   course_id          String? @db.NVarChar(50)
@@ -323,6 +352,7 @@ model crm_loan_hdr {
   amountapplied          Decimal?                 @db.Decimal(18, 0)
   productid              String?                  @db.NVarChar(50)
   agentid                String?                  @db.NVarChar(50)
+  areaid                 String?                  @db.NVarChar(50)
   createdby              String?                  @db.NVarChar(50)
   createddatetime        DateTime?                @db.DateTime
   updatedby              String?                  @db.NVarChar(50)
@@ -383,16 +413,17 @@ model crm_soi {
 }
 
 model crm_soiBusiness {
-  id               Int           @id(map: "PK_crm_soiBusiness") @default(autoincrement())
-  profile          String?       @db.NVarChar(50)
-  loanprofile      String?       @db.NVarChar(50)
-  business_name    String?       @db.NVarChar(50)
-  business_nature  String?       @db.NVarChar(50)
-  business_address String?       @db.NVarChar(50)
-  business_contact String?       @db.NVarChar(50)
-  net_income       String?       @db.NVarChar(50)
-  crm_client       crm_client?   @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_soiBusiness_crm_client")
-  crm_loan_hdr     crm_loan_hdr? @relation(fields: [loanprofile], references: [loanprofile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_soiBusiness_crm_loan_hdr")
+  id               Int               @id(map: "PK_crm_soiBusiness") @default(autoincrement())
+  profile          String?           @db.NVarChar(50)
+  loanprofile      String?           @db.NVarChar(50)
+  business_name    String?           @db.NVarChar(50)
+  business_nature  String?           @db.NVarChar(50)
+  business_address String?           @db.NVarChar(50)
+  business_contact String?           @db.NVarChar(50)
+  net_income       String?           @db.NVarChar(50)
+  crm_businessType crm_businessType? @relation(fields: [business_nature], references: [business_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_soiBusiness_crm_businessType")
+  crm_client       crm_client?       @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_soiBusiness_crm_client")
+  crm_loan_hdr     crm_loan_hdr?     @relation(fields: [loanprofile], references: [loanprofile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_soiBusiness_crm_loan_hdr")
 }
 
 model crm_soiEmployment {
