@@ -41,6 +41,14 @@ model crm_address_region {
   crm_address_province crm_address_province[]
 }
 
+model crm_agency {
+  id                    Int                     @default(autoincrement())
+  agencyid              String                  @id(map: "PK_crm_agency") @db.NVarChar(50)
+  agencycode            String?                 @db.NVarChar(50)
+  agency_name           String?                 @db.NVarChar(50)
+  crm_employmentHistory crm_employmentHistory[]
+}
+
 model crm_agents {
   id              Int            @default(autoincrement())
   agentid         String         @id(map: "PK_crm_agents") @db.NVarChar(50)
@@ -162,6 +170,19 @@ model crm_bankAccount {
   crm_loan_hdr         crm_loan_hdr? @relation(fields: [loan_profile], references: [loanprofile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_bankaccount_crm_loan_hdr")
 }
 
+model crm_barangayChecking {
+  id                  Int           @id(map: "PK_crm_barangayChecking")
+  profile             String?       @db.NVarChar(50)
+  loanprofile         String?       @db.NVarChar(50)
+  informant           String?       @db.NVarChar(50)
+  informant_contactno String?       @db.NVarChar(50)
+  brgy_position       String?       @db.NVarChar(50)
+  remarks             String?       @db.NVarChar(50)
+  date                DateTime?     @db.DateTime
+  crm_client          crm_client?   @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_barangayChecking_crm_client")
+  crm_loan_hdr        crm_loan_hdr? @relation(fields: [loanprofile], references: [loanprofile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_barangayChecking_crm_loan_hdr")
+}
+
 model crm_branch {
   id                 Int       @default(autoincrement())
   branch_code        String    @id(map: "PK_crm_branch") @db.NVarChar(50)
@@ -214,11 +235,12 @@ model crm_client {
   updateddatetime              DateTime?                     @db.DateTime
   crm_allottee                 crm_allottee[]
   crm_assets                   crm_assets[]
-  crm_barangayChecking         crm_barangayChecking[]        @ignore
+  crm_barangayChecking         crm_barangayChecking[]
   crm_address_citymunicipality crm_address_citymunicipality? @relation(fields: [area], references: [citymuncode], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_client_crm_address_citymunicipality")
   crm_clientEducation          crm_clientEducation[]
   crm_clientId                 crm_clientId[]
   crm_clientSocials            crm_clientSocials[]
+  crm_employmentHistory        crm_employmentHistory[]
   crm_loan_hdr                 crm_loan_hdr[]
   crm_soi                      crm_soi[]
   crm_soiBusiness              crm_soiBusiness[]
@@ -262,6 +284,35 @@ model crm_clientId {
   crm_client      crm_client? @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_clientId_crm_client")
 }
 
+model crm_clientSocials {
+  id                  Int         @id(map: "PK_crm_clientSocials") @default(autoincrement())
+  profile             String?     @db.NVarChar(50)
+  socialmedia_type    String?     @db.NVarChar(50)
+  socialmedia_account String?     @db.NVarChar(50)
+  crm_client          crm_client? @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_clientSocials_crm_client")
+}
+
+model crm_course {
+  id                 Int     @id(map: "PK_crm_course") @default(autoincrement())
+  course_id          String? @db.NVarChar(50)
+  course_description String? @db.NVarChar(100)
+}
+
+model crm_employmentHistory {
+  id                  Int         @id(map: "PK_crm_employmentHistory") @default(autoincrement())
+  profile             String?     @db.NVarChar(50)
+  company_agencyid    String?     @db.NVarChar(50)
+  position            String?     @db.NVarChar(50)
+  inclusive_datestart DateTime?   @db.Date
+  inclusive_dateend   DateTime?   @db.Date
+  createdby           String?     @db.NVarChar(50)
+  createddatetime     DateTime?   @db.DateTime
+  updatedby           String?     @db.NVarChar(50)
+  updateddatetime     DateTime?   @db.DateTime
+  crm_agency          crm_agency? @relation(fields: [company_agencyid], references: [agencyid], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_employmentHistory_crm_agency")
+  crm_client          crm_client? @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_employmentHistory_crm_client")
+}
+
 model crm_loan_hdr {
   id                     Int                      @default(autoincrement())
   loanprofile            String                   @id(map: "PK_crm_loan_hdr") @db.NVarChar(50)
@@ -279,7 +330,7 @@ model crm_loan_hdr {
   crm_allottee           crm_allottee[]
   crm_assets             crm_assets[]
   crm_bankAccount        crm_bankAccount[]
-  crm_barangayChecking   crm_barangayChecking[]   @ignore
+  crm_barangayChecking   crm_barangayChecking[]
   crm_characterReference crm_characterReference[]
   crm_agents             crm_agents?              @relation(fields: [agentid], references: [agentid], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_agents")
   crm_client             crm_client               @relation(fields: [profile], references: [profile], onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_client1")
@@ -311,6 +362,16 @@ model crm_products {
   crm_loan_hdr     crm_loan_hdr[]
 }
 
+model crm_schools {
+  id              Int       @default(autoincrement())
+  school_id       String    @id(map: "PK_crm_schools") @db.NVarChar(50)
+  school_name     String?   @db.NVarChar(250)
+  createdby       String?   @db.NVarChar(50)
+  createddatetime DateTime? @db.DateTime
+  updatedby       String?   @db.NVarChar(50)
+  updateddatetime DateTime? @db.DateTime
+}
+
 model crm_soi {
   id            Int           @id(map: "PK_crm_soi") @default(autoincrement())
   profile       String?       @db.NVarChar(50)
@@ -332,6 +393,19 @@ model crm_soiBusiness {
   net_income       String?       @db.NVarChar(50)
   crm_client       crm_client?   @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_soiBusiness_crm_client")
   crm_loan_hdr     crm_loan_hdr? @relation(fields: [loanprofile], references: [loanprofile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_soiBusiness_crm_loan_hdr")
+}
+
+model crm_soiEmployment {
+  id               Int           @id(map: "PK_crm_soiOccupation") @default(autoincrement())
+  profile          String?       @db.NVarChar(50)
+  loanprofile      String?       @db.NVarChar(50)
+  employer_company String?       @db.NVarChar(50)
+  employer_nature  String?       @db.NVarChar(50)
+  employer_address String?       @db.NVarChar(50)
+  employer_contact String?       @db.NVarChar(50)
+  net_salaryincome Decimal?      @db.Decimal(18, 0)
+  crm_client       crm_client?   @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_soiOccupation_crm_client")
+  crm_loan_hdr     crm_loan_hdr? @relation(fields: [loanprofile], references: [loanprofile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_soiOccupation_crm_loan_hdr")
 }
 
 model crm_soiOfw {
@@ -373,6 +447,19 @@ model crm_spouseEducation {
   crm_spouse    crm_spouse @relation(fields: [spouseprofile], references: [spouseprofile], onUpdate: NoAction, map: "FK_crm_spouseEducation_crm_spouse")
 }
 
+model crm_systemdefinition {
+  id              Int       @id(map: "PK_crm_systemdefinition") @default(autoincrement())
+  sys_id          String?   @db.NVarChar(50)
+  sys_listindex   String?   @db.NVarChar(50)
+  sys_description String?   @db.NVarChar(50)
+  sys_value       String?   @db.NVarChar(50)
+  sys_status      String?   @db.NVarChar(50)
+  createdby       String?   @db.NVarChar(50)
+  createddatetime DateTime? @db.DateTime
+  updatedby       String?   @db.NVarChar(50)
+  updateddatetime DateTime? @db.DateTime
+}
+
 model crm_users {
   id           Int     @default(autoincrement())
   emp_id       String  @id(map: "PK_crm_users") @db.NVarChar(50)
@@ -389,54 +476,4 @@ model crm_users {
   LEVEL        String? @map("_LEVEL") @db.NVarChar(50)
   SECONDLEVEL  String? @map("_SECONDLEVEL") @db.NVarChar(50)
   BRANCH       String? @db.NVarChar(250)
-}
-
-model crm_soiEmployment {
-  id               Int           @id(map: "PK_crm_soiOccupation") @default(autoincrement())
-  profile          String?       @db.NVarChar(50)
-  loanprofile      String?       @db.NVarChar(50)
-  employer_company String?       @db.NVarChar(50)
-  employer_nature  String?       @db.NVarChar(50)
-  employer_address String?       @db.NVarChar(50)
-  employer_contact String?       @db.NVarChar(50)
-  net_salaryincome Decimal?      @db.Decimal(18, 0)
-  crm_client       crm_client?   @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_soiOccupation_crm_client")
-  crm_loan_hdr     crm_loan_hdr? @relation(fields: [loanprofile], references: [loanprofile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_soiOccupation_crm_loan_hdr")
-}
-
-model crm_clientSocials {
-  id                  Int         @id(map: "PK_crm_clientSocials") @default(autoincrement())
-  profile             String?     @db.NVarChar(50)
-  socialmedia_type    String?     @db.NVarChar(50)
-  socialmedia_account String?     @db.NVarChar(50)
-  crm_client          crm_client? @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_clientSocials_crm_client")
-}
-
-model crm_systemdefinition {
-  id              Int       @id(map: "PK_crm_systemdefinition") @default(autoincrement())
-  sys_id          String?   @db.NVarChar(50)
-  sys_listindex   String?   @db.NVarChar(50)
-  sys_description String?   @db.NVarChar(50)
-  sys_value       String?   @db.NVarChar(50)
-  sys_status      String?   @db.NVarChar(50)
-  createdby       String?   @db.NVarChar(50)
-  createddatetime DateTime? @db.DateTime
-  updatedby       String?   @db.NVarChar(50)
-  updateddatetime DateTime? @db.DateTime
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-model crm_barangayChecking {
-  id                  Int
-  profile             String?       @db.NVarChar(50)
-  loanprofile         String?       @db.NVarChar(50)
-  informant           String?       @db.NVarChar(50)
-  informant_contactno String?       @db.NVarChar(50)
-  brgy_position       String?       @db.NVarChar(50)
-  remarks             String?       @db.NVarChar(50)
-  date                DateTime?     @db.DateTime
-  crm_client          crm_client?   @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_barangayChecking_crm_client")
-  crm_loan_hdr        crm_loan_hdr? @relation(fields: [loanprofile], references: [loanprofile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_barangayChecking_crm_loan_hdr")
-
-  @@ignore
 }

@@ -45,8 +45,15 @@ class ClientController {
           crm_clientId: true,
           crm_spouse: true,
           crm_address_citymunicipality: true,
-          crm_loan_hdr: true
-        
+          crm_loan_hdr: {
+         select:{
+          crm_products: {
+            select: {
+              prod_description: true
+            }
+          }
+         }
+          }
         },
       });
       console.log("join success", allclients);
@@ -61,8 +68,8 @@ class ClientController {
     try {
       const tele = await prisma.crm_users.findMany({
         where: {
-          SECONDLEVEL: "",
-          LEVEL: "",
+          SECONDLEVEL: "11",
+          LEVEL: "1",
         },
       });
       console.log("Fetch success", tele);

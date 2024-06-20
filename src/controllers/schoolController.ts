@@ -6,8 +6,11 @@ const prisma = new PrismaClient();
 class SchoolController {
   async schoolList(req: Request, res: Response): Promise<void> {
     try {
-      const lists = await prisma.crm_clientEducation.findMany({
-        take: 500,
+      const lists = await prisma.crm_schools.findMany({
+        select: {
+          school_id: true,
+          school_name: true
+        }
       });
       console.log("Fetch success", lists);
       res.status(200).json(lists);
@@ -18,13 +21,16 @@ class SchoolController {
   }
   async courselist(req: Request, res: Response): Promise<void> {
     try {
-      const courses = await prisma.crm_clientEducation.findMany({
-        take: 500,
+      const courses = await prisma.crm_course.findMany({
+       select:{
+course_id: true,
+course_description: true
+       }
       });
       console.log("Fetch success", courses);
       res.status(200).json(courses);
     } catch (err) {
-      console.error("Error retrieving schoollist:", err);
+      console.error("Error retrieving course:", err);
       res.status(500).json({ error: "Internal Server Error" });
     }
   }
