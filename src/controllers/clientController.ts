@@ -58,21 +58,21 @@ class ClientController {
       });
   
    
-      const Clients = allclients.flatMap(client => 
-        client.crm_loan_hdr.map(loan => ({
-          client: client,
-          allottee: client?.crm_allottee,
-          crm_clientEducation: client?.crm_clientEducation,
-          client_id_details: client?.crm_clientId,
-          spouse: client?.crm_spouse,
-          address: client?.crm_address_citymunicipality,
-          ProductID: loan.productid,
-          ProductLoan: loan.crm_products?.prod_description
-        }))
-      );
+      // const Clients = allclients.flatMap(client => 
+      //   client.crm_loan_hdr.map(loan => ({
+      //     client: client,
+      //     allottee: client?.crm_allottee,
+      //     crm_clientEducation: client?.crm_clientEducation,
+      //     client_id_details: client?.crm_clientId,
+      //     spouse: client?.crm_spouse,
+      //     address: client?.crm_address_citymunicipality,
+      //     ProductID: loan.productid,
+      //     ProductLoan: loan.crm_products?.prod_description
+      //   }))
+      // );
   
-      console.log("join success", Clients);
-      res.status(200).json(Clients);
+      console.log("join success", allclients);
+      res.status(200).json(allclients);
     } catch (err) {
       console.error("Error retrieving loans:", err);
       res.status(500).json({ error: "Internal Server Error" });
