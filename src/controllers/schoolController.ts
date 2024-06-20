@@ -4,13 +4,20 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 class SchoolController {
+
   async schoolList(req: Request, res: Response): Promise<void> {
     try {
+      const {school_name } = req.body
       const lists = await prisma.crm_schools.findMany({
-        select: {
-          school_id: true,
-          school_name: true
+      where:{
+        school_name: {
+          contains: school_name
         }
+      },
+      select: {
+        school_name: true
+      }
+   
       });
       console.log("Fetch success", lists);
       res.status(200).json(lists);
@@ -21,10 +28,16 @@ class SchoolController {
   }
   async courselist(req: Request, res: Response): Promise<void> {
     try {
+      // const {course_description} = req.body
       const courses = await prisma.crm_course.findMany({
+        // where:{
+        //   course_description: {
+        //     contains: course_description
+        //   }
+        // },
        select:{
-course_id: true,
-course_description: true
+          course_id: true,
+          course_description: true
        }
       });
       console.log("Fetch success", courses);
