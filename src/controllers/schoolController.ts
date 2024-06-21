@@ -7,13 +7,13 @@ class SchoolController {
 
   async schoolList(req: Request, res: Response): Promise<void> {
     try {
-      const {school_name } = req.body
+      // const {school_name } = req.body
       const lists = await prisma.crm_schools.findMany({
-      where:{
-        school_name: {
-          contains: school_name
-        }
-      },
+      // where:{
+      //   school_name: {
+      //     contains: school_name
+      //   }
+      // },
       select: {
         school_name: true
       }
