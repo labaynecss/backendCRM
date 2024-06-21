@@ -187,15 +187,16 @@ model crm_barangayChecking {
 }
 
 model crm_branch {
-  id                 Int       @default(autoincrement())
-  branch_code        String    @id(map: "PK_crm_branch") @db.NVarChar(50)
-  branch_description String?   @db.NVarChar(50)
-  areaid             String?   @db.NVarChar(50)
+  id                 Int            @default(autoincrement())
+  branch_code        String         @id(map: "PK_crm_branch") @db.NVarChar(50)
+  branch_description String?        @db.NVarChar(50)
+  areaid             String?        @db.NVarChar(50)
   branch_status      Boolean?
-  createdBy          String?   @db.NVarChar(50)
-  createddatetime    DateTime? @db.DateTime
-  updatedBy          String?   @db.NVarChar(50)
-  updateddatetime    DateTime? @db.DateTime
+  createdBy          String?        @db.NVarChar(50)
+  createddatetime    DateTime?      @db.DateTime
+  updatedBy          String?        @db.NVarChar(50)
+  updateddatetime    DateTime?      @db.DateTime
+  crm_loan_hdr       crm_loan_hdr[]
 }
 
 model crm_businessType {
@@ -364,6 +365,7 @@ model crm_loan_hdr {
   terms                  String?                  @db.NVarChar(50)
   modeofpayment          String?                  @db.NVarChar(50)
   amountapplied          Decimal?                 @db.Decimal(18, 0)
+  branchid               String?                  @db.NVarChar(50)
   productid              String?                  @db.NVarChar(50)
   agentid                String?                  @db.NVarChar(50)
   areaid                 String?                  @db.NVarChar(50)
@@ -378,6 +380,7 @@ model crm_loan_hdr {
   crm_characterReference crm_characterReference[]
   crm_documentUploaded   crm_documentUploaded[]
   crm_agents             crm_agents?              @relation(fields: [agentid], references: [agentid], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_agents")
+  crm_branch             crm_branch?              @relation(fields: [branchid], references: [branch_code], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_branch")
   crm_client             crm_client               @relation(fields: [profile], references: [profile], onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_client1")
   crm_products           crm_products?            @relation(fields: [productid], references: [productid], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_products")
   crm_monthlycashflow    crm_monthlycashflow[]

@@ -81,7 +81,8 @@ class LoansController {
         business_nature,
         business_address,
         business_contact,
-        net_income
+        net_income,
+        branchid
       } = req.body;
 
       let existingClient = await prisma.crm_client.findUnique({
@@ -177,6 +178,7 @@ class LoansController {
           modeofpayment,
           amountapplied,
           agentid,
+          branchid,
           crm_soiBusiness: {
             updateMany: {
               where: { profile: profile },

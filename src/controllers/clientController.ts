@@ -206,7 +206,8 @@ class ClientController {
         id_expiration,
         socialmedia_account,
         socialmedia_type,
-        area
+        area,
+        branchid
 
       } = req.body;
   
@@ -300,6 +301,7 @@ class ClientController {
             amountapplied,
             productid,
             agentid,
+            branchid,
             createdby,
             createddatetime: new Date(),
             crm_assets: {
