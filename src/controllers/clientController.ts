@@ -57,19 +57,15 @@ class ClientController {
         }
       });
   
-   
-      // const Clients = allclients.flatMap(client => 
-      //   client.crm_loan_hdr.map(loan => ({
-      //     client: client,
-      //     allottee: client?.crm_allottee,
-      //     crm_clientEducation: client?.crm_clientEducation,
-      //     client_id_details: client?.crm_clientId,
-      //     spouse: client?.crm_spouse,
-      //     address: client?.crm_address_citymunicipality,
-      //     ProductID: loan.productid,
-      //     ProductLoan: loan.crm_products?.prod_description
+      // // Transforming nested data into a flattened structure
+      // const flattenedClients = allclients.map(client => ({
+      //   ...client,
+      //   crm_loan_hdr: client.crm_loan_hdr.map(loan => ({
+      //     loanId: loan.id,
+      //     productId: loan.productid,
+      //     productDescription: loan.crm_products?.prod_description
       //   }))
-      // );
+      // }));
   
       console.log("join success", allclients);
       res.status(200).json(allclients);

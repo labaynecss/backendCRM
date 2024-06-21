@@ -308,7 +308,7 @@ model crm_collectionArea {
   id                           Int                          @default(autoincrement())
   area_id                      String                       @id(map: "PK_crm_collectionArea") @db.NVarChar(50)
   collection_id                String?                      @db.NVarChar(50)
-  crm_address_citymunicipality crm_address_citymunicipality @relation(fields: [area_id], references: [citymuncode], onUpdate: NoAction, map: "FK_crm_collectionArea_crm_address_citymunicipality")
+  crm_address_citymunicipality crm_address_citymunicipality @relation(fields: [area_id], references: [citymuncode], onUpdate: NoAction, map: "FK_crm_collectionArea_crm_address_citymunicipality1")
   crm_collectionCompany        crm_collectionCompany?       @relation(fields: [collection_id], references: [collection_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_collectionArea_crm_collectionCompany")
 }
 
@@ -325,6 +325,20 @@ model crm_course {
   id                 Int     @id(map: "PK_crm_course") @default(autoincrement())
   course_id          String? @db.NVarChar(50)
   course_description String? @db.NVarChar(100)
+}
+
+model crm_documentUploaded {
+  id                  Int           @id(map: "PK_crm_documentUploaded") @default(autoincrement())
+  loanprofile         String?       @db.NVarChar(50)
+  document_type       String?       @db.NVarChar(50)
+  document_path       String?       @db.NVarChar(50)
+  document_verifiedby String?       @db.NVarChar(50)
+  document_verified   String?       @db.NVarChar(50)
+  createdby           String?       @db.NVarChar(50)
+  createddatetime     DateTime?     @db.DateTime
+  updatedby           String?       @db.NVarChar(50)
+  updateddatetime     DateTime?     @db.DateTime
+  crm_loan_hdr        crm_loan_hdr? @relation(fields: [loanprofile], references: [loanprofile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_documentUploaded_crm_loan_hdr")
 }
 
 model crm_employmentHistory {
@@ -362,6 +376,7 @@ model crm_loan_hdr {
   crm_bankAccount        crm_bankAccount[]
   crm_barangayChecking   crm_barangayChecking[]
   crm_characterReference crm_characterReference[]
+  crm_documentUploaded   crm_documentUploaded[]
   crm_agents             crm_agents?              @relation(fields: [agentid], references: [agentid], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_agents")
   crm_client             crm_client               @relation(fields: [profile], references: [profile], onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_client1")
   crm_products           crm_products?            @relation(fields: [productid], references: [productid], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_products")

@@ -39,8 +39,8 @@ async agentjoinagentId  (req: Request, res: Response): Promise<void> {
   async filterAgents(req: Request, res: Response): Promise<void> {
     try {
       const agents = await prisma.crm_agents.findMany({
-       
         select: {
+          agentid: true,
           a_firstname: true,
           a_middlename: true,
           a_lastname: true
