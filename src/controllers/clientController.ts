@@ -226,7 +226,8 @@ class ClientController {
         sssno,
         tinno,
         monthlyincome,
-        w_status
+        w_status,
+        areaid
 
 
       } = req.body;
@@ -350,6 +351,7 @@ class ClientController {
             modeofpayment,
             amountapplied,
             productid,
+            areaid,
             agentid,
             branchid,
             createdby,
