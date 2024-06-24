@@ -127,7 +127,6 @@ class ClientController {
   async createClient(req: Request, res: Response): Promise<void> {
     try {
       const {
-        address,
         lastname,
         firstname,
         middlename,
@@ -255,7 +254,6 @@ class ClientController {
             perm_stay,
             prov_address,
             prov_stay,
-            address,
             civilstatus,
             religion,
             email,

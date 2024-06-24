@@ -243,7 +243,6 @@ model crm_client {
   prov_stay                    String?                       @db.NVarChar(50)
   prov_address                 String?                       @db.NVarChar(100)
   perm_stay                    String?                       @db.NVarChar(50)
-  address                      String?                       @db.NVarChar(50)
   area                         String?                       @db.NVarChar(50)
   civilstatus                  String?                       @db.NVarChar(50)
   religion                     String?                       @db.NVarChar(50)
