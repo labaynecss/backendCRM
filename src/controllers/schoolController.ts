@@ -38,7 +38,8 @@ class SchoolController {
        select:{
           course_id: true,
           course_description: true
-       }
+       },
+       take: 500
       });
       console.log("Fetch success", courses);
       res.status(200).json(courses);

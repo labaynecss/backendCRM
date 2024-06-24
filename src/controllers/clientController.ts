@@ -180,7 +180,6 @@ class ClientController {
         s_telephone,
         s_educLevel,
         s_educCourse,
-        bank_name,
         s_educSchool,
         b_telno,
         accountname,
@@ -207,7 +206,17 @@ class ClientController {
         socialmedia_account,
         socialmedia_type,
         area,
-        branchid
+        branchid,
+        residence_status,
+        perm_address,
+        perm_stay,
+        prov_address,
+        prov_stay,
+        pres_address,
+        pres_stay,
+        s_age
+
+
 
       } = req.body;
   
@@ -229,6 +238,11 @@ class ClientController {
             gender,
             mobile,
             telephone,
+            residence_status,
+            perm_address,
+            perm_stay,
+            prov_address,
+            prov_stay,
             address,
             civilstatus,
             religion,
@@ -256,6 +270,7 @@ class ClientController {
                 s_address: s_address ?? '',
                 s_mobile: s_mobile ?? '',
                 s_telephone: s_telephone ?? '',
+                s_age: s_age,
                 crm_spouseEducation: {
                   create: {
                     s_educLevel: s_educLevel ?? '',
@@ -283,13 +298,8 @@ class ClientController {
               socialmedia_type,
             }
            },
-          //  crm_employmentHistory:{
-          //   create: {
-          //    company_agencyid
-          //   }
-          //  }
+     
           },
-        
         }),
         prisma.crm_loan_hdr.create({
           data: {
@@ -297,6 +307,8 @@ class ClientController {
             loanprofile,
             loantype,
             terms,
+            pres_address,
+            pres_stay,
             modeofpayment,
             amountapplied,
             productid,

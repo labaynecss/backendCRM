@@ -110,6 +110,8 @@ model crm_assetsAuto {
   loanprofile             String     @db.NVarChar(50)
   colspec_make            String?    @db.NVarChar(50)
   colspec_yearmodel       String?    @db.NVarChar(50)
+  colspec_bank            String?    @db.NVarChar(50)
+  colspec_plateno         String?    @db.NVarChar(50)
   colspec_seriesvariant   String?    @db.NVarChar(50)
   colspec_transmission    String?    @db.NVarChar(50)
   colspec_enginetype      String?    @db.NVarChar(50)
@@ -236,6 +238,11 @@ model crm_client {
   gender                       String?                       @db.NVarChar(50)
   mobile                       String?                       @db.NVarChar(50)
   telephone                    String?                       @db.NVarChar(50)
+  residence_status             String?                       @db.NVarChar(50)
+  perm_address                 String?                       @db.NVarChar(100)
+  prov_stay                    String?                       @db.NVarChar(50)
+  prov_address                 String?                       @db.NVarChar(100)
+  perm_stay                    String?                       @db.NVarChar(50)
   address                      String?                       @db.NVarChar(50)
   area                         String?                       @db.NVarChar(50)
   civilstatus                  String?                       @db.NVarChar(50)
@@ -251,6 +258,7 @@ model crm_client {
   crm_barangayChecking         crm_barangayChecking[]
   crm_address_citymunicipality crm_address_citymunicipality? @relation(fields: [area], references: [citymuncode], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_client_crm_address_citymunicipality")
   crm_clientEducation          crm_clientEducation[]
+  crm_clientFamily             crm_clientFamily[]
   crm_clientId                 crm_clientId[]
   crm_clientSocials            crm_clientSocials[]
   crm_employmentHistory        crm_employmentHistory[]
@@ -272,14 +280,15 @@ model crm_clientEducation {
 }
 
 model crm_clientFamily {
-  id                  Int      @id(map: "PK_crm_clientFamily")
-  profile             String?  @db.NVarChar(50)
-  family_relationship String?  @db.NVarChar(50)
-  family_membername   String?  @db.NVarChar(50)
-  family_birthdate    Decimal? @db.Decimal(18, 0)
-  family_status       String?  @db.NVarChar(50)
-  family_remarks      String?  @db.NVarChar(50)
+  id                  Int         @id(map: "PK_crm_clientFamily")
+  profile             String?     @db.NVarChar(50)
+  family_relationship String?     @db.NVarChar(50)
+  family_membername   String?     @db.NVarChar(50)
+  family_birthdate    Decimal?    @db.Decimal(18, 0)
+  family_status       String?     @db.NVarChar(50)
+  family_remarks      String?     @db.NVarChar(50)
   family_verified     Boolean?
+  crm_client          crm_client? @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_clientFamily_crm_client")
 }
 
 model crm_clientId {
@@ -373,6 +382,8 @@ model crm_loan_hdr {
   createddatetime        DateTime?                @db.DateTime
   updatedby              String?                  @db.NVarChar(50)
   updateddatetime        DateTime?                @db.DateTime
+  pres_address           String?                  @db.NVarChar(100)
+  pres_stay              String?                  @db.NVarChar(50)
   crm_allottee           crm_allottee[]
   crm_assets             crm_assets[]
   crm_bankAccount        crm_bankAccount[]
@@ -483,6 +494,8 @@ model crm_spouse {
   s_address           String?               @db.NVarChar(50)
   s_mobile            String?               @db.NVarChar(50)
   s_telephone         String?               @db.NVarChar(50)
+  s_age               String?               @db.NVarChar(50)
+  s_provaddress       String?               @db.NVarChar(50)
   crm_client          crm_client            @relation(fields: [profile], references: [profile], onUpdate: NoAction, map: "FK_crm_spouse_crm_client")
   crm_spouseEducation crm_spouseEducation[]
 }
