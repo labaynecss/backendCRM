@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { generateAssetId, generateProfile } from "../utils/generateProfile";
-import { currentTimestamp, isoDate } from "../utils/calcTime";
-import { create } from "domain";
+import { currentTimestamp, isoDate } from "../utils/calcTime"
 import { generateloanProfileId } from "../utils/generateLoanProfile";
 
 const prisma = new PrismaClient();
@@ -214,8 +213,20 @@ class ClientController {
         prov_stay,
         pres_address,
         pres_stay,
-        s_age
-
+        s_age,
+        family_relationship,
+        family_birthdate,
+        family_membername,
+        family_status,
+        family_remarks,
+        family_verified,
+        businesstype,
+        businessname,
+        industry,
+        sssno,
+        tinno,
+        monthlyincome,
+        w_status
 
 
       } = req.body;
@@ -248,7 +259,7 @@ class ClientController {
             religion,
             email,
             area,
-            mothersname,
+            mothersname: mothersname ?? "",
             createdby: createdby ?? "",
             createddatetime: new Date(),
             crm_clientEducation: {
@@ -258,6 +269,8 @@ class ClientController {
                 course,
               },
             },
+          
+          
             crm_spouse: {
               create: {
                 spouseprofile : spouseprofile ?? '',
@@ -278,9 +291,19 @@ class ClientController {
                     s_educSchool: s_educSchool ?? '',
                   },
                 },
+                
               },
             },
-         
+            crm_clientFamily: {
+              create: {
+                family_relationship: family_relationship ?? '',
+                family_membername: family_membername ?? '',
+                family_birthdate: family_birthdate ?? new Date(),
+                family_status: family_status ?? '',
+                family_remarks: family_remarks ?? '',
+                family_verified: family_verified ?? false,
+              },
+            },
             crm_clientId: {
               create: {
                 id_type: id_type,
@@ -298,6 +321,21 @@ class ClientController {
               socialmedia_type,
             }
            },
+           crm_workInformation: {
+            create: {
+              businesstype,
+              businessname,
+              industry,
+              sssno,
+              tinno,
+              monthlyincome,
+              status: w_status,
+              verified
+
+            }
+           },
+ 
+
      
           },
         }),
@@ -381,6 +419,7 @@ class ClientController {
                 monthlycredit_value1,
                 monthlycredit_value2,
                 monthlycredit_value3,
+                
                 createdby,
                 createddatetime: new Date(),
               },

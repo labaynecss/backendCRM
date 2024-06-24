@@ -15,9 +15,10 @@ class SchoolController {
       //   }
       // },
       select: {
-        school_name: true
-      }
-   
+        school_name: true,
+        school_id: true
+      },
+   take: 500
       });
       console.log("Fetch success", lists);
       res.status(200).json(lists);
@@ -39,7 +40,7 @@ class SchoolController {
           course_id: true,
           course_description: true
        },
-       take: 500
+       
       });
       console.log("Fetch success", courses);
       res.status(200).json(courses);

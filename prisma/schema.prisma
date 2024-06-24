@@ -268,6 +268,7 @@ model crm_client {
   crm_soiEmployment            crm_soiEmployment[]
   crm_soiOfw                   crm_soiOfw[]
   crm_spouse                   crm_spouse[]
+  crm_workInformation          crm_workInformation[]
 }
 
 model crm_clientEducation {
@@ -280,11 +281,11 @@ model crm_clientEducation {
 }
 
 model crm_clientFamily {
-  id                  Int         @id(map: "PK_crm_clientFamily")
+  id                  Int         @id(map: "PK_crm_clientFamily") @default(autoincrement())
   profile             String?     @db.NVarChar(50)
   family_relationship String?     @db.NVarChar(50)
   family_membername   String?     @db.NVarChar(50)
-  family_birthdate    Decimal?    @db.Decimal(18, 0)
+  family_birthdate    DateTime?   @db.Date
   family_status       String?     @db.NVarChar(50)
   family_remarks      String?     @db.NVarChar(50)
   family_verified     Boolean?
@@ -399,6 +400,7 @@ model crm_loan_hdr {
   crm_soiBusiness        crm_soiBusiness[]
   crm_soiEmployment      crm_soiEmployment[]
   crm_soiOfw             crm_soiOfw[]
+  crm_workInformation    crm_workInformation[]
 }
 
 model crm_monthlycashflow {
@@ -489,7 +491,7 @@ model crm_spouse {
   s_firstname         String?               @db.NVarChar(50)
   s_middlename        String?               @db.NVarChar(50)
   s_suffix            String?               @db.NVarChar(50)
-  s_birthdate         DateTime?             @db.Date
+  s_birthdate         String?               @db.NVarChar(50)
   s_gender            String?               @db.NVarChar(50)
   s_address           String?               @db.NVarChar(50)
   s_mobile            String?               @db.NVarChar(50)
@@ -538,4 +540,24 @@ model crm_users {
   LEVEL        String? @map("_LEVEL") @db.NVarChar(50)
   SECONDLEVEL  String? @map("_SECONDLEVEL") @db.NVarChar(50)
   BRANCH       String? @db.NVarChar(250)
+}
+
+model crm_workInformation {
+  id              Int           @id(map: "PK_crm_workInformation") @default(autoincrement())
+  profile         String?       @db.NVarChar(50)
+  loanprofile     String?       @db.NVarChar(50)
+  businesstype    String?       @db.NVarChar(50)
+  businessname    String?       @db.NVarChar(50)
+  industry        String?       @db.NVarChar(50)
+  sssno           String?       @db.NVarChar(50)
+  tinno           String?       @db.NVarChar(50)
+  monthlyincome   String?       @db.NVarChar(50)
+  status          String?       @db.NVarChar(50)
+  verified        Boolean?
+  createdby       String?       @db.NVarChar(50)
+  createddatetime DateTime?     @db.DateTime
+  updatedby       String?       @db.NVarChar(50)
+  updateddatetime String?       @db.NVarChar(50)
+  crm_client      crm_client?   @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_workInformation_crm_client")
+  crm_loan_hdr    crm_loan_hdr? @relation(fields: [loanprofile], references: [loanprofile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_workInformation_crm_loan_hdr")
 }
