@@ -66,7 +66,7 @@ app.use("/api/crmv2", agentRoutes);
 app.use("/api/crmv2", addressRoutes);
 app.use("/api/crmv2", schoolRoutes);
 app.use("/api/crmv2", agencyRoutes)
-app.use("/api/crmv2", areaRoutes)
+// app.use("/api/crmv2", areaRoutes)
 app.use("/api/crmv2", loansRoutes);
 app.use("/api/crmv2", businessRoutes);
 app.use("/api/crmv2", productRoutes);

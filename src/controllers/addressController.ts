@@ -21,6 +21,11 @@ class AddressController {
               },
             },
           },
+          crm_address_barangay:{
+            select: {
+              brgyDescription: true
+            }
+          }
         },
         orderBy:{
           citymunDesc: 'asc'

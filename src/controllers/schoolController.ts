@@ -29,7 +29,7 @@ class SchoolController {
   }
   async courselist(req: Request, res: Response): Promise<void> {
     try {
-      // const {course_description} = req.body
+
       const courses = await prisma.crm_course.findMany({
         // where:{
         //   course_description: {
@@ -40,10 +40,15 @@ class SchoolController {
           course_id: true,
           course_description: true
        },
-       
+      
       });
+
+    
       console.log("Fetch success", courses);
-      res.status(200).json(courses);
+      res.status(200).json(
+courses
+     
+      );
     } catch (err) {
       console.error("Error retrieving course:", err);
       res.status(500).json({ error: "Internal Server Error" });

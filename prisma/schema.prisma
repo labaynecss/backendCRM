@@ -12,18 +12,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model crm_address_barangay {
+  id                           Int                           @default(autoincrement())
+  psgcCode                     String?                       @db.NVarChar(50)
+  brgyDescription              String?                       @db.NVarChar(100)
+  regCode                      String?                       @db.NVarChar(50)
+  provCode                     String?                       @db.NVarChar(50)
+  citymuncode                  String?                       @db.NVarChar(50)
+  brgyCode                     String                        @id(map: "PK_crm_address_barangay") @db.NVarChar(50)
+  crm_address_citymunicipality crm_address_citymunicipality? @relation(fields: [citymuncode], references: [citymuncode], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_address_barangay_crm_address_barangay")
+}
+
 model crm_address_citymunicipality {
-  id                                 Int                           @default(autoincrement())
-  psgcCode                           String                        @db.NVarChar(50)
-  citymunDesc                        String                        @db.NVarChar(50)
-  regCode                            String                        @db.NVarChar(50)
-  provCode                           String                        @db.NVarChar(50)
-  citymuncode                        String                        @id(map: "PK_crm_address_citymunicipality") @db.NVarChar(50)
-  crm_address_province               crm_address_province          @relation(fields: [provCode], references: [provCode], onUpdate: NoAction, map: "FK_crm_address_citymunicipality_crm_address_citymunicipality")
-  crm_address_citymunicipality       crm_address_citymunicipality  @relation("crm_address_citymunicipalityTocrm_address_citymunicipality", fields: [citymuncode], references: [citymuncode], onUpdate: NoAction, map: "FK_crm_address_citymunicipality_crm_address_citymunicipality1")
-  other_crm_address_citymunicipality crm_address_citymunicipality? @relation("crm_address_citymunicipalityTocrm_address_citymunicipality")
-  crm_client                         crm_client[]
-  crm_collectionArea                 crm_collectionArea?
+  id                   Int                    @default(autoincrement())
+  psgcCode             String                 @db.NVarChar(50)
+  citymunDesc          String                 @db.NVarChar(50)
+  regCode              String                 @db.NVarChar(50)
+  provCode             String                 @db.NVarChar(50)
+  citymuncode          String                 @id(map: "PK_crm_address_citymunicipality") @db.NVarChar(50)
+  crm_address_barangay crm_address_barangay[]
+  crm_address_province crm_address_province   @relation(fields: [provCode], references: [provCode], onUpdate: NoAction, map: "FK_crm_address_citymunicipality_crm_address_citymunicipality")
 }
 
 model crm_address_province {
@@ -227,47 +235,46 @@ model crm_characterReference {
 }
 
 model crm_client {
-  id                           Int                           @default(autoincrement())
-  profile                      String                        @id(map: "PK_crm_client_1") @db.NVarChar(50)
-  lastname                     String?                       @db.NVarChar(50)
-  firstname                    String?                       @db.NVarChar(50)
-  middlename                   String?                       @db.NVarChar(50)
-  suffix                       String?                       @db.NVarChar(10)
-  birthday                     String?                       @db.VarChar(50)
-  age                          String?                       @db.NVarChar(50)
-  gender                       String?                       @db.NVarChar(50)
-  mobile                       String?                       @db.NVarChar(50)
-  telephone                    String?                       @db.NVarChar(50)
-  residence_status             String?                       @db.NVarChar(50)
-  perm_address                 String?                       @db.NVarChar(100)
-  prov_stay                    String?                       @db.NVarChar(50)
-  prov_address                 String?                       @db.NVarChar(100)
-  perm_stay                    String?                       @db.NVarChar(50)
-  area                         String?                       @db.NVarChar(50)
-  civilstatus                  String?                       @db.NVarChar(50)
-  religion                     String?                       @db.NVarChar(50)
-  email                        String?                       @db.NVarChar(50)
-  mothersname                  String?                       @db.NVarChar(50)
-  createdby                    String?                       @db.NVarChar(50)
-  createddatetime              DateTime?                     @db.DateTime
-  updatedby                    String?                       @db.NVarChar(50)
-  updateddatetime              DateTime?                     @db.DateTime
-  crm_allottee                 crm_allottee[]
-  crm_assets                   crm_assets[]
-  crm_barangayChecking         crm_barangayChecking[]
-  crm_address_citymunicipality crm_address_citymunicipality? @relation(fields: [area], references: [citymuncode], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_client_crm_address_citymunicipality")
-  crm_clientEducation          crm_clientEducation[]
-  crm_clientFamily             crm_clientFamily[]
-  crm_clientId                 crm_clientId[]
-  crm_clientSocials            crm_clientSocials[]
-  crm_employmentHistory        crm_employmentHistory[]
-  crm_loan_hdr                 crm_loan_hdr[]
-  crm_soi                      crm_soi[]
-  crm_soiBusiness              crm_soiBusiness[]
-  crm_soiEmployment            crm_soiEmployment[]
-  crm_soiOfw                   crm_soiOfw[]
-  crm_spouse                   crm_spouse[]
-  crm_workInformation          crm_workInformation[]
+  id                    Int                     @default(autoincrement())
+  profile               String                  @id(map: "PK_crm_client_1") @db.NVarChar(50)
+  lastname              String?                 @db.NVarChar(50)
+  firstname             String?                 @db.NVarChar(50)
+  middlename            String?                 @db.NVarChar(50)
+  suffix                String?                 @db.NVarChar(10)
+  birthday              String?                 @db.VarChar(50)
+  age                   String?                 @db.NVarChar(50)
+  gender                String?                 @db.NVarChar(50)
+  mobile                String?                 @db.NVarChar(50)
+  telephone             String?                 @db.NVarChar(50)
+  residence_status      String?                 @db.NVarChar(50)
+  perm_address          String?                 @db.NVarChar(100)
+  prov_stay             String?                 @db.NVarChar(50)
+  prov_address          String?                 @db.NVarChar(100)
+  perm_stay             String?                 @db.NVarChar(50)
+  area                  String?                 @db.NVarChar(50)
+  civilstatus           String?                 @db.NVarChar(50)
+  religion              String?                 @db.NVarChar(50)
+  email                 String?                 @db.NVarChar(50)
+  mothersname           String?                 @db.NVarChar(50)
+  createdby             String?                 @db.NVarChar(50)
+  createddatetime       DateTime?               @db.DateTime
+  updatedby             String?                 @db.NVarChar(50)
+  updateddatetime       DateTime?               @db.DateTime
+  crm_allottee          crm_allottee[]
+  crm_assets            crm_assets[]
+  crm_barangayChecking  crm_barangayChecking[]
+  crm_clientEducation   crm_clientEducation[]
+  crm_clientFamily      crm_clientFamily[]
+  crm_clientId          crm_clientId[]
+  crm_clientSocials     crm_clientSocials[]
+  crm_employmentHistory crm_employmentHistory[]
+  crm_loan_hdr          crm_loan_hdr[]
+  crm_soi               crm_soi[]
+  crm_soiBusiness       crm_soiBusiness[]
+  crm_soiEmployment     crm_soiEmployment[]
+  crm_soiOfw            crm_soiOfw[]
+  crm_spouse            crm_spouse[]
+  crm_workInformation   crm_workInformation[]
 }
 
 model crm_clientEducation {
@@ -315,11 +322,10 @@ model crm_clientSocials {
 }
 
 model crm_collectionArea {
-  id                           Int                          @default(autoincrement())
-  area_id                      String                       @id(map: "PK_crm_collectionArea") @db.NVarChar(50)
-  collection_id                String?                      @db.NVarChar(50)
-  crm_address_citymunicipality crm_address_citymunicipality @relation(fields: [area_id], references: [citymuncode], onUpdate: NoAction, map: "FK_crm_collectionArea_crm_address_citymunicipality1")
-  crm_collectionCompany        crm_collectionCompany?       @relation(fields: [collection_id], references: [collection_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_collectionArea_crm_collectionCompany")
+  id                    Int                    @default(autoincrement())
+  area_id               String                 @id(map: "PK_crm_collectionArea") @db.NVarChar(50)
+  collection_id         String?                @db.NVarChar(50)
+  crm_collectionCompany crm_collectionCompany? @relation(fields: [collection_id], references: [collection_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_collectionArea_crm_collectionCompany")
 }
 
 model crm_collectionCompany {
@@ -542,11 +548,14 @@ model crm_users {
 }
 
 model crm_workInformation {
-  id              Int           @id(map: "PK_crm_workInformation") @default(autoincrement())
+  id              Int           @id(map: "PK_crm_workInformation_1") @default(autoincrement())
   profile         String?       @db.NVarChar(50)
   loanprofile     String?       @db.NVarChar(50)
   businesstype    String?       @db.NVarChar(50)
   businessname    String?       @db.NVarChar(50)
+  businesno       String?       @db.NVarChar(50)
+  position        String?       @db.NVarChar(50)
+  job_level       String?       @db.NVarChar(50)
   industry        String?       @db.NVarChar(50)
   sssno           String?       @db.NVarChar(50)
   tinno           String?       @db.NVarChar(50)

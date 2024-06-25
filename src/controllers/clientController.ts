@@ -18,8 +18,8 @@ class ClientController {
           crm_clientEducation: true,
           crm_clientId: true,
           crm_spouse: true,
-        crm_address_citymunicipality: true,
         crm_loan_hdr: true
+      
 
         },
       });
@@ -38,14 +38,15 @@ class ClientController {
   async clientjoinData(req: Request, res: Response): Promise<void> {
     try {
       const allclients = await prisma.crm_client.findMany({
-        include: {
+        select: {
+          createdby: true,
           crm_allottee: true,
           crm_clientEducation: true,
           crm_clientId: true,
           crm_spouse: true,
-          crm_address_citymunicipality: true,
           crm_loan_hdr: {
-            include: {
+            select: {
+              amountapplied: true,
               crm_products: {
                 select: {
                   prod_description: true
@@ -106,6 +107,7 @@ class ClientController {
           lastname: true,
           suffix: true,
         },
+
       });
 
       if (client) {
@@ -226,10 +228,13 @@ class ClientController {
         tinno,
         monthlyincome,
         w_status,
-        areaid
-
+        areaid,
+        position,
+        job_level,
+        businesno,
 
       } = req.body;
+
   
       const profile = generateProfile();
       const loanprofile = generateloanProfileId();
@@ -257,7 +262,7 @@ class ClientController {
             civilstatus,
             religion,
             email,
-            area,
+            area: areaid,
             mothersname: mothersname ?? "",
             createdby: createdby ?? "",
             createddatetime: new Date(),
@@ -327,15 +332,15 @@ class ClientController {
               industry,
               sssno,
               tinno,
+              position,
+              job_level,
+              businesno,
               monthlyincome,
               status: w_status,
               verified
 
             }
            },
- 
-
-     
           },
         }),
         prisma.crm_loan_hdr.create({
