@@ -45,6 +45,7 @@ class ClientController {
       lastname: true,
       firstname: true,
       middlename: true,
+      profile:true,
       createddatetime: true,
       crm_loan_hdr: {
         select: {
@@ -75,6 +76,7 @@ class ClientController {
     crm_branch: { branch_description: null },
   };
   return {
+    profile: client.profile,
     lastname: client.lastname,
     firstname: client.firstname,
     middlename: client.middlename,
