@@ -38,37 +38,56 @@ class ClientController {
   async clientjoinData(req: Request, res: Response): Promise<void> {
     try {
       const allclients = await prisma.crm_client.findMany({
+        orderBy: {
+          id: 'desc',
+        },
+     select: {
+      lastname: true,
+      firstname: true,
+      middlename: true,
+      createddatetime: true,
+      crm_loan_hdr: {
         select: {
-          createdby: true,
-          crm_allottee: true,
-          crm_clientEducation: true,
-          crm_clientId: true,
-          crm_spouse: true,
-          crm_loan_hdr: {
+       crm_branch: {
+        select: {
+          branch_description:  true
+        }
+       },
+          amountapplied: true,
+          crm_products: {
             select: {
-              amountapplied: true,
-              crm_products: {
-                select: {
-                  prod_description: true
-                }
-              }
+              prod_description: true
             }
           }
         }
+        
+      }
+     }
+        
       });
+
+
+ const Clients = allclients.map(client => {
+
+  const loan = client.crm_loan_hdr[0] || {
+    amountapplied: null,
+    crm_products: { prod_description: null },
+    crm_branch: { branch_description: null },
+  };
+  return {
+    lastname: client.lastname,
+    firstname: client.firstname,
+    middlename: client.middlename,
+    branch_description: loan.crm_branch ? loan.crm_branch.branch_description : null,
+    createddatetime: client.createddatetime,
+    amountapplied: loan.amountapplied,
+    prod_description: loan.crm_products ? loan.crm_products.prod_description : null,
+    
+  };
+});
   
-      // // Transforming nested data into a flattened structure
-      // const flattenedClients = allclients.map(client => ({
-      //   ...client,
-      //   crm_loan_hdr: client.crm_loan_hdr.map(loan => ({
-      //     loanId: loan.id,
-      //     productId: loan.productid,
-      //     productDescription: loan.crm_products?.prod_description
-      //   }))
-      // }));
-  
-      console.log("join success", allclients);
-      res.status(200).json(allclients);
+      console.log("join success", Clients );
+      res.status(200).json(Clients);
     } catch (err) {
       console.error("Error retrieving loans:", err);
       res.status(500).json({ error: "Internal Server Error" });
@@ -233,8 +252,8 @@ class ClientController {
         job_level,
         businesno,
 
-      } = req.body;
 
+      } = req.body;
   
       const profile = generateProfile();
       const loanprofile = generateloanProfileId();
@@ -273,8 +292,6 @@ class ClientController {
                 course,
               },
             },
-          
-          
             crm_spouse: {
               create: {
                 spouseprofile : spouseprofile ?? '',
@@ -300,12 +317,12 @@ class ClientController {
             },
             crm_clientFamily: {
               create: {
-                family_relationship: family_relationship ?? '',
-                family_membername: family_membername ?? '',
-                family_birthdate: family_birthdate ?? new Date(),
-                family_status: family_status ?? '',
-                family_remarks: family_remarks ?? '',
-                family_verified: family_verified ?? false,
+                family_relationship,
+                family_membername,
+                family_birthdate,
+                family_status,
+                family_remarks,
+                family_verified,
               },
             },
             crm_clientId: {
@@ -400,9 +417,7 @@ class ClientController {
               },
             },
             crm_soiEmployment: {
-           
                 create: {
-                 
                   employer_company ,
                   employer_nature,
                   employer_address,
