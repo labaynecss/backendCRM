@@ -213,11 +213,7 @@ class ClientController {
         monthlycredit_value1,
         monthlycredit_value3,
         monthlycredit_value2,
-        charref_name,
-        charref_address,
-        charref_contactno,
-        charref_verified,
-        charref_relationship,
+        charref,
         id_type,
         bankname,
         id_no,
@@ -236,12 +232,7 @@ class ClientController {
         pres_address,
         pres_stay,
         s_age,
-        family_relationship,
-        family_birthdate,
-        family_membername,
-        family_status,
-        family_remarks,
-        family_verified,
+        family,
         businesstype,
         businessname,
         industry,
@@ -318,14 +309,14 @@ class ClientController {
               },
             },
             crm_clientFamily: {
-              create: {
-                family_relationship,
-                family_membername,
-                family_birthdate,
-                family_status,
-                family_remarks,
-                family_verified,
-              },
+              create: family.map((fam: { family_relationship: any; family_membername: any; family_birthdate: any; family_status: any; family_remarks: any; family_verified: any; }) => ({
+                family_relationship: fam.family_relationship,
+                family_membername: fam.family_membername,
+                family_birthdate: fam.family_birthdate,
+                family_status: fam.family_status,
+                family_remarks: fam.family_remarks,
+                family_verified: fam.family_verified,
+              })),
             },
             crm_clientId: {
               create: {
@@ -399,15 +390,15 @@ class ClientController {
               },
             },
             crm_characterReference: {
-              create: {
-                charref_name,
-                charref_address,
-                charref_contactno,
-                charref_relationship,
-                charref_verified,
-                createdby,
+              create: charref.map((char: { charref_name: any; charref_address: any; charref_contactno: any; charref_relationship: any; charref_verified: any; createdby: any; }) => ({
+                charref_name: char.charref_name,
+                charref_address: char.charref_address,
+                charref_contactno: char.charref_contactno,
+                charref_relationship: char.charref_relationship,
+                charref_verified: char.charref_verified,
+                createdby: char.createdby,
                 createddatetime: new Date(),
-              },
+              })),
             },
             crm_soiBusiness: {
               create: {

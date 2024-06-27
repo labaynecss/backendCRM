@@ -9,7 +9,7 @@ interface Config {
 
 const config: Config = {
   
-    JWT_SECRET_KEY: process.env.JWT_SECRET_KEY|| 'defaultsecret',
+    JWT_SECRET_KEY: process.env.JWT_SECRET_KEY as string,
 };
 
 export default config;

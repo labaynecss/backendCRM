@@ -1,74 +1,74 @@
 // src/controllers/branchController.ts
-import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
+// import { Request, Response } from "express";
+// import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 
-class AreaController {
-  async collectionCompany(req: Request, res: Response): Promise<void> {
-    try {
-      const company = await prisma.crm_collectionCompany.findMany({
-       take: 500
-      });
-      console.log("Fetch success", company);
-      res.status(200).json(company);
-    } catch (err) {
-      console.error("Error retrieving branches:", err);
-      res.status(500).json({ error: "Internal Server Error" });
-    }
-  }
+// class AreaController {
+//   async collectionCompany(req: Request, res: Response): Promise<void> {
+//     try {
+//       const company = await prisma.crm_collectionCompany.findMany({
+//        take: 500
+//       });
+//       console.log("Fetch success", company);
+//       res.status(200).json(company);
+//     } catch (err) {
+//       console.error("Error retrieving branches:", err);
+//       res.status(500).json({ error: "Internal Server Error" });
+//     }
+//   }
 
-  async collectionArea(req: Request, res: Response): Promise<void> {
-    try {
-      const area = await prisma.crm_collectionArea.findMany();
-      console.log("Fetch success", area);
-      res.status(200).json(area);
-    } catch (err) {
-      console.error("Error retrieving branches:", err);
-      res.status(500).json({ error: "Internal Server Error" });
-    }
-  }
+//   async collectionArea(req: Request, res: Response): Promise<void> {
+//     try {
+//       const area = await prisma.crm_collectionArea.findMany();
+//       console.log("Fetch success", area);
+//       res.status(200).json(area);
+//     } catch (err) {
+//       console.error("Error retrieving branches:", err);
+//       res.status(500).json({ error: "Internal Server Error" });
+//     }
+//   }
 
-  async areas(req: Request, res: Response): Promise<void> {
-    const page = parseInt(req.query.page as string, 10) || 1;
-    const perPage = 15;
-    const skip = (page - 1) * perPage;
+//   async areas(req: Request, res: Response): Promise<void> {
+//     const page = parseInt(req.query.page as string, 10) || 1;
+//     const perPage = 15;
+//     const skip = (page - 1) * perPage;
 
-    if (isNaN(page) || page < 1) {
-      res.status(400).json({ error: "Invalid page number" });
-      return;
-    }
-  }
+//     if (isNaN(page) || page < 1) {
+//       res.status(400).json({ error: "Invalid page number" });
+//       return;
+//     }
+//   }
 
-  async collectionAreaJoin(req: Request, res: Response): Promise<void> {
-    try {
-      const areas = await prisma.crm_collectionCompany.findMany({
-        include: {
-          crm_collectionArea: {
-            include: {
-              crm_address_citymunicipality: true,
-            },
-          },
-        },
-      });
+//   async collectionAreaJoin(req: Request, res: Response): Promise<void> {
+//     try {
+//       const areas = await prisma.crm_collectionCompany.findMany({
+//         include: {
+//           crm_collectionArea: {
+//             include: {
+//               crm_address_citymunicipality: true,
+//             },
+//           },
+//         },
+//       });
   
-      const flattened = areas.map(area => {
-        return area.crm_collectionArea.map(collectionArea => ({
-          collection_id: area.collection_id,
-          collection_company: area.collection_company,
-          area_id: collectionArea.area_id,
-          citymunDesc: collectionArea.crm_address_citymunicipality.citymunDesc,
-          citymuncode: collectionArea.crm_address_citymunicipality.citymuncode,
-        }));
-      }).flat();
+//       const flattened = areas.map(area => {
+//         return area.crm_collectionArea.map(collectionArea => ({
+//           collection_id: area.collection_id,
+//           collection_company: area.collection_company,
+//           area_id: collectionArea.area_id,
+//           citymunDesc: collectionArea.crm_address_citymunicipality.citymunDesc,
+//           citymuncode: collectionArea.crm_address_citymunicipality.citymuncode,
+//         }));
+//       }).flat();
   
-      console.log("Fetch success", flattened);
-      res.status(200).json(flattened);
-    } catch (err) {
-      console.error("Error retrieving branches:", err);
-      res.status(500).json({ error: "Internal Server Error" });
-    }
-  }
+//       console.log("Fetch success", flattened);
+//       res.status(200).json(flattened);
+//     } catch (err) {
+//       console.error("Error retrieving branches:", err);
+//       res.status(500).json({ error: "Internal Server Error" });
+//     }
+//   }
   
 
   //   try {
@@ -161,6 +161,6 @@ class AreaController {
   //     res.status(500).json({ message: "Internal Server Error" });
   //   }
   
-}
+// }
 
-export default new AreaController();
+// export default new AreaController();

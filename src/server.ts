@@ -3,7 +3,7 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import { database } from "./config/db";
 import cors from "cors";
-import session from "express-session";
+
 
 import { userRoutes } from "./routes/userRoutes";
 import { credentialRoutes } from "./routes/credentialRoutes";
@@ -17,31 +17,40 @@ import { clientRoutes } from "./routes/clientRoutes";
 import { loansRoutes } from "./routes/loansRoutes";
 import { assetsRoutes } from "./routes/assetsRoutes";
 import { agencyRoutes } from "./routes/agencyRoutes";
-import { areaRoutes } from "./routes/areasRoutes";
+// import { areaRoutes } from "./routes/areasRoutes";
 //configure env;
 dotenv.config();
 
+
 const app: express.Application = express();
 const port = process.env.PORT;
+
+const allowedOrigins = ['http://10.120.50.190:85', 'http://localhost:5173'];
 app.use(
   cors({
-    origin: process.env.URL,
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true); 
+      
+      const isAllowed = allowedOrigins.some(allowedOrigin => {
+        return origin.startsWith(allowedOrigin);
+      });
+      
+      if (isAllowed) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     allowedHeaders: "Content-Type, Authorization",
   })
 );
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET as string,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false },
-  })
-);
+
 
 // Connect To The Database
 database

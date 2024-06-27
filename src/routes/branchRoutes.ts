@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { allbranches, branches, createBranch } from "../controllers/branchController";
+import Authorization from "../services/Authorization";
     
 
 
@@ -7,7 +8,7 @@ import { allbranches, branches, createBranch } from "../controllers/branchContro
 const router = Router();
 
 
-router.get("/allbranch", allbranches)
+router.get("/allbranch",Authorization.authorized, allbranches)
 router.get('/branches/:page', branches);
 router.post("/branch", createBranch)
 
