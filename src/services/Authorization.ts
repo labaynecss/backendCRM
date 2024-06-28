@@ -7,11 +7,11 @@ class Authorization {
     const headerToken = req.headers.authorization;
     
     if (headerToken) {
-      const token = headerToken.split('Bearer ')[1];
+      const access_token = headerToken.split('Bearer ')[1];
       
-      if (token) {
+      if (access_token) {
         try {
-          const verified = jwt.verify(token, config.JWT_SECRET_KEY);
+          const verified = jwt.verify(access_token, config.JWT_SECRET_KEY);
 
           if (verified) {
             next();
