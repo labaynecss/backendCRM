@@ -4,11 +4,11 @@ import { AuthRequest } from "../types/global";
 
 const verifyToken = (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
-    const access_token = req.cookies.token;
+    const access_token = req.cookies.access_token;
     if (!access_token) {
       return res
         .status(400)
-        .json({ message: "No Token Authorization has been denied." });
+        .json({ message: "No token provided" });
     }
 
     jwt.verify(

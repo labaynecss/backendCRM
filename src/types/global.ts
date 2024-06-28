@@ -1,18 +1,11 @@
-import { Request } from "express"; 
-
-
+import { Request } from 'express';
 
 export interface AuthRequest extends Request {
-    username ?: string;
-    password ?: string | null;
-  }
+  username?: string;
+}
 
 
-  declare module 'express-session' {
-    interface Session {
-      access_token?: string | undefined
-    }
-  }
+
 
 
   export interface UserInput {
