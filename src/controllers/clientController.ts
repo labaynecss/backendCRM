@@ -213,7 +213,21 @@ class ClientController {
         monthlycredit_value1,
         monthlycredit_value3,
         monthlycredit_value2,
-        charref,
+        charrefTwo_name,
+        charrefTwo_address,
+        charrefTwo_contactno,
+        charrefTwo_relationship,
+        charrefTwo_verified,
+        charrefThree_name,
+        charrefThree_address,
+        charrefThree_contactno,
+        charrefThree_relationship,
+        charrefThree_verified,
+        charrefFour_name,
+        charrefFour_address,
+        charrefFour_contactno,
+        charrefFour_relationship,
+        charrefFour_verified,
         id_type,
         bankname,
         id_no,
@@ -309,7 +323,7 @@ class ClientController {
               },
             },
             crm_clientFamily: {
-              create: family.map((fam: { family_relationship: any; family_membername: any; family_birthdate: any; family_status: any; family_remarks: any; family_verified: any; }) => ({
+              createMany: family.map((fam: { family_relationship: any; family_membername: any; family_birthdate: any; family_status: any; family_remarks: any; family_verified: any; }) => ({
                 family_relationship: fam.family_relationship,
                 family_membername: fam.family_membername,
                 family_birthdate: fam.family_birthdate,
@@ -390,15 +404,35 @@ class ClientController {
               },
             },
             crm_characterReference: {
-              create: charref.map((char: { charref_name: any; charref_address: any; charref_contactno: any; charref_relationship: any; charref_verified: any; createdby: any; }) => ({
-                charref_name: char.charref_name,
-                charref_address: char.charref_address,
-                charref_contactno: char.charref_contactno,
-                charref_relationship: char.charref_relationship,
-                charref_verified: char.charref_verified,
-                createdby: char.createdby,
-                createddatetime: new Date(),
-              })),
+              createMany: {
+                data: [
+                  {
+                    charref_name: charrefTwo_name,
+                    charref_address: charrefTwo_address,
+                    charref_contactno: charrefTwo_contactno,
+                    charref_relationship: charrefTwo_relationship,
+                    charref_verified: charrefTwo_verified,
+                    createddatetime: new Date(),
+                  },
+                  {
+                    charref_name: charrefThree_name,
+                    charref_address: charrefThree_address,
+                    charref_contactno: charrefThree_contactno,
+                    charref_relationship: charrefThree_relationship,
+                    charref_verified: charrefThree_verified ,
+                    createddatetime: new Date(),
+                  },
+                  {
+                    charref_name: charrefFour_name,
+                    charref_address: charrefFour_address,
+                    charref_contactno: charrefFour_contactno,
+                    charref_relationship: charrefFour_relationship,
+                    charref_verified: charrefFour_verified ,
+                    createddatetime: new Date(),
+                  },
+                ],
+              },
+
             },
             crm_soiBusiness: {
               create: {

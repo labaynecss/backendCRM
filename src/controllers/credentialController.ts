@@ -5,7 +5,6 @@ import {
   generateToken,
 } from "../utils/generateRefreshtoken";
 import { getExpirationTime } from "../utils/calcTime";
-
 import * as bcrypt from "bcrypt";
 
 class UserController {
@@ -20,8 +19,6 @@ class UserController {
         res.status(400).json({ message: "Invalid Credentials!" });
         return;
       }
-      console.log(`Stored password: ${signin.PASSWORD}`);
-
       // Compare passwords
       const match = await bcrypt.compare(PASSWORD, signin.PASSWORD!);
       if (!match) {
@@ -37,7 +34,6 @@ class UserController {
       // Set cookies
       res.cookie("token", access_token, { httpOnly: true });
       res.cookie("refresh_token", refresh_token, { httpOnly: true });
-
       // Return success response
       res
         .status(200)
