@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt, { TokenExpiredError } from 'jsonwebtoken';
 import config from '../config/envConfig';
 
 class Authorization {
@@ -18,7 +18,11 @@ class Authorization {
             res.status(401).json({ message: 'Invalid token' });
           }
         } catch (err) {
-          res.status(401).json({ message: 'Token verification failed' });
+          if (err instanceof TokenExpiredError) {
+            res.status(401).json({ message: 'Token has expired' });
+          } else {
+            res.status(401).json({ message: 'Token verification failed' });
+          }
         }
       } else {
         res.status(401).json({ message: 'Token format is incorrect' });

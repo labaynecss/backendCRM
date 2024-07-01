@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import path from "path";
-import fs from "fs";
 
 const prisma = new PrismaClient();
 
@@ -20,19 +19,28 @@ class FileController {
   async UploadFile(req: Request, res: Response): Promise<void> {
     try {
       const files = req.files as Express.Multer.File[];
-      if (!files) {
-       res.status(400).json({ message: 'No files uploaded' });
+      if (!files || files.length === 0) {
+        res.status(400).json({ message: 'No files uploaded' });
+        return;
       }
 
-      // Process and save file information to the database
+      const {  file_category, subfile_category, document_verified, 
+        document_verifiedby, createdby, updatedby } = req.body;
+
       const uploadedFiles = [];
       for (const file of files) {
         const newDocument = await prisma.crm_documentUploaded.create({
           data: {
-          document_path: file.path,
-          document_type: file.filename,
-          document_verified: file.originalname,
-
+            file_category: file_category ,
+            subfile_category: subfile_category ,
+            filename: file.originalname,
+            file_directory: path.join('uploads', file.filename),
+            document_verified: document_verified,
+            document_verifiedby: document_verifiedby ,
+            createdby: createdby ,
+            createddatetime: new Date(),
+            updatedby: updatedby ,
+            updateddatetime: new Date(),
           },
         });
         uploadedFiles.push(newDocument);
