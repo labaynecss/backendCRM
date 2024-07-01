@@ -24,7 +24,7 @@ class FileController {
         return;
       }
 
-      const {  file_category, subfile_category, document_verified, 
+      const {  file_category, document_verified, 
         document_verifiedby, createdby, updatedby } = req.body;
 
       const uploadedFiles = [];
@@ -32,7 +32,6 @@ class FileController {
         const newDocument = await prisma.crm_documentUploaded.create({
           data: {
             file_category: file_category ,
-            subfile_category: subfile_category ,
             filename: file.originalname,
             file_directory: path.join('uploads', file.filename),
             document_verified: document_verified,
