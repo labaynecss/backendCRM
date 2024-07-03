@@ -347,7 +347,6 @@ model crm_documentUploaded {
   id                  Int           @id(map: "PK_crm_documentUploaded") @default(autoincrement())
   loanprofile         String?       @db.NVarChar(50)
   file_category       String?       @db.NVarChar(50)
-  subfile_category    String?       @db.NVarChar(50)
   filename            String?       @db.NVarChar(50)
   file_directory      String?       @db.NVarChar(50)
   document_verified   String?       @db.NVarChar(50)

@@ -24,21 +24,22 @@ class FileController {
         return;
       }
 
-      const {  file_category, document_verified, 
+      const { loanprofile, file_category, document_verified, 
         document_verifiedby, createdby, updatedby } = req.body;
 
       const uploadedFiles = [];
       for (const file of files) {
         const newDocument = await prisma.crm_documentUploaded.create({
           data: {
-            file_category: file_category ,
+            loanprofile,
+            file_category ,
             filename: file.originalname,
             file_directory: path.join('uploads', file.filename),
-            document_verified: document_verified,
-            document_verifiedby: document_verifiedby ,
-            createdby: createdby ,
+            document_verified,
+            document_verifiedby,
+            createdby,
             createddatetime: new Date(),
-            updatedby: updatedby ,
+            updatedby,
             updateddatetime: new Date(),
           },
         });

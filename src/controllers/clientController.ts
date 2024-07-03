@@ -246,7 +246,12 @@ class ClientController {
         pres_address,
         pres_stay,
         s_age,
-        family,
+        fathername,
+        fatherage,
+        mothername,
+        motherage,
+        family_verified,
+        family_verified1,
         businesstype,
         businessname,
         industry,
@@ -306,7 +311,7 @@ class ClientController {
                 s_firstname: s_firstname ?? '',
                 s_middlename: s_middlename ?? '',
                 s_suffix : s_suffix ?? '',
-                s_birthdate: s_birthdate ?? new Date,
+                s_birthdate: s_birthdate ?? '',
                 s_gender: s_gender ?? '',
                 s_address: s_address ?? '',
                 s_mobile: s_mobile ?? '',
@@ -323,14 +328,23 @@ class ClientController {
               },
             },
             crm_clientFamily: {
-              createMany: family.map((fam: { family_relationship: any; family_membername: any; family_birthdate: any; family_status: any; family_remarks: any; family_verified: any; }) => ({
-                family_relationship: fam.family_relationship,
-                family_membername: fam.family_membername,
-                family_birthdate: fam.family_birthdate,
-                family_status: fam.family_status,
-                family_remarks: fam.family_remarks,
-                family_verified: fam.family_verified,
-              })),
+              createMany: {
+                data: [
+                  {
+                    family_relationship:  'Father' ,
+                    family_membername: fathername ?? '' ,
+                    family_remarks:`AGE: ${fatherage}` , 
+                    family_verified: family_verified ?? '',
+                  },
+                  {
+                    family_relationship:  "Mother",
+                    family_membername: mothername ?? '',
+                    family_remarks: `AGE: ${motherage}`,
+                    family_verified: family_verified1 ?? '',
+                  },
+                
+                ],
+              }
             },
             crm_clientId: {
               create: {
