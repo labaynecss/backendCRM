@@ -7,7 +7,12 @@ const prisma = new PrismaClient();
 class FileController {
   async Documents(req: Request, res: Response): Promise<void> {
     try {
-      const documents = await prisma.crm_documentUploaded.findMany();
+      const documents = await prisma.crm_documentUploaded.findMany({
+        select: {
+          file_category: true,
+          file_directory: true,
+        }
+      });
       console.log("Fetch success", documents);
       res.status(200).json(documents);
     } catch (err) {
