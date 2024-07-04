@@ -14,7 +14,7 @@ class ClientController {
       const profileGet = await prisma.crm_client.findUnique({
         where: { profile: profile },
         include: {
-          crm_allottee: {},
+          crm_allottee: true,
           crm_clientEducation: true,
           crm_clientId: true,
           crm_spouse: true,

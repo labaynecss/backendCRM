@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import path from "path";
 
 const prisma = new PrismaClient();
 
@@ -39,7 +38,7 @@ class FileController {
             loanprofile,
             file_category ,
             filename: file.originalname,
-            file_directory: path.join('uploads', file.filename),
+            file_directory: `/uploads/${file.filename}`,
             document_verified,
             document_verifiedby,
             createdby,
