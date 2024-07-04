@@ -6,14 +6,25 @@ const prisma = new PrismaClient();
 class FileController {
   async Documents(req: Request, res: Response): Promise<void> {
     try {
+      const  {loanprofile} = req.params
       const documents = await prisma.crm_documentUploaded.findMany({
+        where: {
+          loanprofile: loanprofile
+        },
         select: {
           file_category: true,
           file_directory: true,
+          loanprofile: true
+        
         }
       });
-      console.log("Fetch success", documents);
-      res.status(200).json(documents);
+      const documentsWithUrls = documents.map((doc) => ({
+        ...doc,
+        file_directory: `${req.protocol}://${req.get("host")}${
+          doc.file_directory
+        }`,
+      }));
+      res.status(200).json(documentsWithUrls);
     } catch (err) {
       console.error("Error retrieving documents:", err);
       res.status(500).json({ error: "Internal Server Error" });
