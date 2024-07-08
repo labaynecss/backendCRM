@@ -178,7 +178,7 @@ class LoansController {
             updatedby: updatedby,
             updateddatetime: new Date(),
             crm_clientEducation: {
-              updateMany: {
+              update: {
                 where: { profile },
                 data: {
                   educ_level,
@@ -294,8 +294,8 @@ update: {
             updatedby: updatedby,
             updateddatetime: new Date(),
             crm_assets: {
-              updateMany: {
-                where: { profile },
+               updateMany: {
+                where: { loanprofile },
                 data: {
                   assetid,
                   assetremarks,

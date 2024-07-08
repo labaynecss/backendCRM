@@ -263,7 +263,7 @@ model crm_client {
   crm_allottee          crm_allottee[]
   crm_assets            crm_assets[]
   crm_barangayChecking  crm_barangayChecking[]
-  crm_clientEducation   crm_clientEducation[]
+  crm_clientEducation   crm_clientEducation?
   crm_clientFamily      crm_clientFamily[]
   crm_clientId          crm_clientId[]
   crm_clientSocials     crm_clientSocials[]
@@ -278,12 +278,14 @@ model crm_client {
 }
 
 model crm_clientEducation {
-  id          Int        @id(map: "PK_crm_clientEducation") @default(autoincrement())
-  profile     String     @db.NVarChar(50)
-  educ_level  String?    @db.NVarChar(50)
-  educ_school String?    @db.NVarChar(50)
-  course      String?    @db.NVarChar(50)
-  crm_client  crm_client @relation(fields: [profile], references: [profile], onUpdate: NoAction, map: "FK_crm_education_crm_client")
+  id          Int          @default(autoincrement())
+  profile     String       @id(map: "PK_crm_clientEducation") @db.NVarChar(50)
+  educ_level  String?      @db.NVarChar(50)
+  educ_school String?      @db.NVarChar(50)
+  course      String?      @db.NVarChar(50)
+  crm_client  crm_client   @relation(fields: [profile], references: [profile], onUpdate: NoAction, map: "FK_crm_clientEducation_crm_client")
+  crm_course  crm_course?  @relation(fields: [course], references: [course_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_clientEducation_crm_course")
+  crm_schools crm_schools? @relation(fields: [educ_school], references: [school_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_clientEducation_crm_schools")
 }
 
 model crm_clientFamily {
@@ -338,9 +340,10 @@ model crm_collectionCompany {
 }
 
 model crm_course {
-  id                 Int     @id(map: "PK_crm_course") @default(autoincrement())
-  course_id          String? @db.NVarChar(50)
-  course_description String? @db.NVarChar(100)
+  id                  Int                   @default(autoincrement())
+  course_id           String                @id(map: "PK_crm_course") @db.NVarChar(50)
+  course_description  String?               @db.NVarChar(100)
+  crm_clientEducation crm_clientEducation[]
 }
 
 model crm_documentUploaded {
@@ -433,13 +436,14 @@ model crm_products {
 }
 
 model crm_schools {
-  id              Int       @default(autoincrement())
-  school_id       String    @id(map: "PK_crm_schools") @db.NVarChar(50)
-  school_name     String?   @db.NVarChar(250)
-  createdby       String?   @db.NVarChar(50)
-  createddatetime DateTime? @db.DateTime
-  updatedby       String?   @db.NVarChar(50)
-  updateddatetime DateTime? @db.DateTime
+  id                  Int                   @default(autoincrement())
+  school_id           String                @id(map: "PK_crm_schools") @db.NVarChar(50)
+  school_name         String?               @db.NVarChar(250)
+  createdby           String?               @db.NVarChar(50)
+  createddatetime     DateTime?             @db.DateTime
+  updatedby           String?               @db.NVarChar(50)
+  updateddatetime     DateTime?             @db.DateTime
+  crm_clientEducation crm_clientEducation[]
 }
 
 model crm_soi {

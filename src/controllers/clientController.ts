@@ -9,27 +9,40 @@ const prisma = new PrismaClient();
 class ClientController {
   async getClientByProfile(req: Request, res: Response): Promise<void> {
     const { profile } = req.params;
-
+  
     try {
       const profileGet = await prisma.crm_client.findUnique({
         where: { profile: profile },
         include: {
           crm_allottee: true,
-          crm_clientEducation: true,
-          crm_clientId: true,
+          crm_clientEducation: {
+            select: {
+              crm_schools: {
+                select: {
+                  school_name: true,
+                },
+              },
+              crm_course: {
+                select: {
+                  course_description: true,
+                },
+              },
+            },
+          },
           crm_spouse: true,
-        crm_loan_hdr: true
-      
-
+          crm_loan_hdr: true,
+          crm_workInformation: true,
         },
       });
-
+  
       if (!profileGet) {
         res.status(404).json({ error: "Profile not found" });
         return;
       }
-
+  
+  
       res.status(200).json(profileGet);
+      console.log("response", profileGet);
     } catch (err) {
       console.error("Error retrieving profile:", err);
       res.status(500).json({ message: "Internal Server Error" });
@@ -397,26 +410,26 @@ class ClientController {
             branchid,
             createdby,
             createddatetime: new Date(),
-            crm_assets: {
-              create: {
-                assetid,
-                assetremarks,
-                totalfair_marketvalue,
-              },
-            },
-            crm_allottee: {
-              create: {
-                profile,
-                allottee_address,
-                allottee_contactnumber,
-                allottee_principalemployer,
-                allottee_agency,
-                allottee_netsalaryincome,
-                verified,
-                createdby,
-                createddatetime: new Date(),
-              },
-            },
+            // crm_assets: {
+            //   create: {
+            //     assetid,
+            //     assetremarks,
+            //     totalfair_marketvalue,
+            //   },
+            // },
+            // crm_allottee: {
+            //   create: {
+            //     profile,
+            //     allottee_address,
+            //     allottee_contactnumber,
+            //     allottee_principalemployer,
+            //     allottee_agency,
+            //     allottee_netsalaryincome,
+            //     verified,
+            //     createdby,
+            //     createddatetime: new Date(),
+            //   },
+            // },
             crm_characterReference: {
               createMany: {
                 data: [
@@ -448,42 +461,42 @@ class ClientController {
               },
 
             },
-            crm_soiBusiness: {
-              create: {
-                business_name,
-                business_nature,
-                business_address,
-                business_contact,
-                net_income,
-              },
-            },
-            crm_soiEmployment: {
-                create: {
-                  employer_company ,
-                  employer_nature,
-                  employer_address,
-                  employer_contact,
-                  net_salaryincome,
-                },
-            },
-            crm_bankAccount: {
-              create: {
-                bankname,
-                b_telno,
-                accountname,
-                accountno,
-                dateopened: dateopened ,
-                handling,
-                monthlycredit_month1,
-                monthlycredit_month2,
-                monthlycredit_month3,
-                monthlycredit_value1,
-                monthlycredit_value2,
-                monthlycredit_value3,
-                createdby,
-                createddatetime: new Date(),
-              },
-            },
+            // crm_soiBusiness: {
+            //   create: {
+            //     business_name,
+            //     business_nature,
+            //     business_address,
+            //     business_contact,
+            //     net_income,
+            //   },
+            // },
+            // crm_soiEmployment: {
+            //     create: {
+            //       employer_company ,
+            //       employer_nature,
+            //       employer_address,
+            //       employer_contact,
+            //       net_salaryincome,
+            //     },
+            // },
+            // crm_bankAccount: {
+            //   create: {
+            //     bankname,
+            //     b_telno,
+            //     accountname,
+            //     accountno,
+            //     dateopened: dateopened ,
+            //     handling,
+            //     monthlycredit_month1,
+            //     monthlycredit_month2,
+            //     monthlycredit_month3,
+            //     monthlycredit_value1,
+            //     monthlycredit_value2,
+            //     monthlycredit_value3,
+            //     createdby,
+            //     createddatetime: new Date(),
+            //   },
+            // },
           },
         }),
       ]);
