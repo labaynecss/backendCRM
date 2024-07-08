@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import { database } from "./config/db";
 import cors from "cors";
 import path from "path"
-
+import errorHandlerMiddleware from "./middlewares/error-handler";
 
 import { userRoutes } from "./routes/userRoutes";
 import { credentialRoutes } from "./routes/credentialRoutes";
@@ -18,6 +18,7 @@ import { clientRoutes } from "./routes/clientRoutes";
 import { loansRoutes } from "./routes/loansRoutes";
 import { assetsRoutes } from "./routes/assetsRoutes";
 import { agencyRoutes } from "./routes/agencyRoutes";
+
 // import { areaRoutes } from "./routes/areasRoutes";
 //configure env;
 dotenv.config();
@@ -25,6 +26,7 @@ dotenv.config();
 
 const app: express.Application = express();
 const port = process.env.PORT;
+
 
 const allowedOrigins = ['http://10.120.50.190:85', 'http://localhost:5173'];
 app.use(
@@ -50,6 +52,8 @@ app.use(
 
 app.use(express.json());
 app.use(cookieParser());
+// Error handler middleware
+app.use(errorHandlerMiddleware);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.urlencoded({ extended: true }));
 

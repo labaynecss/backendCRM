@@ -480,7 +480,6 @@ class ClientController {
                 monthlycredit_value1,
                 monthlycredit_value2,
                 monthlycredit_value3,
-                
                 createdby,
                 createddatetime: new Date(),
               },

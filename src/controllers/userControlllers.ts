@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import * as bcrypt from "bcrypt";
 import prisma from "../utils/db";
 import {
@@ -6,6 +6,7 @@ import {
   generateToken,
 } from "../utils/generateRefreshtoken";
 import { generateEmployee } from "../utils/generateEmployee";
+import { NotFoundError } from "../utils/error";
 
 class UserController {
   public async createUser(req: Request, res: Response): Promise<void> {
@@ -67,14 +68,15 @@ class UserController {
   }
 
   public async usersList(req: Request, res: Response): Promise<void> {
-    try {
       const users = await prisma.crm_users.findMany();
-      console.log(users);
-      res.status(200).json(users);
-    } catch (err) {
-      console.error("Error retrieving users:", err);
-      res.status(500).json({ error: "Internal Server Error" });
-    }
+  
+      if (!users || users.length === 0) {
+        throw new NotFoundError('No users found');
+      }
+   
+  console.log(users);
+  res.status(200).json(users);
+    
   }
 
   public async updateUsers(req: Request, res: Response): Promise<void> {

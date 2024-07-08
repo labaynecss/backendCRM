@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
-    "start": "nodemon --exec ts-node ./src/server.ts",
+    "dev": "nodemon --exec ts-node ./src/server.ts",
     "build": "tsc",
-    "serve": "node dist/server.ts"
+    "serve": "node dist/server.ts",
+    "start": "node ./dist/server.js",
+    "db:generate": "prisma generate",
+    "db:pull": "prisma db pull"
   },
   "author": "",
   "license": "ISC",

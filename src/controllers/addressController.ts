@@ -1,42 +1,43 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import { NotFoundError } from "../utils/error";
 
 const prisma = new PrismaClient();
 
 class AddressController {
   async Address(req: Request, res: Response): Promise<void> {
-    try {
-      const address = await prisma.crm_address_citymunicipality.findMany({
-       
-        select: {
-          citymunDesc: true,
-          citymuncode:true,
-          crm_address_province: {
-            select: {
-              provDesc: true,
-              crm_address_region: {
-                select: {
-                  regdescription: true,
-                },
+    const address = await prisma.crm_address_citymunicipality.findMany({
+      select: {
+        citymunDesc: true,
+        citymuncode: true,
+        crm_address_province: {
+          select: {
+            provDesc: true,
+            crm_address_region: {
+              select: {
+                regdescription: true,
               },
             },
           },
-          crm_address_barangay:{
-            select: {
-              brgyDescription: true
-            }
-          }
         },
-        orderBy:{
-          citymunDesc: 'asc'
-        }
-      });
-      console.log("Fetch success", address);
-      res.status(200).json(address);
-    } catch (err) {
-      console.error("Error retrieving branches:", err);
-      res.status(500).json({ error: "Internal Server Error" });
+        crm_address_barangay: {
+          select: {
+            brgyDescription: true,
+          },
+        },
+      },
+      orderBy: {
+        citymunDesc: 'asc',
+      },
+    });
+  
+    if (!address || address.length === 0) {
+      throw new NotFoundError('No addresses found');
     }
+  
+    console.log("Fetch success", address);
+    res.status(200).json(address);
+   
   }
   async ProviceAddress(req: Request, res: Response): Promise<void> {
     try {
