@@ -39,10 +39,26 @@ class ClientController {
         res.status(404).json({ error: "Profile not found" });
         return;
       }
+      const flattenedProfileGet = {
+        profile: profileGet.profile,
+        lastname: profileGet.lastname,
+        firstname: profileGet.firstname,
+        middlename: profileGet.middlename,
+        crm_allottee: profileGet.crm_allottee,
+ 
+        crm_spouse: profileGet.crm_spouse,
+        crm_loan_hdr: profileGet.crm_loan_hdr,
+        crm_workInformation: profileGet.crm_workInformation,
+        clientEducation: profileGet.crm_clientEducation
+          ? {
+              school_name: profileGet.crm_clientEducation?.crm_schools?.school_name || null,
+              course_description: profileGet.crm_clientEducation?.crm_course?.course_description || null,
+            }
+          : null,
+      };
   
-  
-      res.status(200).json(profileGet);
-      console.log("response", profileGet);
+      res.status(200).json(flattenedProfileGet);
+      console.log("response", flattenedProfileGet);
     } catch (err) {
       console.error("Error retrieving profile:", err);
       res.status(500).json({ message: "Internal Server Error" });
