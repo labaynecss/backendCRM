@@ -7,6 +7,7 @@ const router = Router();
 
 router.get("/clients/profile/:profile",Authorization.authorized, ClientController.getClientByProfile);
 router.get("/clients", Authorization.authorized,ClientController.clientjoinData);
+router.get("/allclients", Authorization.authorized,ClientController.getallClients)
 router.get("/clients/tele",Authorization.authorized, ClientController.getTelemarketer);
 router.post("/createClients", ClientController.createClient);
 router.post("/Checkclients", ClientController.checkclient);

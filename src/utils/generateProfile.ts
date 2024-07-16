@@ -19,20 +19,3 @@ export const generateProfile = (): string => {
 
 
 
-  export const  generateAssetId =() =>  {
-    // Define the characters allowed in the barcode
-    const characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const length = 12; // Length of the barcode
-
-    let assetId = '';
-    for (let i = 0; i < length; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        assetId += characters[randomIndex];
-    }
-
-    return assetId;
-}
-
-// // Example usage:
-// const newAssetId = generateAssetId();
-// console.log("Generated Asset ID:", newAssetId);

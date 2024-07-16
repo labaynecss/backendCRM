@@ -6,7 +6,13 @@ const allbranches = async (req: Request, res: Response): Promise<void> => {
     try {
         const branches = await prisma.crm_branch.findMany({
             orderBy: {
-                branch_code: "asc"
+                branch_description: "asc"
+            },
+            select: {
+                areaid: true,
+                branch_code: true,
+                branch_description: true,
+                
             }
         });
         console.log("fetch success",allbranches);
@@ -16,6 +22,7 @@ const allbranches = async (req: Request, res: Response): Promise<void> => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
 
 const branches = async (req: Request, res: Response): Promise<void> => {
 
@@ -45,6 +52,9 @@ const branches = async (req: Request, res: Response): Promise<void> => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
+
+
 const createBranch = async (req: Request, res: Response): Promise<void> => {
 
     const {branch_code, areaid, branch_description, branch_status, createdBy } = req.body 
@@ -67,6 +77,7 @@ const createBranch = async (req: Request, res: Response): Promise<void> => {
  res.status(500).json({ message: "Internal Server Error" });
     }
 }
+
 
 
 

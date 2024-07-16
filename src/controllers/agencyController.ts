@@ -6,18 +6,10 @@ const prisma = new PrismaClient();
 
 class AgencyController {
   async listagency(req: Request, res: Response): Promise<void> {
-    try {
-      // const {agency_name} = req.body
+    try { 
       const agency = await prisma.crm_agency.findMany({
-        // where:{
-        //   agency_name:{
-        //     contains: agency_name
-        //   }
-        // },
         select:{
           agency_name: true,
-          // agencycode: true,
-          // agencyid: true
         }
       });
       console.log("Fetch success", agency);
