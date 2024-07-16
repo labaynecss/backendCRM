@@ -13,8 +13,8 @@ router.get("/loans",Authorization.authorized, LoansController.listofLoans);
 router.patch("/clients/:profile",Authorization.authorized, LoansController.updateProduct);
 router.post('/fileupload', upload.array('files'), FileController.UploadFile);
 router.get ('/documents/:loanprofile', FileController.Documents )
-router.put('/loans/:profile/:loanprofile',Authorization.authorized, LoansController.BorrowerInformation);
+router.put('/borrowerinfo',Authorization.authorized, LoansController.BorrowerInformation);
+router.put('/loans/:loanprofile',Authorization.authorized, LoansController.LoanDetails);
 
 
 export const loansRoutes = router;
-77958

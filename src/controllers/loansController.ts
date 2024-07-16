@@ -35,10 +35,12 @@ class LoansController {
   }
 
   async BorrowerInformation(req: Request, res: Response): Promise<void> {
-    const { profile , loanprofile} = req.params;
+  
   
     try {
       const {
+        profile , 
+        loanprofile,
         lastname,
         firstname,
         middlename,
@@ -84,11 +86,33 @@ class LoansController {
         spouseprofile,
         s_educLevel,
         s_educSchool,
-        s_educCourse
+        s_educCourse,
+        course_id,
+        school_id
       } = req.body;
   
+      const logData: any = {
+        profile,
+        loanprofile,
+        requestBody: req.body,
+        borrowerUpdate: null,
+        workInfoUpsert: null,
+        spouseUpsert: null,
+        socialMediaUpdate: null,
+        clientIdUpdate: null,
+        validCourse: null,
+        validSchool: null,
+        educationUpdate: null,
+        familyUpdates: {
+          fatherUpdate: null,
+          motherUpdate: null,
+          siblingUpdate: null,
+          otherUpdate: null,
+        }
+      };
+  
       // Update borrower details
-      await prisma.crm_client.update({
+      logData.borrowerUpdate = await prisma.crm_client.update({
         where: { profile },
         data: {
           lastname,
@@ -103,70 +127,71 @@ class LoansController {
           civilstatus,
           mobile,
           telephone,
-          
         },
       });
- await prisma.crm_workInformation.upsert({
-      where:  { profile, loanprofile  },
-      update: { sssno, tinno },
-      create: { profile, loanprofile, sssno, tinno },
-    });
-      
-    await prisma.crm_spouse.upsert({
-      where: { spouseprofile: spouseprofile ?? profile },
-      update: {
-        s_lastname,
-        s_firstname,
-        s_middlename,
-        s_suffix,
-        s_birthdate,
-        s_gender,
-        s_address,
-        s_mobile,
-        s_telephone,
-        s_age,
-        s_provaddress,
-        crm_spouseEducation: {
-          update: {
-            s_educLevel,
-            s_educSchool,
-            s_educCourse
-          }
-        }
-      },
-      create: {
-        spouseprofile: spouseprofile ?? "",
-        profile,
-        s_lastname,
-        s_firstname,
-        s_middlename,
-        s_suffix,
-        s_birthdate,
-        s_gender,
-        s_address,
-        s_mobile,
-        s_telephone,
-        s_age,
-        s_provaddress,
-        crm_spouseEducation: {
-          create: {
-            s_educLevel,
-            s_educSchool,
-            s_educCourse
-          }
-        }
-      }
-    });
+  
+      logData.workInfoUpsert = await prisma.crm_workInformation.upsert({
+        where: { profile, loanprofile },
+        update: { sssno, tinno },
+        create: { profile, loanprofile, sssno, tinno },
+      });
+  
+      logData.spouseUpsert = await prisma.crm_spouse.upsert({
+        where: { spouseprofile: spouseprofile ?? "" },
+        update: {
+          ...(s_lastname && { s_lastname }),
+          ...(s_firstname && { s_firstname }),
+          ...(s_middlename && { s_middlename }),
+          ...(s_suffix && { s_suffix }),
+          ...(s_birthdate && { s_birthdate }),
+          ...(s_gender && { s_gender }),
+          ...(s_address && { s_address }),
+          ...(s_mobile && { s_mobile }),
+          ...(s_telephone && { s_telephone }),
+          ...(s_age && { s_age }),
+          ...(s_provaddress && { s_provaddress }),
+          crm_spouseEducation: {
+            update: {
+              ...(s_educLevel && { s_educLevel }),
+              ...(s_educSchool && { s_educSchool }),
+              ...(s_educCourse && { s_educCourse }),
+            },
+          },
+        },
+        create: {
+          spouseprofile: spouseprofile ?? "",
+          profile,
+          ...(s_lastname && { s_lastname }),
+          ...(s_firstname && { s_firstname }),
+          ...(s_middlename && { s_middlename }),
+          ...(s_suffix && { s_suffix }),
+          ...(s_birthdate && { s_birthdate }),
+          ...(s_gender && { s_gender }),
+          ...(s_address && { s_address }),
+          ...(s_mobile && { s_mobile }),
+          ...(s_telephone && { s_telephone }),
+          ...(s_age && { s_age }),
+          ...(s_provaddress && { s_provaddress }),
+          crm_spouseEducation: {
+            create: {
+              s_educLevel: s_educLevel ?? '',
+              s_educSchool: s_educSchool ?? '',
+              s_educCourse: s_educCourse ?? '',
+            },
+          },
+        },
+      });
   
       // Update social media details
-      await prisma.crm_clientSocials.update({
+      logData.socialMediaUpdate = await prisma.crm_clientSocials.update({
         where: { profile },
         data: {
           socialmedia_account,
           socialmedia_type,
         },
       });
-      await prisma.crm_clientId.update({
+  
+      logData.clientIdUpdate = await prisma.crm_clientId.update({
         where: { profile },
         data: {
           id_type,
@@ -177,21 +202,29 @@ class LoansController {
           updatedby,
           updateddatetime: new Date(),
         },
-      })
-  
-      // Update education details
-      await prisma.crm_clientEducation.update({
-        where: { profile },
-        data: {
-          educ_level,
-          educ_school,
-          course,
-          
-        },
       });
   
+      logData.validCourse = await prisma.crm_course.findUnique({ where: { course_id } });
+      logData.validSchool = await prisma.crm_schools.findUnique({ where: { school_id } });
+  
+      if (logData.validCourse && logData.validSchool) {
+        logData.educationUpdate = await prisma.crm_clientEducation.update({
+          where: { profile },
+          data: {
+            educ_level,
+            educ_school: logData.validSchool.school_id,
+            course: logData.validCourse.course_id,
+          },
+        });
+      } else {
+        if (!logData.validCourse) {
+          throw new Error(`Course with ID ${course_id} does not exist in the related table.`);
+        }
+       
+      }
+  
       // Update family details
-      await prisma.crm_clientFamily.updateMany({
+      logData.familyUpdates.fatherUpdate = await prisma.crm_clientFamily.updateMany({
         where: {
           profile: profile,
           family_relationship: "0",
@@ -202,7 +235,7 @@ class LoansController {
         },
       });
   
-      await prisma.crm_clientFamily.updateMany({
+      logData.familyUpdates.motherUpdate = await prisma.crm_clientFamily.updateMany({
         where: {
           profile: profile,
           family_relationship: "1",
@@ -213,7 +246,7 @@ class LoansController {
         },
       });
   
-      await prisma.crm_clientFamily.updateMany({
+      logData.familyUpdates.siblingUpdate = await prisma.crm_clientFamily.updateMany({
         where: {
           profile: profile,
           family_relationship: "2",
@@ -224,7 +257,7 @@ class LoansController {
         },
       });
   
-      await prisma.crm_clientFamily.updateMany({
+      logData.familyUpdates.otherUpdate = await prisma.crm_clientFamily.updateMany({
         where: {
           profile: profile,
           family_relationship: "3",
@@ -235,13 +268,14 @@ class LoansController {
         },
       });
   
+      console.log("All Data:", logData);
+  
       res.status(200).json({ message: 'Personal details updated successfully' });
     } catch (error) {
       console.error("Error updating personal details:", error);
       res.status(500).json({ error: 'An error occurred while updating personal details' });
     }
   }
-
 
   async LoanDetails(req: Request, res: Response): Promise<void> {
     const {  loanprofile } = req.params;
@@ -262,31 +296,36 @@ class LoansController {
        } = req.body
 
 
-       await prisma.crm_loan_hdr.update({
-        where: { loanprofile },
-        data: {
-          profile,
-          loantype,
-          terms,
-          pres_address,
-          pres_stay,
-          modeofpayment,
-          amountapplied,
-          productid,
-          areaid,
-          agentid,
-          branchid,
-          updatedby,
-          updateddatetime: new Date(),
-        },
-      });
-      res.status(200).json({ message: 'Loan details updated successfully' });
-    } catch (err) {
-      console.error('Error updating loan details:', err);
-      res.status(500).json({ err: 'An error occurred while updating loan details'});
-  }
-
-  }
+       console.log("Request Parameters:", { loanprofile });
+       console.log("Request Body:", req.body);
+   
+       const loanUpdateResult = await prisma.crm_loan_hdr.update({
+         where: { loanprofile },
+         data: {
+           profile,
+           loantype,
+           terms,
+           pres_address,
+           pres_stay,
+           modeofpayment,
+           amountapplied,
+           productid,
+           areaid,
+           agentid,
+           branchid,
+           updatedby,
+           updateddatetime: new Date(),
+         },
+       });
+   
+       console.log("Loan Update Result:", loanUpdateResult);
+   
+       res.status(200).json({ message: 'Loan details updated successfully' });
+     } catch (err) {
+       console.error('Error updating loan details:', err);
+       res.status(500).json({ err: 'An error occurred while updating loan details' });
+     }
+   }
 
   async SalaryInformation(req: Request, res: Response): Promise<void> {
     const { profile, loanprofile } = req.params;
