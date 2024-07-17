@@ -14,7 +14,7 @@ router.patch("/clients/:profile",Authorization.authorized, LoansController.updat
 router.post('/fileupload', upload.array('files'), FileController.UploadFile);
 router.get ('/documents/:loanprofile', FileController.Documents )
 router.put('/borrowerinfo',Authorization.authorized, LoansController.BorrowerInformation);
-router.put('/loans/:loanprofile',Authorization.authorized, LoansController.LoanDetails);
+router.put('/loandetails',Authorization.authorized, LoansController.LoanDetails);
 
 
 export const loansRoutes = router;

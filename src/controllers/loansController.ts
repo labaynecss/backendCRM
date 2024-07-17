@@ -278,14 +278,12 @@ class LoansController {
   }
 
   async LoanDetails(req: Request, res: Response): Promise<void> {
-    const {  loanprofile } = req.params;
 
     try {
       const { profile,
+        loanprofile,
         loantype,
         terms,
-        pres_address,
-        pres_stay,
         modeofpayment,
         amountapplied,
         productid,
@@ -298,15 +296,14 @@ class LoansController {
 
        console.log("Request Parameters:", { loanprofile });
        console.log("Request Body:", req.body);
-   
+       
+
        const loanUpdateResult = await prisma.crm_loan_hdr.update({
          where: { loanprofile },
          data: {
            profile,
            loantype,
            terms,
-           pres_address,
-           pres_stay,
            modeofpayment,
            amountapplied,
            productid,
@@ -317,6 +314,8 @@ class LoansController {
            updateddatetime: new Date(),
          },
        });
+
+       
    
        console.log("Loan Update Result:", loanUpdateResult);
    
@@ -328,9 +327,9 @@ class LoansController {
    }
 
   async SalaryInformation(req: Request, res: Response): Promise<void> {
-    const { profile, loanprofile } = req.params;
   try {
     const {
+      profile, loanprofile ,
       businesstype,
       businessname,
       businesno,
@@ -359,12 +358,107 @@ class LoansController {
       colspec_sellingprice,
       colspec_representative,
       colspec_verified,
-      id
+      realstate_tctnumber,
+      realstate_registerowner,
+      realstate_address,
+      realstate_localitytype,
+      realstate_landvalue,
+      realstate_improvement,
+      realstate_landsqm,
+      realstate_pricepersqm,
+      realstate_totalappraisalvalue,
+      realstate_marketable,
+      realstate_marketableprice,
+      realstate_referencefile,
+      realstate_housetype,
+      realstate_remarks,
+      sourcetype,
+      ofw_principalemployer,
+      ofw_agency,
+      ofw_address,
+      ofw_contactnumber,
+      ofw_netsalaryincome,
+      business_nature,
+      business_name,
+      business_address,
+      business_contact,
+      net_income,
+       employer_nature,
+        employer_address,
+        employer_contact,
+        net_salaryincome,
+        employer_company,
+        allottee_principalemployer,
+        allottee_agency,
+        allottee_address,
+        allottee_contactnumber,
+        soiid,
+        allottee_netsalaryincome,
+
+
     } = req.body;
+
+    
+    const logData: any = {
+      profile,
+      loanprofile,
+      businesstype,
+      businessname,
+      businesno,
+      job_level,
+      industry,
+      monthlyincome,
+      status,
+      verified,
+      updatedby,
+      amount,
+      expense_description,
+      colspec_make,
+      colspec_yearmodel,
+      colspec_bank,
+      colspec_plateno,
+      colspec_seriesvariant,
+      colspec_transmission,
+      colspec_enginetype,
+      colspec_displacement,
+      colspec_seatingcapacity,
+      colspec_fueltype,
+      colspec_dealername,
+      colspec_dealeraddress,
+      colspec_contactnumber,
+      colspec_remarks,
+      colspec_sellingprice,
+      colspec_representative,
+      colspec_verified,
+      realstate_tctnumber,
+      realstate_registerowner,
+      realstate_address,
+      realstate_localitytype,
+      realstate_landvalue,
+      realstate_improvement,
+      realstate_landsqm,
+      realstate_pricepersqm,
+      realstate_totalappraisalvalue,
+      realstate_marketable,
+      realstate_marketableprice,
+      realstate_referencefile,
+      realstate_housetype,
+      realstate_remarks,
+    };
+
+  
+    
+    console.log("All Data:", logData);
+
+    const soi = await prisma.crm_soi.findFirst({
+      where: { loanprofile },
+      select: { sourcetype }
+    });
+
 
     await prisma.$transaction(async (prisma) => {
       await prisma.crm_workInformation.update({
-        where: { loanprofile, id },
+        where: { loanprofile },
         data: {
           profile,
           businesstype,
@@ -391,38 +485,130 @@ class LoansController {
         data: cashflowData,
       });
 
-      // Create many crm_assetsAuto entries
-      const assetsData = colspec_make.map((make: any, index: string | number) => ({
-        loanprofile,
-        colspec_make: make,
-        colspec_yearmodel: colspec_yearmodel[index],
-        colspec_bank: colspec_bank[index],
-        colspec_plateno: colspec_plateno[index],
-        colspec_seriesvariant: colspec_seriesvariant[index],
-        colspec_transmission: colspec_transmission[index],
-        colspec_enginetype: colspec_enginetype[index],
-        colspec_displacement: colspec_displacement[index],
-        colspec_seatingcapacity: colspec_seatingcapacity[index],
-        colspec_fueltype: colspec_fueltype[index],
-        colspec_dealername: colspec_dealername[index],
-        colspec_dealeraddress: colspec_dealeraddress[index],
-        colspec_contactnumber: colspec_contactnumber[index],
-        colspec_remarks: colspec_remarks[index],
-        colspec_sellingprice: colspec_sellingprice[index],
-        colspec_representative: colspec_representative[index],
-        colspec_verified: colspec_verified[index],
-      }));
+     // Create many crm_assetsAuto entries
+     const assetsData = colspec_make.map((make: any, index: string | number) => ({
+      loanprofile,
+      colspec_make: make,
+      ...(colspec_yearmodel[index] && { colspec_yearmodel: colspec_yearmodel[index] }),
+      ...(colspec_bank[index] && { colspec_bank: colspec_bank[index] }),
+      ...(colspec_plateno[index] && { colspec_plateno: colspec_plateno[index] }),
+      ...(colspec_seriesvariant[index] && { colspec_seriesvariant: colspec_seriesvariant[index] }),
+      ...(colspec_transmission[index] && { colspec_transmission: colspec_transmission[index] }),
+      ...(colspec_enginetype[index] && { colspec_enginetype: colspec_enginetype[index] }),
+      ...(colspec_displacement[index] && { colspec_displacement: colspec_displacement[index] }),
+      ...(colspec_seatingcapacity[index] && { colspec_seatingcapacity: colspec_seatingcapacity[index] }),
+      ...(colspec_fueltype[index] && { colspec_fueltype: colspec_fueltype[index] }),
+      ...(colspec_dealername[index] && { colspec_dealername: colspec_dealername[index] }),
+      ...(colspec_dealeraddress[index] && { colspec_dealeraddress: colspec_dealeraddress[index] }),
+      ...(colspec_contactnumber[index] && { colspec_contactnumber: colspec_contactnumber[index] }),
+      ...(colspec_remarks[index] && { colspec_remarks: colspec_remarks[index] }),
+      ...(colspec_sellingprice[index] && { colspec_sellingprice: colspec_sellingprice[index] }),
+      ...(colspec_representative[index] && { colspec_representative: colspec_representative[index] }),
+      ...(colspec_verified[index] && { colspec_verified: colspec_verified[index] }),
+      updatedby,
+      updateddatetime: new Date()
+    }));
 
-      await prisma.crm_assetsAuto.createMany({
-        data: assetsData,
-      });
+    await prisma.crm_assetsAuto.createMany({
+      data: assetsData,
     });
-    } catch (error) {
-      console.error('Error updating salary information:', error);
-      res.status(500).json({ error: 'An error occurred while updating salary information' });
-    }
+
+    // Create many crm_assetsRealstate entries
+    const realstateData = realstate_tctnumber.map((tctnumber: any, index: string | number) => ({
+      loanprofile,
+      realstate_tctnumber: tctnumber,
+      ...(realstate_registerowner[index] && { realstate_registerowner: realstate_registerowner[index] }),
+      ...(realstate_address[index] && { realstate_address: realstate_address[index] }),
+      ...(realstate_localitytype[index] && { realstate_localitytype: realstate_localitytype[index] }),
+      ...(realstate_landvalue[index] && { realstate_landvalue: realstate_landvalue[index] }),
+      ...(realstate_improvement[index] && { realstate_improvement: realstate_improvement[index] }),
+      ...(realstate_landsqm[index] && { realstate_landsqm: realstate_landsqm[index] }),
+      ...(realstate_pricepersqm[index] && { realstate_pricepersqm: realstate_pricepersqm[index] }),
+      ...(realstate_totalappraisalvalue[index] && { realstate_totalappraisalvalue: realstate_totalappraisalvalue[index] }),
+      ...(realstate_marketable[index] && { realstate_marketable: realstate_marketable[index] }),
+      ...(realstate_marketableprice[index] && { realstate_marketableprice: realstate_marketableprice[index] }),
+      ...(realstate_referencefile[index] && { realstate_referencefile: realstate_referencefile[index] }),
+      ...(realstate_housetype[index] && { realstate_housetype: realstate_housetype[index] }),
+      ...(realstate_remarks[index] && { realstate_remarks: realstate_remarks[index] }),
+      updatedby,
+      updateddatetime: new Date()
+    }));
+
+    
+
+    await prisma.crm_assetsRealstate.createMany({
+      data: realstateData,
+    });
+  });
+
+
+  if (soi?.sourcetype === 'OFW') {
+    await prisma.crm_soiOfw.createMany({
+      data: [{
+        soiid,
+        loanprofile,
+        profile,
+        ofw_principalemployer,
+        ofw_agency,
+        ofw_address,
+        ofw_contactnumber,
+        ofw_netsalaryincome,
+        
+      
+      }]
+    });
+  } else if (soi?.sourcetype === 'Business') {
+    await prisma.crm_soiBusiness.createMany({
+      data: [{
+        soiid,
+        loanprofile,
+        business_nature,
+        business_name,
+        business_address,
+        business_contact,
+        net_income,
+   
+      }]
+    });
+  } else if (soi?.sourcetype === 'Employment') {
+    await prisma.crm_soiEmployment.createMany({
+      data: [{
+        soiid,
+        loanprofile,
+        employer_nature,
+        employer_address,
+        employer_contact,
+        net_salaryincome,
+        employer_company,
+    
+      }]
+    });
+  } else if (soi?.sourcetype === 'Allottee') {
+    await prisma.crm_soiAllottee.createMany({
+      data: [{
+        soiid,
+        loanprofile,
+        allottee_principalemployer,
+        allottee_agency,
+        allottee_address,
+        allottee_contactnumber,
+        allottee_netsalaryincome,
+        verified,
+        updatedby,
+        updateddatetime: new Date()
+      }]
+    });
   }
 
+
+
+
+    res.status(200).json({ message: 'Salary information updated successfully' });
+  } catch (error) {
+    console.error('Error updating salary information:', error);
+    res.status(500).json({ error: 'An error occurred while updating salary information' });
+  }
+}
 
   async EmploymentHistory(req: Request, res: Response): Promise<void> {
     const { loanprofile } = req.params;
@@ -468,7 +654,6 @@ class LoansController {
         charrefFour_verified,
       } = req.body;
   
-      // Create an array of employment history data
       const employmentData = profile.map((prof: any, index: string | number) => ({
         loanprofile,
         profile: prof,

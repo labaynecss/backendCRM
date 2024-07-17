@@ -5,6 +5,7 @@ import { generateloanProfileId } from "../utils/generateLoanProfile";
 import { NotFoundError } from "../utils/error";
 import { flattenProfileGet } from "../helpers/getClientbyProfile";
 import { ClientData } from "../helpers/getClients";
+import { generateSoiId } from "../utils/generateSoi";
 
 
 const prisma = new PrismaClient();
@@ -269,6 +270,7 @@ class ClientController {
       const profile = generateProfile();
       const loanprofile = generateloanProfileId();
       const spouseprofile = generateProfile();
+      const soi_id = generateSoiId(sourcetype); 
 
 
       const [createClient, loans] = await prisma.$transaction([
@@ -463,8 +465,8 @@ class ClientController {
             },
             crm_soi: {
               create: {
+                soiid: soi_id,
                 sourcetype,
-                
               },
             },
           },
