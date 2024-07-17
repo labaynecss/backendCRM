@@ -379,22 +379,26 @@ class ClientController {
               socialmedia_type,
             }
            },
-          //  crm_workInformation: {
-          //   createMany: {
-          //     businesstype,
-          //     businessname,
-          //     industry,
-          //     sssno,
-          //     tinno,
-          //     position,
-          //     job_level,
-          //     businesno,
-          //     monthlyincome,
-          //     status: w_status,
-          //     verified
-          //   }
-          //  },
+           crm_workInformation: {
+            create: {
+          
+              loanprofile : loanprofile,
+              businesstype,
+              businessname,
+              businesno,
+              position,
+              job_level,
+              industry,
+              sssno,
+              tinno,
+              monthlyincome,
+              status: w_status,
+              verified,
+              createdby,
+              createddatetime: new Date(),
+            },
           },
+        },
         }),
         prisma.crm_loan_hdr.create({
           data: {
@@ -467,6 +471,7 @@ class ClientController {
               create: {
                 soiid: soi_id,
                 sourcetype,
+                monthlyincome: monthlyincome
               },
             },
           },
