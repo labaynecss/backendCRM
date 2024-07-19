@@ -21,6 +21,14 @@ export const mapLoanData = (loan: any) => ({
     pres_address: loan.pres_address,
     pres_stay: loan.pres_stay,
   });
+
+
+  export const flattenSoi = (soi: any) => ({
+    soiid: soi.soiid,
+    sourcetype: soi.sourcetype,
+    // Add other fields if necessary
+  });
+  
   
   export const flattenClientEducation = (education: any) => ({
     school_name: education?.crm_schools?.school_name || null,
@@ -51,6 +59,7 @@ export const mapLoanData = (loan: any) => ({
     crm_spouse: profileGet.crm_spouse,
     crm_loan_hdr: profileGet.crm_loan_hdr.map(mapLoanData),
     crm_workInformation: profileGet.crm_workInformation,
+    crm_soi: profileGet.crm_soi.map(flattenSoi),
     crm_clientFamily: profileGet.crm_clientFamily,
     crm_characterReference: profileGet.crm_loan_hdr.flatMap((loanHdr: { crm_characterReference: any; }) => loanHdr.crm_characterReference),
     clientEducation: profileGet.crm_clientEducation ? flattenClientEducation(profileGet.crm_clientEducation) : null,

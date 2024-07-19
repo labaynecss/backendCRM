@@ -55,7 +55,8 @@ class ClientController {
            }
           },
           crm_workInformation: true,
-          crm_clientFamily: true
+          crm_clientFamily: true,
+          crm_soi: true
         },
       });
   
@@ -262,15 +263,18 @@ class ClientController {
         SDFullname,
         SDAge,
         sourcetype,
-        assetremarks,
-        totalfair_marketvalue,
-        assetid,
+        businessType,
+        businessName,
+        businessNumber,
+        workPosition,
+        tin,
+        workStatus
+
       } = req.body;
   
       const profile = generateProfile();
-      const loanprofile = generateloanProfileId();
+      const loan_profile = generateloanProfileId();
       const spouseprofile = generateProfile();
-      const soi_id = generateSoiId(sourcetype); 
 
 
       const [createClient, loans] = await prisma.$transaction([
@@ -379,31 +383,15 @@ class ClientController {
               socialmedia_type,
             }
            },
-           crm_workInformation: {
-            create: {
+        
+        
           
-              loanprofile : loanprofile,
-              businesstype,
-              businessname,
-              businesno,
-              position,
-              job_level,
-              industry,
-              sssno,
-              tinno,
-              monthlyincome,
-              status: w_status,
-              verified,
-              createdby,
-              createddatetime: new Date(),
-            },
-          },
         },
         }),
         prisma.crm_loan_hdr.create({
           data: {
             profile,
-            loanprofile,
+            loanprofile : loan_profile,
             personal_loan,
             loantype,
             terms,
@@ -420,13 +408,24 @@ class ClientController {
             branchid,
             createdby,
             createddatetime: new Date(),
-            // crm_assets: {
-            //   create: {
-            //     assetid,
-            //     assetremarks,
-            //     totalfair_marketvalue,
-            //   },
-            // },
+            crm_workInformation: {
+              create: {
+                profile: profile,
+                businesstype: businessType,
+                businessname: businessName,
+                businesno: businessNumber,
+                position: workPosition,
+                job_level: job_level,
+                industry: industry,
+                sssno: sssno,
+                tinno: tin,
+                monthlyincome: monthlyincome,
+                status: workStatus,
+                verified: true,
+                createdby: createdby,
+                createddatetime: new Date(),
+              }
+          },
             crm_characterReference: {
               createMany: {
                 data: [
@@ -467,17 +466,11 @@ class ClientController {
               },
 
             },
-            crm_soi: {
-              create: {
-                soiid: soi_id,
-                sourcetype,
-                monthlyincome: monthlyincome
-              },
-            },
-          },
+          }
         }),
       ]);
-  
+
+   
       res.status(201).json({
         message: "Client created successfully",
         loans,
