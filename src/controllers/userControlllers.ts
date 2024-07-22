@@ -20,8 +20,6 @@ class UserController {
         u_suffix,
         u_email,
         address,
-        LEVEL,
-        SECONDLEVEL,
         BRANCH,
       } = req.body;
       const salted = await bcrypt.genSalt();
@@ -49,8 +47,6 @@ class UserController {
           u_suffix: u_suffix,
           address: address,
           BRANCH: BRANCH,
-          LEVEL: LEVEL,
-          SECONDLEVEL: SECONDLEVEL,
           emp_id: emp_id,
         },
       });
@@ -92,8 +88,7 @@ class UserController {
         u_suffix,
         address,
         BRANCH,
-        LEVEL,
-        SECONDLEVEL,
+       
       } = req.body;
       const salt = await bcrypt.genSalt();
       const passwordHash = await bcrypt.hash(PASSWORD, salt);
@@ -117,8 +112,6 @@ class UserController {
           u_lastname: u_lastname,
           u_middlename: u_middlename,
           address: address,
-          LEVEL: LEVEL,
-          SECONDLEVEL: SECONDLEVEL,
           u_email: u_email,
           u_suffix: u_suffix,
           BRANCH: BRANCH,
@@ -143,8 +136,6 @@ class UserController {
           u_firstname: true,
           u_lastname: true,
           address: true,
-          LEVEL: true,
-          SECONDLEVEL: true,
           u_email: true,
           u_middlename: true,
           u_suffix: true,

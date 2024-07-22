@@ -11,7 +11,7 @@ router.post(
   UserController.createUser
 );
 router.get("/users", Authorization.authorized,UserController.usersList);
-router.put("/user/:emp_id",Authorization.authorized ,UserController.updateUsers);
+router.put("/user/:emp_id" ,UserController.updateUsers);
 router.get("/user/:emp_id", Authorization.authorized,UserController.userbyId);
 
 export const userRoutes = router;

@@ -112,24 +112,24 @@ class ClientController {
     }
   }
   
-  async getTelemarketer(req: Request, res: Response): Promise<void> {
-    try {
-      const tele = await prisma.crm_users.findMany({
-        where: {
-          SECONDLEVEL: "11",
-          LEVEL: "1",
-        },
-      });
-      console.log("Fetch success", tele);
-      res.status(200).json(tele);
-    } catch (err) {
-      console.error("Error retrieving fetch:", err);
-      res.status(500).json({ error: "Internal Server Error" });
-    }
-  }
+  // async getTelemarketer(req: Request, res: Response): Promise<void> {
+  //   try {
+  //     const tele = await prisma.crm_users.findMany({
+  //       where: {
+  //         SECONDLEVEL: "11",
+  //         LEVEL: "1",
+  //       },
+  //     });
+  //     console.log("Fetch success", tele);
+  //     res.status(200).json(tele);
+  //   } catch (err) {
+  //     console.error("Error retrieving fetch:", err);
+  //     res.status(500).json({ error: "Internal Server Error" });
+  //   }
+  // }
 
   async checkclient(req: Request, res: Response): Promise<void> {
-    const { firstname, middlename, lastname, suffix , birthday} = req.body;
+    const { firstname, middlename, lastname, suffix , dateOfBirth} = req.body;
     try {
       const client = await prisma.crm_client.findFirst({
         where: {
@@ -137,7 +137,7 @@ class ClientController {
           middlename: middlename,
           lastname: lastname,
           suffix: suffix,
-          birthday: birthday
+          birthday: dateOfBirth
         },
         select: {
           firstname: true,
@@ -268,7 +268,8 @@ class ClientController {
         businessNumber,
         workPosition,
         tin,
-        workStatus
+        workStatus,
+        acode
 
       } = req.body;
   
@@ -290,6 +291,7 @@ class ClientController {
             gender,
             mobile,
             telephone,
+            acode,
             residence_status,
             perm_address,
             perm_stay,
@@ -316,7 +318,7 @@ class ClientController {
                 s_firstname: s_firstname ?? '',
                 s_middlename: s_middlename ?? '',
                 s_suffix : s_suffix ?? '',
-                s_birthdate,
+                s_birthdate  : s_birthdate ?? '',
                 s_gender: s_gender ?? '',
                 s_address: s_prov_address ?? '',
                 s_mobile: s_mobile ?? '',
@@ -388,7 +390,7 @@ class ClientController {
           
         },
         }),
-        prisma.crm_loan_hdr.create({
+        prisma.crm_loan_hdr.create({ 
           data: {
             profile,
             loanprofile : loan_profile,
@@ -402,9 +404,9 @@ class ClientController {
             pres_stay,
             modeofpayment,
             amountapplied,
-            productid,
+            productid: productid,
             areaid,
-            agentid,
+            agentid: agentid,
             branchid,
             createdby,
             createddatetime: new Date(),
