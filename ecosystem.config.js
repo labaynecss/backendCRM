@@ -3,7 +3,7 @@ module.exports = {
     apps: [
       {
         name: 'backendCRM',
-        script: 'node_modules/ts-node/dist/bin.js',
+        script: 'node_modules/ts-node/dist/server.js',
         args: 'src/server.ts',
         interpreter: 'none',
         watch: true,

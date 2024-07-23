@@ -228,7 +228,7 @@ class ClientController {
         socialmedia_type,
         areacode,
         branchid,
-        residence_status,
+        residenceStatus,
         perm_address,
         perm_stay, 
         prov_address,
@@ -269,7 +269,8 @@ class ClientController {
         workPosition,
         tin,
         workStatus,
-        acode
+        areaCode,
+        address
 
       } = req.body;
   
@@ -291,8 +292,8 @@ class ClientController {
             gender,
             mobile,
             telephone,
-            acode,
-            residence_status,
+            acode: areaCode,
+            residence_status: residenceStatus,
             perm_address,
             perm_stay,
             prov_address,
@@ -300,7 +301,7 @@ class ClientController {
             civilstatus,
             religion,
             email,
-            area: areacode,
+            area: areaid,
             mothersname: mothersname ?? "",
             createdby: createdby ?? "",
             createddatetime: new Date(),
@@ -320,10 +321,9 @@ class ClientController {
                 s_suffix : s_suffix ?? '',
                 s_birthdate  : s_birthdate ?? '',
                 s_gender: s_gender ?? '',
-                s_address: s_prov_address ?? '',
                 s_mobile: s_mobile ?? '',
                 s_telephone: s_telephone ?? '',
-                s_provaddress: s_prov_address,
+                s_provaddress: address,
                 s_age: s_age,
                 crm_spouseEducation: {
                   create: {
@@ -342,27 +342,23 @@ class ClientController {
                     family_relationship:  '0' ,
                     family_membername: fathername ,
                     family_age:fatherage , 
-                    // family_verified: family_verified ?? '',
                   },
                   {
                     family_relationship:  "1",
                     family_membername: mothername ,
                     family_age: motherage,
-                    // family_verified: family_verified1 ?? '',
                   },
 
                   {
                     family_relationship:  "2",
                     family_membername: SDFullname ,
                     family_age: SDAge,
-                    // family_verified: family_verified1 ?? '',
                   },
 
                   {
                     family_relationship:  "3",
                     family_membername: SDFullname ?? '',
                     family_age: SDAge,
-                    // family_verified: family_verified1 ?? '',
                   },
                 
                 ],
