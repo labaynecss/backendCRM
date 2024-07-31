@@ -19,11 +19,11 @@ class AgentController {
     try {
       const allagents = await prisma.crm_loan_hdr.findMany({
         include: {
-          crm_agents: {
-            select: {
-              agentid: true,
-            },
-          },
+          // crm_agents: {
+          //   select: {
+          //     agentid: true,
+          //   },
+          // },
         },
       });
       console.log("join success", allagents);

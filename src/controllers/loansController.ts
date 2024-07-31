@@ -113,7 +113,6 @@ class LoansController {
         spouseEducationLevel,
         spouseSchool,
         spouseCourse,
-       
         pres_address,
         pres_stay,
         region,
@@ -125,7 +124,7 @@ class LoansController {
         perm_stay,
         prov_address,
         prov_stay,
-
+        course_id
 
 
 
@@ -169,6 +168,7 @@ class LoansController {
           civilstatus,
           mobile,
           telephone,
+          perm_address,
           perm_stay,
           prov_stay,
           prov_address
@@ -235,7 +235,7 @@ class LoansController {
           },
           update: {
             socialmedia_account: facebook,
- socialmedia_type: 'Facebook'
+          socialmedia_type: 'Facebook'
           },
           create: {
             profile: profile,
@@ -287,9 +287,13 @@ class LoansController {
           data: {
             educ_level,
             educ_school: educ_school ,
-            course: course
+            course: course_id
+            
+            
           },
         });
+
+      
      
   
       // Update family details
@@ -302,7 +306,7 @@ class LoansController {
           family_membername: fathername,
           family_age: fatherage,
         },
-      });
+      }); 
   
       logData.familyUpdates.motherUpdate = await prisma.crm_clientFamily.updateMany({
         where: {
@@ -315,23 +319,28 @@ class LoansController {
         },
       });
   
-      for (const sibling of siblings) {
-        logData.familyUpdates.siblingUpdate = await prisma.crm_clientFamily.updateMany({
-          where: {
-            profile: profile,
-            family_relationship: "2",
-            family_membername: sibling.SDFullname
-          },
-          data: {
-            family_membername: sibling.SDFullname,
-            family_age: sibling.SDAge,
-            family_relationship: sibling.SDtypes,
-            family_remarks: sibling.SDschool
-          },
-        });
-      }
+      if (Array.isArray(siblings) && siblings.length) {
+        for (const sibling of siblings) {
+          const updateResult = await prisma.crm_clientFamily.updateMany({
+            where: {
+              profile: profile,
+              family_relationship: "2",
+              family_membername: sibling.SDFullname,
+            },
+            data: {
+              family_membername: sibling.SDFullname,
+              family_age: sibling.SDAge,
+              family_relationship: sibling.SDtypes,
+              family_remarks: sibling.SDschool,
+            },
+          });
   
-      console.log("All Data:", logData);
+          // Log each update result
+          logData.familyUpdates.siblingUpdates.push(updateResult);
+        }
+      } else {
+        console.log("No siblings data provided or empty array.");
+      }
   
       res.status(200).json({ message: 'Personal details updated successfully' });
     } catch (error) {

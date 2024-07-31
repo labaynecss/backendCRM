@@ -10,19 +10,26 @@ class AddressController {
       select: {
         citymunDesc: true,
         citymuncode: true,
+        provCode: true,
         crm_address_province: {
           select: {
             provDesc: true,
+            provCode: true,
+            regCode: true,
             crm_address_region: {
               select: {
+                regcode: true,
                 regdescription: true,
+                
               },
-            },
+            }, 
           },
         },
         crm_address_barangay: {
           select: {
             brgyDescription: true,
+            citymuncode: true,
+            brgyCode: true,
           },
         },
       },
@@ -35,10 +42,43 @@ class AddressController {
       throw new NotFoundError('No addresses found');
     }
   
-    console.log("Fetch success", address);
+    console.log("Address value", address);
     res.status(200).json(address);
    
   }
+
+//   async GetAddressByArea(req: Request, res: Response): Promise<void> {
+//  const { brgyCode } = req.params
+//  const area = await prisma.crm.findMany({
+//    where: {  },
+//    select: {
+//     brgyDescription: true,
+//     citymuncode: true,
+//     crm_address_citymunicipality: {
+//       select: {
+//         citymunDesc: true,
+//         citymuncode: true,
+//         crm_address_province: {
+//           select: {
+//             provDesc: true,
+//             provCode: true,
+//             crm_address_region: {
+//               select: {
+//                 regdescription: true,
+//                 psgcCode: true
+                
+//               },
+//             }, 
+//           },
+//         },
+//       },
+//     }
+//    }
+
+//  })
+// }
+  
+
   async ProviceAddress(req: Request, res: Response): Promise<void> {
     try {
       const addresslist = await prisma.crm_address_province.findMany({

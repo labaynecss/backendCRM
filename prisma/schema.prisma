@@ -21,7 +21,9 @@ model crm_address_barangay {
   citymuncode                  String?                       @db.NVarChar(50)
   brgyCode                     String                        @id(map: "PK_crm_address_barangay") @db.NVarChar(50)
   crm_address_citymunicipality crm_address_citymunicipality? @relation(fields: [citymuncode], references: [citymuncode], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_address_barangay_crm_address_barangay")
+  crm_client                   crm_client[]
   crm_coBorrowers              crm_coBorrowers[]
+  crm_loan_hdr                 crm_loan_hdr[]
 }
 
 model crm_address_citymunicipality {
@@ -61,24 +63,23 @@ model crm_agency {
 }
 
 model crm_agents {
-  id              Int            @default(autoincrement())
-  agentid         String         @id(map: "PK_crm_agents") @db.NVarChar(50)
-  a_lastname      String?        @db.NVarChar(50)
-  a_firstname     String?        @db.NVarChar(50)
-  a_middlename    String?        @db.NVarChar(50)
-  a_suffix        String?        @db.NVarChar(50)
-  a_birthday      String?        @db.NVarChar(50)
-  a_gender        String?        @db.NVarChar(50)
-  a_mobile        String?        @db.NVarChar(50)
-  a_telephone     String?        @db.NVarChar(50)
-  a_addresscode   String?        @db.NVarChar(50)
-  a_address       String?        @db.NVarChar(50)
+  id              Int       @default(autoincrement())
+  agentid         String    @id(map: "PK_crm_agents") @db.NVarChar(50)
+  a_lastname      String?   @db.NVarChar(50)
+  a_firstname     String?   @db.NVarChar(50)
+  a_middlename    String?   @db.NVarChar(50)
+  a_suffix        String?   @db.NVarChar(50)
+  a_birthday      String?   @db.NVarChar(50)
+  a_gender        String?   @db.NVarChar(50)
+  a_mobile        String?   @db.NVarChar(50)
+  a_telephone     String?   @db.NVarChar(50)
+  a_addresscode   String?   @db.NVarChar(50)
+  a_address       String?   @db.NVarChar(50)
   a_status        Boolean?
-  createdby       String?        @db.NVarChar(50)
-  createddatetime DateTime?      @db.DateTime
-  updatedby       String?        @db.NVarChar(50)
-  updateddatetime DateTime?      @db.DateTime
-  crm_loan_hdr    crm_loan_hdr[]
+  createdby       String?   @db.NVarChar(50)
+  createddatetime DateTime? @db.DateTime
+  updatedby       String?   @db.NVarChar(50)
+  updateddatetime DateTime? @db.DateTime
 }
 
 model crm_area {
@@ -213,7 +214,6 @@ model crm_characterReference {
   loanprofile          String       @db.NVarChar(50)
   charref_name         String?      @db.NVarChar(50)
   charref_address      String?      @db.NVarChar(50)
-  charref_areacode     String?      @db.NVarChar(50)
   charref_contactno    String?      @db.NVarChar(50)
   charref_relationship String?      @db.NVarChar(50)
   charref_verified     String?      @db.NVarChar(50)
@@ -238,11 +238,12 @@ model crm_client {
   telephone             String?                 @db.NVarChar(50)
   acode                 String?                 @db.NVarChar(50)
   residence_status      String?                 @db.NVarChar(50)
+  perm_stay             String?                 @db.NVarChar(50)
   perm_address          String?                 @db.NVarChar(100)
+  perm_brgycode         String?                 @db.NVarChar(50)
   prov_stay             String?                 @db.NVarChar(50)
   prov_address          String?                 @db.NVarChar(100)
-  perm_stay             String?                 @db.NVarChar(50)
-  area                  String?                 @db.NVarChar(50)
+  prov_brgycode         String?                 @db.NVarChar(50)
   civilstatus           String?                 @db.NVarChar(50)
   religion              String?                 @db.NVarChar(50)
   email                 String?                 @db.NVarChar(50)
@@ -253,6 +254,7 @@ model crm_client {
   updateddatetime       DateTime?               @db.DateTime
   crm_assets            crm_assets[]
   crm_barangayChecking  crm_barangayChecking[]
+  crm_address_barangay  crm_address_barangay?   @relation(fields: [prov_brgycode], references: [brgyCode], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_client_crm_address_barangay")
   crm_clientEducation   crm_clientEducation?
   crm_clientFamily      crm_clientFamily[]
   crm_clientId          crm_clientId?
@@ -265,7 +267,6 @@ model crm_client {
   crm_soiEmployment     crm_soiEmployment[]
   crm_soiOfw            crm_soiOfw[]
   crm_spouse            crm_spouse[]
-  crm_workInformation   crm_workInformation[]
 }
 
 model crm_clientEducation {
@@ -354,6 +355,14 @@ model crm_course {
   crm_clientEducation crm_clientEducation[]
 }
 
+model crm_department {
+  id               Int         @default(autoincrement())
+  dept_id          String      @id(map: "PK_crm_department") @db.NVarChar(50)
+  dept_description String?     @db.NVarChar(50)
+  dept_module      String?     @db.NVarChar(50)
+  crm_users        crm_users[]
+}
+
 model crm_documentUploaded {
   id                  Int           @id(map: "PK_crm_documentUploaded") @default(autoincrement())
   loanprofile         String?       @db.NVarChar(50)
@@ -385,6 +394,7 @@ model crm_employmentHistory {
 
 model crm_loan_hdr {
   id                     Int                      @default(autoincrement())
+  branchid               String?                  @db.NVarChar(50)
   loanprofile            String                   @id(map: "PK_crm_loan_hdr") @db.NVarChar(50)
   profile                String                   @db.NVarChar(50)
   loantype               String?                  @db.NVarChar(50)
@@ -395,10 +405,9 @@ model crm_loan_hdr {
   previouspn             String?                  @db.NVarChar(50)
   personal_loan          String?                  @db.NVarChar(50)
   paymenthistory         String?                  @db.NVarChar(50)
-  branchid               String?                  @db.NVarChar(50)
   productid              String?                  @db.NVarChar(50)
   agentid                String?                  @db.NVarChar(50)
-  areaid                 String?                  @db.NVarChar(50)
+  pres_brgycode          String?                  @db.NVarChar(50)
   createdby              String?                  @db.NVarChar(50)
   createddatetime        DateTime?                @db.DateTime
   updatedby              String?                  @db.NVarChar(50)
@@ -412,9 +421,9 @@ model crm_loan_hdr {
   crm_barangayChecking   crm_barangayChecking[]
   crm_characterReference crm_characterReference[]
   crm_documentUploaded   crm_documentUploaded[]
-  crm_agents             crm_agents?              @relation(fields: [agentid], references: [agentid], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_agents")
+  crm_address_barangay   crm_address_barangay?    @relation(fields: [pres_brgycode], references: [brgyCode], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_address_barangay")
   crm_branch             crm_branch?              @relation(fields: [branchid], references: [branch_code], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_branch")
-  crm_client             crm_client               @relation(fields: [profile], references: [profile], onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_client1")
+  crm_client             crm_client               @relation(fields: [profile], references: [profile], onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_client")
   crm_products           crm_products?            @relation(fields: [productid], references: [productid], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_products")
   crm_soi                crm_soi[]
   crm_soiAllottee        crm_soiAllottee[]
@@ -424,7 +433,6 @@ model crm_loan_hdr {
   crm_workInformation    crm_workInformation?
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model crm_loanStatusReport {
   id                    Int       @id(map: "PK_crm_loanStatusReport") @default(autoincrement())
   loan_profile          String?   @db.NVarChar(50)
@@ -451,6 +459,51 @@ model crm_loanStatusReport {
   crd_mo_returndate     DateTime? @db.DateTime
   crd_ao_returndate     DateTime? @db.DateTime
   crd_returndate        DateTime? @db.DateTime
+}
+
+model crm_moduleStaticAccess {
+  id                   Int       @id(map: "PK_crm_moduleStaticAccess") @default(autoincrement())
+  userGroup            String?   @db.NVarChar(50)
+  userAccess           String?   @db.NVarChar(50)
+  moduleDescription    String?   @db.NVarChar(50)
+  moduleAdmin          Boolean?
+  moduleMarketing      Boolean?
+  moduleAOCI           Boolean?
+  moduleCrecom         Boolean?
+  moduleCRD            Boolean?
+  moduleLoansReleasing Boolean?
+  moduleOtherDept      Boolean?
+  createdBy            String?   @db.NVarChar(50)
+  createdDatetime      DateTime? @db.DateTime
+  updatedBy            String?   @db.NVarChar(50)
+  updatedDatetime      DateTime? @db.DateTime
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model crm_moduleStaticAccess2 {
+  id              Int       @default(autoincrement())
+  userGroup       String?   @db.NVarChar(50)
+  userAccess      String?   @db.NVarChar(50)
+  moduleType      String?   @db.NVarChar(50)
+  module_bAccess  Boolean?
+  createdBy       String?   @db.NVarChar(50)
+  createdDatetime DateTime? @db.DateTime
+  updatedBy       String?   @db.NVarChar(50)
+  updatedDatetime DateTime? @db.DateTime
+
+  @@ignore
+}
+
+model crm_moduleUserAccess {
+  id              Int        @id(map: "PK_crm_moduleUserAccess") @default(autoincrement())
+  emp_id          String?    @db.NVarChar(50)
+  userAccess      String?    @db.NVarChar(50)
+  user_bAccess    Boolean?
+  createdBy       String?    @db.NVarChar(50)
+  createdDatetime DateTime?  @db.DateTime
+  updatedBy       String?    @db.NVarChar(50)
+  updatedDatetime DateTime?  @db.DateTime
+  crm_users       crm_users? @relation(fields: [emp_id], references: [emp_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_moduleUserAccess_crm_users")
 }
 
 model crm_monthlycashflow {
@@ -534,6 +587,27 @@ model crm_soiBusiness {
   crm_soi          crm_soi           @relation(fields: [soiid], references: [soiid], onUpdate: NoAction, map: "FK_crm_soiBusiness_crm_soi")
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model crm_soiDoctors {
+  id                          Int      @default(autoincrement())
+  soiid                       String?  @db.NVarChar(50)
+  profile                     String?  @db.NVarChar(50)
+  loanprofile                 String?  @db.NVarChar(50)
+  doctor_clinicName           String?  @db.NVarChar(50)
+  doctor_address              String?  @db.NVarChar(50)
+  doctor_area                 String?  @db.NVarChar(50)
+  doctor_yrsInOperation       Int?
+  doctor_rentExpenseLessor    Decimal? @db.Decimal(18, 0)
+  doctor_natureOfClinic       String?  @db.NVarChar(50)
+  doctor_specialization       String?  @db.NVarChar(50)
+  doctor_avePatientPerDayRate Int?
+  doctor_noOfPatients         Int?
+  doctor_aveMonthlyIncome     Decimal? @db.Decimal(18, 0)
+  doctor_otherClinicInfoAffil String?  @db.NVarChar(100)
+
+  @@ignore
+}
+
 model crm_soiEmployment {
   id                Int          @default(autoincrement())
   soiid             String       @id(map: "PK_crm_soiOccupation") @db.NVarChar(50)
@@ -613,90 +687,45 @@ model crm_systemdefinition {
 }
 
 model crm_users {
-  id           Int     @default(autoincrement())
-  emp_id       String  @id(map: "PK_crm_users") @db.NVarChar(50)
-  USERNAME     String  @db.NVarChar(50)
-  PASSWORD     String? @map("_PASSWORD") @db.NVarChar(100)
-  SALT         String? @map("_SALT") @db.NVarChar(50)
-  u_lastname   String? @db.NVarChar(50)
-  u_firstname  String? @db.NVarChar(50)
-  u_middlename String? @db.NVarChar(50)
-  u_suffix     String? @db.NVarChar(50)
-  u_email      String? @db.NVarChar(50)
-  u_contact    String? @db.NVarChar(50)
-  address      String? @db.NVarChar(50)
-  BRANCH       String? @db.NVarChar(250)
+  id                   Int                    @default(autoincrement())
+  emp_id               String                 @id(map: "PK_crm_users") @db.NVarChar(50)
+  USERNAME             String                 @db.NVarChar(50)
+  PASSWORD             String?                @map("_PASSWORD") @db.NVarChar(100)
+  SALT                 String?                @map("_SALT") @db.NVarChar(50)
+  u_lastname           String?                @db.NVarChar(50)
+  u_firstname          String?                @db.NVarChar(50)
+  u_middlename         String?                @db.NVarChar(50)
+  u_suffix             String?                @db.NVarChar(50)
+  u_departmentid       String?                @db.NVarChar(50)
+  u_email              String?                @db.NVarChar(50)
+  u_contact            String?                @db.NVarChar(50)
+  address              String?                @db.NVarChar(50)
+  BRANCH               String?                @db.NVarChar(250)
+  crm_moduleUserAccess crm_moduleUserAccess[]
+  crm_department       crm_department?        @relation(fields: [u_departmentid], references: [dept_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_users_crm_department")
 }
 
 model crm_workInformation {
-  id              Int          @default(autoincrement())
-  profile         String       @db.NVarChar(50)
-  loanprofile     String       @id(map: "PK_crm_workInformation_1") @db.NVarChar(50)
-  businesstype    String?      @db.NVarChar(50)
-  businessname    String?      @db.NVarChar(50)
-  businesno       String?      @db.NVarChar(50)
-  position        String?      @db.NVarChar(50)
-  job_level       String?      @db.NVarChar(50)
-  industry        String?      @db.NVarChar(50)
-  sssno           String?      @db.NVarChar(50)
-  tinno           String?      @db.NVarChar(50)
-  monthlyincome   String?      @db.NVarChar(50)
-  status          String?      @db.NVarChar(50)
-  verified        Boolean?
-  createdby       String?      @db.NVarChar(50)
-  createddatetime DateTime?    @db.DateTime
-  updatedby       String?      @db.NVarChar(50)
-  updateddatetime DateTime?    @db.DateTime
-  crm_client      crm_client   @relation(fields: [profile], references: [profile], onUpdate: NoAction, map: "FK_crm_workInformation_crm_client")
-  crm_loan_hdr    crm_loan_hdr @relation(fields: [loanprofile], references: [loanprofile], onUpdate: NoAction, map: "FK_crm_workInformation_crm_loan_hdr")
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-model crm_soiDoctors {
-  id                          Int      @default(autoincrement())
-  soiid                       String?  @db.NVarChar(50)
-  profile                     String?  @db.NVarChar(50)
-  loanprofile                 String?  @db.NVarChar(50)
-  doctor_clinicName           String?  @db.NVarChar(50)
-  doctor_address              String?  @db.NVarChar(50)
-  doctor_area                 String?  @db.NVarChar(50)
-  doctor_yrsInOperation       Int?
-  doctor_rentExpenseLessor    Decimal? @db.Decimal(18, 0)
-  doctor_natureOfClinic       String?  @db.NVarChar(50)
-  doctor_specialization       String?  @db.NVarChar(50)
-  doctor_avePatientPerDayRate Int?
-  doctor_noOfPatients         Int?
-  doctor_aveMonthlyIncome     Decimal? @db.Decimal(18, 0)
-  doctor_otherClinicInfoAffil String?  @db.NVarChar(100)
-
-  @@ignore
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-model crm_moduleStaticAccess {
-  id              Int       @default(autoincrement())
-  userGroup       String?   @db.NVarChar(50)
-  userAccess      String?   @db.NVarChar(50)
-  moduleType      String?   @db.NVarChar(50)
-  module_bAccess  Boolean?
-  createdBy       String?   @db.NVarChar(50)
-  createdDatetime DateTime? @db.DateTime
-  updatedBy       String?   @db.NVarChar(50)
-  updatedDatetime DateTime? @db.DateTime
-
-  @@ignore
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-model crm_moduleUserAccess {
-  id              Int
-  emp_id          String?   @db.NVarChar(50)
-  userAccess      String?   @db.NVarChar(50)
-  user_bAccess    Boolean?
-  createdBy       String?   @db.NVarChar(50)
-  createdDatetime DateTime? @db.DateTime
-  updatedBy       String?   @db.NVarChar(50)
-  updatedDatetime DateTime? @db.DateTime
-
-  @@ignore
+  id                        Int                  @default(autoincrement())
+  profile                   String               @db.NVarChar(50)
+  loanprofile               String               @id(map: "PK_crm_workInformation_1") @db.NVarChar(50)
+  businesstype              String?              @db.NVarChar(50)
+  businessname              String?              @db.NVarChar(50)
+  businessAddress           String?              @db.NVarChar(150)
+  businesno                 String?              @db.NVarChar(50)
+  position                  String?              @db.NVarChar(50)
+  job_level                 String?              @db.NVarChar(50)
+  industry                  String?              @db.NVarChar(50)
+  sssno                     String?              @db.NVarChar(50)
+  tinno                     String?              @db.NVarChar(50)
+  monthlyincome             String?              @db.NVarChar(50)
+  status                    String?              @db.NVarChar(50)
+  verified                  Boolean?
+  createdby                 String?              @db.NVarChar(50)
+  createddatetime           DateTime?            @db.DateTime
+  updatedby                 String?              @db.NVarChar(50)
+  updateddatetime           DateTime?            @db.DateTime
+  crm_loan_hdr              crm_loan_hdr         @relation(fields: [loanprofile], references: [loanprofile], onUpdate: NoAction, map: "FK_crm_workInformation_crm_loan_hdr")
+  crm_workInformation       crm_workInformation  @relation("crm_workInformationTocrm_workInformation", fields: [loanprofile], references: [loanprofile], onUpdate: NoAction, map: "FK_crm_workInformation_crm_workInformation")
+  other_crm_workInformation crm_workInformation? @relation("crm_workInformationTocrm_workInformation")
 }

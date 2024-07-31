@@ -28,16 +28,18 @@ class SchoolController {
   }
   async courselist(req: Request, res: Response): Promise<void> {
     try {
+      const {course_description} = req.params
       const courses = await prisma.crm_course.findMany({
-        // where:{
-        //   course_description: {
-        //     contains: course_description
-        //   }
-        // },
+        where:{
+          course_description: {
+            contains: course_description
+          }
+        },
         select: {
           course_id: true,
           course_description: true,
         },
+        take: 100,
       });
 
       console.log("Fetch success", courses);

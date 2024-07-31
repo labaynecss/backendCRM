@@ -20,15 +20,10 @@ export const mapLoanData = (loan: any) => ({
   updateddatetime: loan.updateddatetime,
   pres_address: loan.pres_address,
   pres_stay: loan.pres_stay,
+  pres_brgycode: loan.pres_brgycode
 });
 
-export const flattenWorkInformation = (workInfo: { company: any; position: any; salary: any; startDate: any; endDate: any; }) => ({
-  company: workInfo.company,
-  position: workInfo.position,
-  salary: workInfo.salary,
-  startDate: workInfo.startDate,
-  endDate: workInfo.endDate,
-});
+
 
 export const flattenSoi = (soi: any) => ({
   soiid: soi.soiid,
@@ -37,36 +32,44 @@ export const flattenSoi = (soi: any) => ({
 });
 
 export const flattenClientEducation = (education: any) => ({
+  educ_level: education?.educ_level,
   school_name: education?.crm_schools?.school_name || null,
   course_description: education?.crm_course?.course_description || null,
+  course_id : education?.crm_course?.course_id || null
 });
 
-export const flattenProfileGet = (profileGet: any) => ({
-  profile: profileGet.profile,
-  lastname: profileGet.lastname,
-  firstname: profileGet.firstname,
-  middlename: profileGet.middlename,
-  suffix: profileGet.suffix,
-  birthday: profileGet.birthday,
-  age: profileGet.age,
-  gender: profileGet.gender,
-  mobile: profileGet.mobile,
-  telephone: profileGet.telephone,
-  residence_status: profileGet.residence_status,
-  perm_address: profileGet.perm_address,
-  prov_stay: profileGet.prov_stay,
-  prov_address: profileGet.prov_address,
-  perm_stay: profileGet.perm_stay,
-  area: profileGet.area,
-  civilstatus: profileGet.civilstatus,
-  religion: profileGet.religion,
-  email: profileGet.email,
-  mothersname: profileGet.mothersname,
-  crm_spouse: profileGet.crm_spouse,
-  crm_loan_hdr: profileGet.crm_loan_hdr.map(mapLoanData),
-  crm_workInformation: profileGet.crm_workInformation.map(flattenWorkInformation),
-  crm_soi: profileGet.crm_soi.map(flattenSoi),
-  crm_clientFamily: profileGet.crm_clientFamily,
-  crm_characterReference: profileGet.crm_loan_hdr.flatMap((loanHdr: { crm_characterReference: any; }) => loanHdr.crm_characterReference),
-  clientEducation: profileGet.crm_clientEducation ? flattenClientEducation(profileGet.crm_clientEducation) : null,
-});
+export const flattenProfileGet = (profileGet: any) => {
+  return {
+    profile: profileGet.profile,
+    lastname: profileGet.lastname,
+    firstname: profileGet.firstname,
+    middlename: profileGet.middlename,
+    suffix: profileGet.suffix,
+    birthday: profileGet.birthday,
+    age: profileGet.age,
+    gender: profileGet.gender,
+    mobile: profileGet.mobile,
+    telephone: profileGet.telephone,
+    residence_status: profileGet.residence_status,
+    perm_address: profileGet.perm_address,
+    perm_brgycode: profileGet.perm_brgycode,
+    prov_stay: profileGet.prov_stay,
+    prov_address: profileGet.prov_address,
+    perm_stay: profileGet.perm_stay,
+    area: profileGet.area,
+    acode: profileGet.acode,
+    civilstatus: profileGet.civilstatus,
+    religion: profileGet.religion,
+    email: profileGet.email,
+    mothersname: profileGet.mothersname,
+    crm_spouse: profileGet.crm_spouse,
+    crm_loan_hdr: profileGet.crm_loan_hdr.map(mapLoanData),
+    crm_workInformation:profileGet.crm_loan_hdr.flatMap((loanHdr: { crm_workInformation: any; }) => loanHdr.crm_workInformation),
+    crm_soi: profileGet.crm_soi.map(flattenSoi),
+    crm_clientFamily: profileGet.crm_clientFamily,
+    crm_characterReference: profileGet.crm_loan_hdr.flatMap((loanHdr: { crm_characterReference: any; }) => loanHdr.crm_characterReference),
+    crm_clientEducation: profileGet.crm_clientEducation ? flattenClientEducation(profileGet.crm_clientEducation) : null,
+    crm_address_barangay: profileGet.crm_loan_hdr.flatMap((loanHdr: { crm_address_barangay: any; }) => loanHdr.crm_address_barangay), 
+    crm_branch: profileGet.crm_loan_hdr.flatMap((loanHdr: { crm_branch: any; }) => loanHdr.crm_branch), // Assuming a relation or processing path exists here
+  };
+};

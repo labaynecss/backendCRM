@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Prisma, PrismaClient } from "@prisma/client";
-import {  generateProfile } from "../utils/generateProfile";
+import {  generateProfile, generateSpouseProfile } from "../utils/generateProfile";
 import { generateloanProfileId } from "../utils/generateLoanProfile";
 import { NotFoundError } from "../utils/error";
 import { flattenProfileGet } from "../helpers/getClientbyProfile";
@@ -26,7 +26,6 @@ class ClientController {
       console.error('Error retrieving agents:', err);
       res.status(500).json({ error: 'Internal Server Error' });
   
-  
     }
   }
   async getClientByProfile(req: Request, res: Response): Promise<void> {
@@ -34,8 +33,10 @@ class ClientController {
       const profileGet = await prisma.crm_client.findUnique({
         where: { profile: profile },
         include: {
+          
           crm_clientEducation: {
             select: {
+              educ_level: true,
               crm_schools: {
                 select: {
                   school_name: true,
@@ -44,6 +45,7 @@ class ClientController {
               crm_course: {
                 select: {
                   course_description: true,
+                  course_id: true,
                 },
               },
             },
@@ -51,12 +53,48 @@ class ClientController {
           crm_spouse: true,
           crm_loan_hdr: {
            include:{
-            crm_characterReference: true
+            crm_characterReference: true,
+            crm_branch: {
+              select: {
+                branch_code: true,
+                branch_description: true,
+              },
+            },
+            crm_workInformation: true,
+            crm_address_barangay: {
+              select: 
+              {
+                citymuncode: true,
+                brgyCode: true,
+                brgyDescription: true,
+               crm_address_citymunicipality: {
+                select: {
+                  citymunDesc: true,
+                  citymuncode: true,
+                  provCode: true,
+                  crm_address_province: {
+                    select: {
+                      provDesc: true,
+                      provCode: true,
+                      regCode: true,
+                      crm_address_region: {
+                        select: {
+                          regcode: true,
+                          regdescription: true
+                        }
+                      }
+                    },
+                  }
+                }
+               }
+              }
+            }
            }
           },
-          crm_workInformation: true,
+         
           crm_clientFamily: true,
-          crm_soi: true
+          crm_soi: true,
+          
         },
       });
   
@@ -82,6 +120,7 @@ class ClientController {
       middlename: true,
       profile:true,
       createddatetime: true,
+      
       crm_loan_hdr: {
         
         select: {
@@ -129,7 +168,7 @@ class ClientController {
   // }
 
   async checkclient(req: Request, res: Response): Promise<void> {
-    const { firstname, middlename, lastname, suffix , dateOfBirth} = req.body;
+    const { firstname, middlename, lastname, suffix , dateOfBirth } = req.body;
     try {
       const client = await prisma.crm_client.findFirst({
         where: {
@@ -137,14 +176,14 @@ class ClientController {
           middlename: middlename,
           lastname: lastname,
           suffix: suffix,
-          birthday: dateOfBirth
+          birthday: dateOfBirth,
         },
         select: {
           firstname: true,
           middlename: true,
           lastname: true,
           suffix: true,
-          birthday: true
+          birthday: true,
         },
 
       });
@@ -243,14 +282,14 @@ class ClientController {
         businesstype,
         businessname,
         industry,
-        sssno,
+        sssNo,
         tinno,
         monthlyincome,
         w_status,
         areaid,
         position,
         job_level,
-        businesno,
+        area,
         personal_loan,
         charref_name,
         charref_address,
@@ -262,7 +301,7 @@ class ClientController {
         paymenthistory,
         SDFullname,
         SDAge,
-        sourcetype,
+        educationLevel,
         businessType,
         businessName,
         businessNumber,
@@ -270,14 +309,17 @@ class ClientController {
         tin,
         workStatus,
         areaCode,
-        address
+        perm_brgycode,
+        pres_brgycode,
+        personalLoan,
+        businessAddress
+
 
       } = req.body;
   
       const profile = generateProfile();
       const loan_profile = generateloanProfileId();
-      const spouseprofile = generateProfile();
-
+      const spouseprofile = generateSpouseProfile();
 
       const [createClient, loans] = await prisma.$transaction([
         prisma.crm_client.create({
@@ -301,15 +343,15 @@ class ClientController {
             civilstatus,
             religion,
             email,
-            area: areaid,
+            perm_brgycode,
             mothersname: mothersname ?? "",
             createdby: createdby ?? "",
             createddatetime: new Date(),
             crm_clientEducation: {
               create: {
-                educ_level,
-                educ_school,
-                course,
+                educ_level : educationLevel,
+                educ_school : educ_school,
+                course: course,
               },
             },
             crm_spouse: {
@@ -323,7 +365,7 @@ class ClientController {
                 s_gender: s_gender ?? '',
                 s_mobile: s_mobile ?? '',
                 s_telephone: s_telephone ?? '',
-                s_provaddress: address,
+                s_provaddress: s_prov_address,
                 s_age: s_age,
                 crm_spouseEducation: {
                   create: {
@@ -390,7 +432,7 @@ class ClientController {
           data: {
             profile,
             loanprofile : loan_profile,
-            personal_loan,
+            personal_loan: personalLoan,
             loantype,
             terms,
             prevamount,
@@ -401,7 +443,7 @@ class ClientController {
             modeofpayment,
             amountapplied,
             productid: productid,
-            areaid,
+            pres_brgycode,
             agentid: agentid,
             branchid,
             createdby,
@@ -412,10 +454,11 @@ class ClientController {
                 businesstype: businessType,
                 businessname: businessName,
                 businesno: businessNumber,
+                businessAddress,
                 position: workPosition,
                 job_level: job_level,
                 industry: industry,
-                sssno: sssno,
+                sssno: sssNo,
                 tinno: tin,
                 monthlyincome: monthlyincome,
                 status: workStatus,

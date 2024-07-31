@@ -4,18 +4,22 @@ import  {Request , Response } from "express"
 
 const allbranches = async (req: Request, res: Response): Promise<void> => {
     try {
+        const {branch_description} = req.params
         const branches = await prisma.crm_branch.findMany({
-            orderBy: {
-                branch_description: "asc"
+            where: {
+                branch_description: {
+                    contains: branch_description
+                }
             },
             select: {
                 areaid: true,
                 branch_code: true,
                 branch_description: true,
                 
-            }
+            },
+            take: 100
         });
-        console.log("fetch success",allbranches);
+        console.log("fetch branch",branches);
         res.status(200).json(branches);
     } catch (err) {
         console.error('Error retrieving branches:', err);

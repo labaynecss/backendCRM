@@ -20,7 +20,9 @@ class UserController {
         u_suffix,
         u_email,
         address,
+        u_departmentid,
         BRANCH,
+        u_contact
       } = req.body;
       const salted = await bcrypt.genSalt();
       const emp_id = generateEmployee();
@@ -44,6 +46,8 @@ class UserController {
           u_firstname: u_firstname,
           u_middlename: u_middlename,
           u_email: u_email,
+          u_departmentid: u_departmentid,
+          u_contact: u_contact,
           u_suffix: u_suffix,
           address: address,
           BRANCH: BRANCH,
@@ -88,6 +92,8 @@ class UserController {
         u_suffix,
         address,
         BRANCH,
+        u_departmentid,
+        u_contact
        
       } = req.body;
       const salt = await bcrypt.genSalt();
@@ -115,6 +121,9 @@ class UserController {
           u_email: u_email,
           u_suffix: u_suffix,
           BRANCH: BRANCH,
+          u_contact: u_contact,
+          u_departmentid: u_departmentid
+
         },
       });
 
@@ -135,6 +144,8 @@ class UserController {
           USERNAME: true,
           u_firstname: true,
           u_lastname: true,
+          u_departmentid: true,
+          u_contact: true,
           address: true,
           u_email: true,
           u_middlename: true,

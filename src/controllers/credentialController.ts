@@ -4,7 +4,6 @@ import {
   generateRefreshToken,
   generateToken,
 } from "../utils/generateRefreshtoken";
-import { getExpirationTime } from "../utils/calcTime";
 import * as bcrypt from "bcrypt";
 
 class UserController {

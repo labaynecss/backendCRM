@@ -8,7 +8,7 @@ import Authorization from "../services/Authorization";
 const router = Router();
 
 
-router.get("/allbranch",Authorization.authorized, allbranches)
+router.get("/allbranch/:branch_description",Authorization.authorized, allbranches)
 router.get('/branches/:page', branches);
 router.post("/branch", createBranch)
 
