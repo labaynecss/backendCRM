@@ -3,7 +3,7 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import { database } from "./config/db";
 import cors from "cors";
-import path from "path"
+import path from "path";
 import errorHandlerMiddleware from "./middlewares/error-handler";
 
 import { userRoutes } from "./routes/userRoutes";
@@ -23,25 +23,23 @@ import { agencyRoutes } from "./routes/agencyRoutes";
 //configure env;
 dotenv.config();
 
-
 const app: express.Application = express();
 const port = process.env.PORT;
 
-
-const allowedOrigins = ['http://10.120.50.190:85', 'http://localhost:5173'];
+const allowedOrigins = ["http://10.120.50.190:85", "http://localhost:5173"];
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin) return callback(null, true); 
-      
-      const isAllowed = allowedOrigins.some(allowedOrigin => {
+      if (!origin) return callback(null, true);
+
+      const isAllowed = allowedOrigins.some((allowedOrigin) => {
         return origin.startsWith(allowedOrigin);
       });
-      
+
       if (isAllowed) {
         callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS'));
+        callback(new Error("Not allowed by CORS"));
       }
     },
     credentials: true,
@@ -54,9 +52,8 @@ app.use(express.json());
 app.use(cookieParser());
 // Error handler middleware
 app.use(errorHandlerMiddleware);
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.urlencoded({ extended: true }));
-
 
 // Connect To The Database
 database
@@ -80,7 +77,7 @@ app.use("/api/crmv2", clientRoutes);
 app.use("/api/crmv2", agentRoutes);
 app.use("/api/crmv2", addressRoutes);
 app.use("/api/crmv2", schoolRoutes);
-app.use("/api/crmv2", agencyRoutes)
+app.use("/api/crmv2", agencyRoutes);
 // app.use("/api/crmv2", areaRoutes)
 app.use("/api/crmv2", loansRoutes);
 app.use("/api/crmv2", businessRoutes);

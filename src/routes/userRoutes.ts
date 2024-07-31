@@ -10,8 +10,33 @@ router.post(
   validate,
   UserController.createUser
 );
-router.get("/users", Authorization.authorized,UserController.usersList);
-router.put("/user/:emp_id" ,UserController.updateUsers);
-router.get("/user/:emp_id", Authorization.authorized,UserController.userbyId);
+router.get("/users", Authorization.authorized, UserController.usersList);
+router.put("/user/:emp_id", UserController.updateUsers);
+router.get("/user/:emp_id", Authorization.authorized, UserController.userbyId);
+router.get(
+  "/default_roles",
+  Authorization.authorized,
+  UserController.DefaultRoles
+);
+router.put(
+  "/default_roles/updated",
+  Authorization.authorized,
+  UserController.UpdateDefaultRoles
+);
+router.get(
+  "/default_roles/department",
+  Authorization.authorized,
+  UserController.UserDepartment
+);
+router.get(
+  "/default_roles/:emp_id",
+  Authorization.authorized,
+  UserController.UserAccessEmpID
+);
+router.put(
+  "/default_roles/:emp_id",
+  Authorization.authorized,
+  UserController.UserAccessUpdateEmpID
+);
 
 export const userRoutes = router;

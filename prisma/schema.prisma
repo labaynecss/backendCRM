@@ -437,6 +437,7 @@ model crm_loanStatusReport {
   id                    Int       @id(map: "PK_crm_loanStatusReport") @default(autoincrement())
   loan_profile          String?   @db.NVarChar(50)
   branch                String?   @db.NVarChar(50)
+  active_department     String?   @db.NVarChar(50)
   mo                    String?   @db.NVarChar(50)
   mo_idate              DateTime? @db.DateTime
   mo_submitted          Boolean?
