@@ -1,58 +1,56 @@
 import { Request, Response } from "express";
 import { Prisma, PrismaClient } from "@prisma/client";
-import {  generateProfile, generateSpouseProfile } from "../utils/generateProfile";
+import {
+  generateProfile,
+  generateSpouseProfile,
+} from "../utils/generateProfile";
 import { generateloanProfileId } from "../utils/generateLoanProfile";
 import { NotFoundError } from "../utils/error";
 import { flattenProfileGet } from "../helpers/getClientbyProfile";
 import { ClientData } from "../helpers/getClients";
 import { generateSoiId } from "../utils/generateSoi";
 
-
 const prisma = new PrismaClient();
 
 class ClientController {
-
   async getallClients(req: Request, res: Response): Promise<void> {
-
-    try { 
+    try {
       const clients = await prisma.crm_client.findMany({
         orderBy: {
-          profile: 'desc',
-        }
+          profile: "desc",
+        },
       });
       console.log("Fetch success", clients);
       res.status(200).json(clients);
     } catch (err) {
-      console.error('Error retrieving agents:', err);
-      res.status(500).json({ error: 'Internal Server Error' });
-  
+      console.error("Error retrieving agents:", err);
+      res.status(500).json({ error: "Internal Server Error" });
     }
   }
   async getClientByProfile(req: Request, res: Response): Promise<void> {
     const { profile } = req.params;
-      const profileGet = await prisma.crm_client.findUnique({
-        where: { profile: profile },
-        include: {
-          
-          crm_clientEducation: {
-            select: {
-              educ_level: true,
-              crm_schools: {
-                select: {
-                  school_name: true,
-                },
+    const profileGet = await prisma.crm_client.findUnique({
+      where: { profile: profile },
+      include: {
+        crm_clientEducation: {
+          select: {
+            educ_level: true,
+            crm_schools: {
+              select: {
+                school_name: true,
               },
-              crm_course: {
-                select: {
-                  course_description: true,
-                  course_id: true,
-                },
+            },
+            crm_course: {
+              select: {
+                course_description: true,
+                course_id: true,
               },
             },
           },
-          crm_spouse: true,
-          crm_loan_hdr: {
-           include:{
+        },
+        crm_spouse: true,
+        crm_loan_hdr: {
+          include: {
             crm_characterReference: true,
             crm_branch: {
               select: {
@@ -62,95 +60,88 @@ class ClientController {
             },
             crm_workInformation: true,
             crm_address_barangay: {
-              select: 
-              {
+              select: {
                 citymuncode: true,
                 brgyCode: true,
                 brgyDescription: true,
-               crm_address_citymunicipality: {
-                select: {
-                  citymunDesc: true,
-                  citymuncode: true,
-                  provCode: true,
-                  crm_address_province: {
-                    select: {
-                      provDesc: true,
-                      provCode: true,
-                      regCode: true,
-                      crm_address_region: {
-                        select: {
-                          regcode: true,
-                          regdescription: true
-                        }
-                      }
+                crm_address_citymunicipality: {
+                  select: {
+                    citymunDesc: true,
+                    citymuncode: true,
+                    provCode: true,
+                    crm_address_province: {
+                      select: {
+                        provDesc: true,
+                        provCode: true,
+                        regCode: true,
+                        crm_address_region: {
+                          select: {
+                            regcode: true,
+                            regdescription: true,
+                          },
+                        },
+                      },
                     },
-                  }
-                }
-               }
-              }
-            }
-           }
+                  },
+                },
+              },
+            },
           },
-         
-          crm_clientFamily: true,
-          crm_soi: true,
-          
         },
-      });
-  
-      if (!profileGet ) {
-        throw new NotFoundError('No profile found');
-      }
-      const flattenedProfile = flattenProfileGet(profileGet);
 
-      res.status(200).json(flattenedProfile );
-      console.log("response", flattenedProfile );
+        crm_clientFamily: true,
+        crm_soi: true,
+      },
+    });
 
+    if (!profileGet) {
+      throw new NotFoundError("No profile found");
+    }
+    const flattenedProfile = flattenProfileGet(profileGet);
+
+    res.status(200).json(flattenedProfile);
+    console.log("response", flattenedProfile);
   }
   async clientjoinData(req: Request, res: Response): Promise<void> {
     try {
       const allclients = await prisma.crm_client.findMany({
-     
         orderBy: {
-          id: 'desc',
+          id: "desc",
         },
-     select: {
-      lastname: true,
-      firstname: true,
-      middlename: true,
-      profile:true,
-      createddatetime: true,
-      
-      crm_loan_hdr: {
-        
         select: {
-       crm_branch: {
-        select: {
-          branch_description:  true
-        }
-       },
-          amountapplied: true,
-          crm_products: {
+          lastname: true,
+          firstname: true,
+          middlename: true,
+          profile: true,
+          createddatetime: true,
+
+          crm_loan_hdr: {
             select: {
-              prod_description: true
-            }
-          }
-        }
-        
-      }
-     }
-        
+              crm_branch: {
+                select: {
+                  branch_description: true,
+                },
+              },
+              amountapplied: true,
+              crm_products: {
+                select: {
+                  prod_description: true,
+                },
+              },
+            },
+          },
+        },
       });
       const Clients = allclients.map(ClientData);
-  
-      console.log("join success", Clients );
+
+      console.log("join success", Clients);
       res.status(200).json(Clients);
     } catch (err) {
       console.error("Error retrieving loans:", err);
       res.status(500).json({ error: "Internal Server Error" });
     }
   }
-  
+
   // async getTelemarketer(req: Request, res: Response): Promise<void> {
   //   try {
   //     const tele = await prisma.crm_users.findMany({
@@ -168,7 +159,7 @@ class ClientController {
   // }
 
   async checkclient(req: Request, res: Response): Promise<void> {
-    const { firstname, middlename, lastname, suffix , dateOfBirth } = req.body;
+    const { firstname, middlename, lastname, suffix, dateOfBirth } = req.body;
     try {
       const client = await prisma.crm_client.findFirst({
         where: {
@@ -185,7 +176,6 @@ class ClientController {
           suffix: true,
           birthday: true,
         },
-
       });
 
       if (client) {
@@ -196,14 +186,12 @@ class ClientController {
       } else {
         console.log("Client doesn't exist, proceed with new application");
         res.status(200).json({ message: "New application" });
-        
       }
     } catch (err) {
       console.error("Error retrieving client:", err);
       res.status(500).json({ error: "Internal Server Error" });
     }
   }
-
 
   async createClient(req: Request, res: Response): Promise<void> {
     try {
@@ -269,7 +257,7 @@ class ClientController {
         branchid,
         residenceStatus,
         perm_address,
-        perm_stay, 
+        perm_stay,
         prov_address,
         prov_stay,
         pres_address,
@@ -312,14 +300,14 @@ class ClientController {
         perm_brgycode,
         pres_brgycode,
         personalLoan,
-        businessAddress
-
-
+        businessAddress,
+        mo,
       } = req.body;
-  
+
       const profile = generateProfile();
       const loan_profile = generateloanProfileId();
       const spouseprofile = generateSpouseProfile();
+      const active_department = "MO";
 
       const [createClient, loans] = await prisma.$transaction([
         prisma.crm_client.create({
@@ -329,7 +317,7 @@ class ClientController {
             firstname,
             middlename,
             suffix,
-            birthday: birthday ?? '',
+            birthday: birthday ?? "",
             age,
             gender,
             mobile,
@@ -349,62 +337,60 @@ class ClientController {
             createddatetime: new Date(),
             crm_clientEducation: {
               create: {
-                educ_level : educationLevel,
-                educ_school : educ_school,
+                educ_level: educationLevel,
+                educ_school: educ_school,
                 course: course,
               },
             },
             crm_spouse: {
               create: {
-                spouseprofile : spouseprofile ?? '',
+                spouseprofile: spouseprofile ?? "",
                 s_lastname: s_lastname ?? "",
-                s_firstname: s_firstname ?? '',
-                s_middlename: s_middlename ?? '',
-                s_suffix : s_suffix ?? '',
-                s_birthdate  : s_birthdate ?? '',
-                s_gender: s_gender ?? '',
-                s_mobile: s_mobile ?? '',
-                s_telephone: s_telephone ?? '',
+                s_firstname: s_firstname ?? "",
+                s_middlename: s_middlename ?? "",
+                s_suffix: s_suffix ?? "",
+                s_birthdate: s_birthdate ?? "",
+                s_gender: s_gender ?? "",
+                s_mobile: s_mobile ?? "",
+                s_telephone: s_telephone ?? "",
                 s_provaddress: s_prov_address,
                 s_age: s_age,
                 crm_spouseEducation: {
                   create: {
-                    s_educLevel: s_educLevel ?? '',
-                    s_educCourse: s_educCourse ?? '',
-                    s_educSchool: s_educSchool ?? '',
+                    s_educLevel: s_educLevel ?? "",
+                    s_educCourse: s_educCourse ?? "",
+                    s_educSchool: s_educSchool ?? "",
                   },
                 },
-                
               },
             },
             crm_clientFamily: {
               createMany: {
                 data: [
                   {
-                    family_relationship:  '0' ,
-                    family_membername: fathername ,
-                    family_age:fatherage , 
+                    family_relationship: "0",
+                    family_membername: fathername,
+                    family_age: fatherage,
                   },
                   {
-                    family_relationship:  "1",
-                    family_membername: mothername ,
+                    family_relationship: "1",
+                    family_membername: mothername,
                     family_age: motherage,
                   },
 
                   {
-                    family_relationship:  "2",
-                    family_membername: SDFullname ,
+                    family_relationship: "2",
+                    family_membername: SDFullname,
                     family_age: SDAge,
                   },
 
                   {
-                    family_relationship:  "3",
-                    family_membername: SDFullname ?? '',
+                    family_relationship: "3",
+                    family_membername: SDFullname ?? "",
                     family_age: SDAge,
                   },
-                
                 ],
-              }
+              },
             },
             crm_clientId: {
               create: {
@@ -413,25 +399,22 @@ class ClientController {
                 b_expiry,
                 id_expiration,
                 verified,
-                createdby: createdby ?? '',
+                createdby: createdby ?? "",
                 createddatetime: new Date(),
               },
             },
-           crm_clientSocials: {
-            create: {
-              socialmedia_account,
-              socialmedia_type,
-            }
-           },
-        
-        
-          
-        },
+            crm_clientSocials: {
+              create: {
+                socialmedia_account,
+                socialmedia_type,
+              },
+            },
+          },
         }),
-        prisma.crm_loan_hdr.create({ 
+        prisma.crm_loan_hdr.create({
           data: {
             profile,
-            loanprofile : loan_profile,
+            loanprofile: loan_profile,
             personal_loan: personalLoan,
             loantype,
             terms,
@@ -465,8 +448,8 @@ class ClientController {
                 verified: true,
                 createdby: createdby,
                 createddatetime: new Date(),
-              }
-          },
+              },
+            },
             crm_characterReference: {
               createMany: {
                 data: [
@@ -492,7 +475,7 @@ class ClientController {
                     charref_address: charrefThree_address,
                     charref_contactno: charrefThree_contactno,
                     charref_relationship: charrefThree_relationship,
-                    charref_verified: charrefThree_verified ,
+                    charref_verified: charrefThree_verified,
                     createddatetime: new Date(),
                   },
                   {
@@ -500,25 +483,32 @@ class ClientController {
                     charref_address: charrefFour_address,
                     charref_contactno: charrefFour_contactno,
                     charref_relationship: charrefFour_relationship,
-                    charref_verified: charrefFour_verified ,
+                    charref_verified: charrefFour_verified,
                     createddatetime: new Date(),
                   },
                 ],
               },
-
             },
-          }
+          },
         }),
       ]);
 
-   
+      const loanStatusReport = await prisma.crm_loanStatusReport.create({
+        data: {
+          loan_profile: loan_profile,
+          active_department: active_department,
+          mo: mo,
+          mo_idate: new Date(),
+        },
+      });
+
       res.status(201).json({
         message: "Client created successfully",
         loans,
         createClient,
       });
-  
-      console.log("Fetch success", createClient);
+
+      console.log("Fetch success", createClient, loanStatusReport);
     } catch (err) {
       console.error("Error creating client:", err);
       if (err instanceof Prisma.PrismaClientKnownRequestError) {
@@ -530,7 +520,6 @@ class ClientController {
       }
     }
   }
-
 }
 
 export default new ClientController();
