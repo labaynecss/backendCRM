@@ -28,29 +28,24 @@ const allbranches = async (req: Request, res: Response): Promise<void> => {
 };
 
 
-const branches = async (req: Request, res: Response): Promise<void> => {
 
-    const page = parseInt(req.params.page, 20)
-    const perPage = 20
-    const skip = (page - 1 ) * perPage;
-    
-    if (isNaN(page) || page < 1) {
-        res.status(400).json({ error: 'Invalid page number' });
-        return;
-    }
+
+const branch = async (req: Request, res: Response): Promise<void> => {
 
     try {
-        const count  = await prisma.crm_branch.count();
+   
      const response = await prisma.crm_branch.findMany({
-         take: perPage,
-         skip: skip,    
-         orderBy: {
-             id: "desc"
-         }
+        select: {
+            areaid: true,
+            branch_code: true,
+            branch_description: true,
+            
+        },
+        take: 100
          
      });
-     console.log("fetch success",branches);
-        res.status(200).json({branches: response, perPage, count});
+     console.log("fetch success",branch);
+        res.status(200).json(response);
     } catch (err) {
         console.error('Error retrieving branches:', err);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -87,4 +82,4 @@ const createBranch = async (req: Request, res: Response): Promise<void> => {
 
 
 
-export {allbranches, branches, createBranch}
+export {allbranches, branch, createBranch}
