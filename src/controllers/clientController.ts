@@ -49,6 +49,7 @@ class ClientController {
           },
         },
         crm_clientSocials: true,
+
         crm_spouse: true,
         crm_loan_hdr: {
           include: {
@@ -283,6 +284,8 @@ class ClientController {
         position,
         job_level,
         area,
+
+        mo,
         personal_loan,
         charref_name,
         charref_address,
@@ -311,6 +314,7 @@ class ClientController {
       const profile = generateProfile();
       const loan_profile = generateloanProfileId();
       const spouseprofile = generateSpouseProfile();
+      const active_department = "MO";
 
       const [createClient, loans] = await prisma.$transaction([
         prisma.crm_client.create({
@@ -491,13 +495,22 @@ class ClientController {
         }),
       ]);
 
+      const loanStatusReport = await prisma.crm_loanStatusReport.create({
+        data: {
+          loan_profile: loan_profile,
+          active_department: active_department,
+          mo: mo,
+          mo_idate: new Date(),
+        },
+      });
+
       res.status(201).json({
         message: "Client created successfully",
         loans,
         createClient,
       });
 
-      console.log("Fetch success", createClient);
+      console.log("Fetch success", createClient, loanStatusReport);
     } catch (err) {
       console.error("Error creating client:", err);
       if (err instanceof Prisma.PrismaClientKnownRequestError) {

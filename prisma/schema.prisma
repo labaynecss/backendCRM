@@ -89,10 +89,11 @@ model crm_area {
   crm_branch crm_branch[]
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model crm_assetAutoInspection {
   id               Int      @default(autoincrement())
   loanProfile      String   @db.NVarChar(50)
-  assetId          String   @id(map: "PK_crm_assetAutoInspection") @db.NVarChar(50)
+  assetId          String   @db.NVarChar(50)
   engineCondition  String?  @db.NVarChar(50)
   useType          String?  @db.NVarChar(50)
   reference        String?  @db.NVarChar(50)
@@ -105,18 +106,21 @@ model crm_assetAutoInspection {
   percentage       Int?
   remarks          String?  @db.NVarChar(50)
   agreedPrice      Decimal? @db.Decimal(18, 0)
+
+  @@ignore
 }
 
 model crm_assets {
-  id             Int         @default(autoincrement())
-  profile        String?     @db.NVarChar(50)
-  assetid        String      @id(map: "PK_crm_assets_1") @db.NVarChar(50)
-  assettype      String?     @db.NVarChar(50)
-  auto_make      String?     @db.NVarChar(50)
-  auto_yearmodel String?     @db.NVarChar(50)
-  auto_series    String?     @db.NVarChar(50)
-  auto_remarks   String?     @db.NVarChar(50)
-  crm_client     crm_client? @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_assets_crm_client")
+  id             Int             @default(autoincrement())
+  profile        String?         @db.NVarChar(50)
+  assetid        String          @id(map: "PK_crm_assets_1") @db.NVarChar(50)
+  assettype      String?         @db.NVarChar(50)
+  auto_make      String?         @db.NVarChar(50)
+  auto_yearmodel String?         @db.NVarChar(50)
+  auto_series    String?         @db.NVarChar(50)
+  auto_remarks   String?         @db.NVarChar(50)
+  crm_client     crm_client?     @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_assets_crm_client")
+  crm_assetsAuto crm_assetsAuto[]
 }
 
 model crm_assetsAuto {
@@ -149,6 +153,7 @@ model crm_assetsAuto {
   createddatetime    DateTime?    @db.DateTime
   updatedby          String?      @db.NVarChar(50)
   updateddatetime    DateTime?    @db.DateTime
+  crm_assets         crm_assets   @relation(fields: [asset_autoid], references: [assetid], onUpdate: NoAction, map: "FK_crm_assetsAuto_crm_assets")
   crm_loan_hdr       crm_loan_hdr @relation(fields: [loanprofile], references: [loanprofile], onUpdate: NoAction, map: "FK_crm_assetsAuto_crm_loan_hdr")
 }
 

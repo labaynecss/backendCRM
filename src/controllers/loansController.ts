@@ -400,6 +400,13 @@ class LoansController {
       const {
         profile,
         loanprofile,
+        businesstype,
+        businessname,
+        businesno,
+        job_level,
+        industry,
+        monthlyincome,
+        verified,
         updatedby,
         amount,
         expense_description,
@@ -432,7 +439,7 @@ class LoansController {
         net,
         soiid,
         assettype,
-        assetid,
+
         make,
         yearModel,
         auto_series,
@@ -471,7 +478,7 @@ class LoansController {
         autoCar,
       } = req.body;
 
-      console.log("respose", req.body);
+      const assetid = generateAssets();
 
       const soi = await prisma.crm_soi.findFirst({
         where: { loanprofile },
@@ -587,27 +594,59 @@ class LoansController {
           });
         }
 
-        await prisma.crm_assets.upsert({
-          where: {
-            assetid: assetid, // This assumes `assetid` uniquely identifies a record
-          },
-          update: {
-            profile,
-            assettype,
+        await prisma.crm_assets.create({
+          data: {
+            assetid: assetid,
+            profile: profile,
+            assettype: assettype,
             auto_make: make,
             auto_yearmodel: yearModel,
             auto_series: variant,
             auto_remarks: roadTestRemarks,
-          },
-          create: {
-            assetid: assetid, // Include all fields necessary for a new record
-            profile,
-            assettype,
-            auto_make: make,
-            auto_yearmodel: yearModel,
-            auto_series: variant,
-            auto_remarks: roadTestRemarks,
-            // Add all other fields required by your schema for creating a new asset
+            crm_assetsAuto: {
+              create: autoCar.map(
+                (car: {
+                  aircondition: any;
+                  loanprofile: any;
+                  aquiredCar: any;
+                  wheelClass: any;
+                  classification: any;
+                  chasisNo: any;
+                  yearAquired: any;
+                  engineNo: any;
+                  goodsLoaded: any;
+                  loadedWeight: any;
+                  registeredInLTO: any;
+                  transmissionFuel: any;
+                  airConditioned: any;
+                  powerWindow: any;
+                  powerLock: any;
+                  powerSideMirror: any;
+                  powerSteering: any;
+                  fourWheelDrive: any;
+                  remarks: any;
+                }) => ({
+                  loanprofile: loanprofile,
+                  aquiredCar: car.aquiredCar,
+                  wheelClass: car.wheelClass,
+                  classification: car.classification,
+                  chasisNo: car.chasisNo,
+                  yearAquired: car.yearAquired,
+                  engineNo: car.engineNo,
+                  goodsLoaded: car.goodsLoaded,
+                  loadedWeight: car.loadedWeight,
+                  registeredLTO: car.registeredInLTO,
+                  transmissionFuel: car.transmissionFuel,
+                  airConditioned: car.aircondition,
+                  powerWindow: car.powerWindow,
+                  powerLock: car.powerLock,
+                  powerSideMirror: car.powerSideMirror,
+                  powerSteering: car.powerSteering,
+                  fourWheelDrive: car.fourWheelDrive,
+                  remarks: car.remarks,
+                })
+              ),
+            },
           },
         });
       });
@@ -622,68 +661,6 @@ class LoansController {
           otherincome: otherIncome,
         },
       });
-
-      for (const car of autoCar) {
-        await prisma.crm_assetsAuto.upsert({
-          where: {
-            asset_autoid: car.assetid || -1,
-          },
-          create: {
-            // Provide all fields necessary for creation
-            asset_autoid: car.asset_autoid,
-            loanprofile,
-            aquiredCar: car.acquiredCar,
-            wheelClass: car.wheelClass,
-            classification: car.usedClassification,
-            chasisNo: car.chasisNo,
-            yearAquired: car.yearAcquired,
-            goodsLoaded: car.itemsGoodsLoaded,
-            loadedWeight: car.loadedWeight,
-            registeredLTO: car.registeredInLTO,
-            transmissionFuel: car.transmissionFuel,
-            airConditioned: car.aircondition,
-            powerWindow: car.powerWindow,
-            powerLock: car.powerLock,
-            powerSideMirror: car.powerSideMirror,
-            powerSteering: car.powerSteering,
-            fourWheelDrive: car.fourWheelDrive,
-            remarks: car.roadTestRemarks,
-            dealer_name: dealer_name,
-            dealer_address: dealer_address,
-            dealer_contactno: dealer_contactno,
-            dealer_agreedprice: car.agreedPrice,
-            dealer_accessories: car.accessories,
-            updatedby,
-            updateddatetime: new Date(),
-          },
-          update: {
-            // Provide all fields that might be updated
-            aquiredCar: car.acquiredCar,
-            wheelClass: car.wheelClass,
-            classification: car.usedClassification,
-            chasisNo: car.chasisNo,
-            yearAquired: car.yearAcquired,
-            goodsLoaded: car.itemsGoodsLoaded,
-            loadedWeight: car.loadedWeight,
-            registeredLTO: car.registeredInLTO,
-            transmissionFuel: car.transmissionFuel,
-            airConditioned: car.aircondition,
-            powerWindow: car.powerWindow,
-            powerLock: car.powerLock,
-            powerSideMirror: car.powerSideMirror,
-            powerSteering: car.powerSteering,
-            fourWheelDrive: car.fourWheelDrive,
-            remarks: car.roadTestRemarks,
-            dealer_name,
-            dealer_address,
-            dealer_contactno,
-            dealer_agreedprice: car.agreedPrice,
-            dealer_accessories: car.accessories,
-            updatedby,
-            updateddatetime: new Date(),
-          },
-        });
-      }
 
       res
         .status(200)
@@ -869,6 +846,77 @@ class LoansController {
       console.log("updating coborrower", coborrower);
       res.status(200).json({ message: "Loan details updated successfully" });
     } catch (err) {}
+  }
+
+  public async updateLoanStatusReport(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    try {
+      const {
+        loan_profile,
+        branch,
+        active_department,
+        mo,
+        mo_idate,
+        mo_submitted,
+        mo_submitteddatetime,
+        ao,
+        ao_idate,
+        ao_returndate,
+        mo_returndate,
+        ao_verify,
+        ao_vdate,
+        crecom,
+        crecom_idate,
+        crecom_approvedamount,
+        crecom_approval,
+        crecom_approvedate,
+        crd,
+        crd_idate,
+        crd_dataverify,
+        crd_verifydate,
+        crd_mo_returndate,
+        crd_ao_returndate,
+        crd_returndate,
+      } = req.body;
+
+      const loanStatus = await prisma.crm_loanStatusReport.update({
+        where: { loan_profile: loan_profile },
+        data: {
+          branch,
+          active_department,
+          mo,
+          mo_idate: new Date(mo_idate),
+          mo_submitted,
+          mo_submitteddatetime: new Date(mo_submitteddatetime),
+          ao,
+          ao_idate: new Date(ao_idate),
+          ao_returndate: new Date(ao_returndate),
+          mo_returndate: new Date(mo_returndate),
+          ao_verify,
+          ao_vdate: new Date(ao_vdate),
+          crecom,
+          crecom_idate: new Date(crecom_idate),
+          crecom_approvedamount,
+          crecom_approval,
+          crecom_approvedate: new Date(crecom_approvedate),
+          crd,
+          crd_idate: new Date(crd_idate),
+          crd_dataverify,
+          crd_verifydate: new Date(crd_verifydate),
+          crd_mo_returndate: new Date(crd_mo_returndate),
+          crd_ao_returndate: new Date(crd_ao_returndate),
+          crd_returndate: new Date(crd_returndate),
+        },
+      });
+
+      console.log("Updating loan status", loanStatus);
+      res.status(200).json({ message: "Loan status updated successfully" });
+    } catch (err) {
+      console.error("Error updating loan status", err);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
   }
 }
 
