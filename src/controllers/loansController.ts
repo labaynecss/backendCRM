@@ -860,6 +860,7 @@ class LoansController {
         mo,
         mo_idate,
         mo_submitted,
+        mo_status,
         mo_submitteddatetime,
         ao,
         ao_idate,
@@ -881,36 +882,27 @@ class LoansController {
         crd_returndate,
       } = req.body;
 
+      let updateData = {};
+
+      if (active_department === "1") {
+        if (mo_status === "Ok to Process") {
+          updateData = {
+            ao: ao,
+            ao_idate: new Date(),
+            mo_status: mo_status,
+            active_department: "2",
+          };
+        } else {
+          updateData = {
+            mo_status: mo_status,
+          };
+        }
+      }
+
       const loanStatus = await prisma.crm_loanStatusReport.update({
         where: { loan_profile: loan_profile },
-        data: {
-          branch,
-          active_department,
-          mo,
-          mo_idate: new Date(mo_idate),
-          mo_submitted,
-          mo_submitteddatetime: new Date(mo_submitteddatetime),
-          ao,
-          ao_idate: new Date(ao_idate),
-          ao_returndate: new Date(ao_returndate),
-          mo_returndate: new Date(mo_returndate),
-          ao_verify,
-          ao_vdate: new Date(ao_vdate),
-          crecom,
-          crecom_idate: new Date(crecom_idate),
-          crecom_approvedamount,
-          crecom_approval,
-          crecom_approvedate: new Date(crecom_approvedate),
-          crd,
-          crd_idate: new Date(crd_idate),
-          crd_dataverify,
-          crd_verifydate: new Date(crd_verifydate),
-          crd_mo_returndate: new Date(crd_mo_returndate),
-          crd_ao_returndate: new Date(crd_ao_returndate),
-          crd_returndate: new Date(crd_returndate),
-        },
+        data: updateData,
       });
-
       console.log("Updating loan status", loanStatus);
       res.status(200).json({ message: "Loan status updated successfully" });
     } catch (err) {

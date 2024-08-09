@@ -120,7 +120,7 @@ model crm_assets {
   auto_series    String?         @db.NVarChar(50)
   auto_remarks   String?         @db.NVarChar(50)
   crm_client     crm_client?     @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_assets_crm_client")
-  crm_assetsAuto crm_assetsAuto[]
+  crm_assetsAuto crm_assetsAuto?
 }
 
 model crm_assetsAuto {
@@ -452,10 +452,12 @@ model crm_loan_hdr {
   crm_characterReference crm_characterReference[]
   crm_coBorrowers        crm_coBorrowers?
   crm_documentUploaded   crm_documentUploaded[]
+  crm_kycScoring         crm_kycScoring[]
   crm_address_barangay   crm_address_barangay?    @relation(fields: [pres_brgycode], references: [brgyCode], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_address_barangay")
   crm_branch             crm_branch?              @relation(fields: [branchid], references: [branch_code], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_branch")
   crm_client             crm_client               @relation(fields: [profile], references: [profile], onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_client")
   crm_products           crm_products?            @relation(fields: [productid], references: [productid], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_products")
+  crm_loanStatusReport   crm_loanStatusReport?
   crm_soi                crm_soi[]
   crm_soiBusiness        crm_soiBusiness[]
   crm_soiEmployment      crm_soiEmployment[]
@@ -464,36 +466,37 @@ model crm_loan_hdr {
 }
 
 model crm_loanStatusReport {
-  id                    Int       @default(autoincrement())
-  loan_profile          String    @id(map: "PK_crm_loanStatusReport") @db.NVarChar(50)
-  branch                String?   @db.NVarChar(50)
-  active_department     String?   @db.NVarChar(50)
-  mo                    String?   @db.NVarChar(50)
-  mo_idate              DateTime? @db.DateTime
+  id                    Int          @default(autoincrement())
+  loan_profile          String       @id(map: "PK_crm_loanStatusReport") @db.NVarChar(50)
+  branch                String?      @db.NVarChar(50)
+  active_department     String?      @db.NVarChar(50)
+  mo                    String?      @db.NVarChar(50)
+  mo_idate              DateTime?    @db.DateTime
   mo_submitted          Boolean?
-  mo_submitteddatetime  DateTime? @db.DateTime
-  mo_status             String?   @db.NVarChar(50)
-  ao                    String?   @db.NVarChar(50)
-  ao_idate              DateTime? @db.DateTime
-  ao_returndate         DateTime? @db.DateTime
-  mo_returndate         DateTime? @db.DateTime
+  mo_submitteddatetime  DateTime?    @db.DateTime
+  mo_status             String?      @db.NVarChar(50)
+  ao                    String?      @db.NVarChar(50)
+  ao_idate              DateTime?    @db.DateTime
+  ao_returndate         DateTime?    @db.DateTime
+  mo_returndate         DateTime?    @db.DateTime
   ao_verify             Boolean?
-  ao_vdate              DateTime? @db.DateTime
-  ao_status             String?   @db.NVarChar(50)
-  crecom                String?   @db.NVarChar(50)
-  crecom_idate          DateTime? @db.DateTime
-  crecom_approvedamount Decimal?  @db.Decimal(18, 0)
+  ao_vdate              DateTime?    @db.DateTime
+  ao_status             String?      @db.NVarChar(50)
+  crecom                String?      @db.NVarChar(50)
+  crecom_idate          DateTime?    @db.DateTime
+  crecom_approvedamount Decimal?     @db.Decimal(18, 0)
   crecom_approval       Boolean?
-  crecom_approvedate    DateTime? @db.DateTime
-  crecom_status         String?   @db.NVarChar(50)
-  crd                   String?   @db.NVarChar(50)
-  crd_idate             DateTime? @db.DateTime
+  crecom_approvedate    DateTime?    @db.DateTime
+  crecom_status         String?      @db.NVarChar(50)
+  crd                   String?      @db.NVarChar(50)
+  crd_idate             DateTime?    @db.DateTime
   crd_dataverify        Boolean?
-  crd_verifydate        DateTime? @db.DateTime
-  crd_mo_returndate     DateTime? @db.DateTime
-  crd_ao_returndate     DateTime? @db.DateTime
-  crd_returndate        DateTime? @db.DateTime
-  crd_status            String?   @db.NVarChar(50)
+  crd_verifydate        DateTime?    @db.DateTime
+  crd_mo_returndate     DateTime?    @db.DateTime
+  crd_ao_returndate     DateTime?    @db.DateTime
+  crd_returndate        DateTime?    @db.DateTime
+  crd_status            String?      @db.NVarChar(50)
+  crm_loan_hdr          crm_loan_hdr @relation(fields: [loan_profile], references: [loanprofile], onUpdate: NoAction, map: "FK_crm_loanStatusReport_crm_loan_hdr")
 }
 
 model crm_moduleStaticAccess {
@@ -761,4 +764,35 @@ model crm_workInformation {
   updatedby       String?      @db.NVarChar(50)
   updateddatetime DateTime?    @db.DateTime
   crm_loan_hdr    crm_loan_hdr @relation(fields: [loanprofile], references: [loanprofile], onUpdate: NoAction, map: "FK_crm_workInformation_crm_loan_hdr")
+}
+
+model crm_kycScoreCard_dtl {
+  id                  Int      @default(autoincrement())
+  scorecardId         String?  @db.NVarChar(50)
+  scoreMatrixCode     String   @id(map: "PK_crm_kycScoreCard") @db.NVarChar(50)
+  scoreBusinessMatrix String?  @db.NVarChar(50)
+  scoreEmployedMatrix String?  @db.NVarChar(50)
+  scorePoints         Decimal? @db.Decimal(3, 0)
+}
+
+model crm_kycScoreCard_hdr {
+  id                   Int              @default(autoincrement())
+  scorecardId          String           @id(map: "PK_crm_kycCredit") @db.NVarChar(50)
+  scorecardDescription String?          @db.NVarChar(50)
+  scorecardCreditCs    String?          @db.NVarChar(50)
+  scorecardType        String?          @db.NVarChar(50)
+  createdBy            String?          @db.NVarChar(50)
+  createdDatetime      DateTime?        @db.DateTime
+  updatedBy            String?          @db.NVarChar(50)
+  updatedDatetime      DateTime?        @db.DateTime
+  crm_kycScoring       crm_kycScoring[]
+}
+
+model crm_kycScoring {
+  id                   Int                   @id(map: "PK_crm_kycScoring")
+  loanprofile          String?               @db.NVarChar(50)
+  scorecardId          String?               @db.NVarChar(50)
+  scorecardMatrixCode  String?               @db.NVarChar(50)
+  crm_kycScoreCard_hdr crm_kycScoreCard_hdr? @relation(fields: [scorecardId], references: [scorecardId], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_kycScoring_crm_kycScoreCard_hdr")
+  crm_loan_hdr         crm_loan_hdr?         @relation(fields: [loanprofile], references: [loanprofile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_kycScoring_crm_loan_hdr")
 }

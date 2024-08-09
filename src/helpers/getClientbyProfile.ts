@@ -22,6 +22,7 @@ export const mapLoanData = (loan: any) => ({
   pres_address: loan.pres_address,
   pres_stay: loan.pres_stay,
   pres_brgycode: loan.pres_brgycode,
+  crm_loanStatusReport: loan.crm_loanStatusReport,
 });
 
 export const flattenSoi = (soi: any) => ({
