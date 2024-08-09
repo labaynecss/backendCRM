@@ -53,6 +53,7 @@ class ClientController {
         crm_spouse: true,
         crm_loan_hdr: {
           include: {
+            crm_loanStatusReport: true,
             crm_characterReference: true,
             crm_branch: {
               select: {
@@ -93,7 +94,6 @@ class ClientController {
             },
           },
         },
-
         crm_clientFamily: true,
         crm_soi: true,
       },
@@ -314,7 +314,7 @@ class ClientController {
       const profile = generateProfile();
       const loan_profile = generateloanProfileId();
       const spouseprofile = generateSpouseProfile();
-      const active_department = "MO";
+      const active_department = "1";
 
       const [createClient, loans] = await prisma.$transaction([
         prisma.crm_client.create({

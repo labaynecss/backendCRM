@@ -12,6 +12,19 @@ class UserController {
       const { USERNAME, PASSWORD } = req.body;
       let signin = await prisma.crm_users.findFirst({
         where: { USERNAME: USERNAME },
+        select: {
+          BRANCH: true,
+          USERNAME: true,
+          u_firstname: true,
+          u_lastname: true,
+          u_departmentid: true,
+          u_email: true,
+          u_middlename: true,
+          u_suffix: true,
+          crm_department: true,
+          PASSWORD: true,
+          emp_id: true,
+        },
       });
 
       if (!signin) {
