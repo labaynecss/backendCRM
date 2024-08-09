@@ -439,43 +439,13 @@ class LoansController {
         net,
         soiid,
         assettype,
-
         make,
         yearModel,
-        auto_series,
-        auto_remarks,
-        aquiredCar,
-        wheelClass,
-        classification,
-        chasisNo,
-        yearAquired,
-        goodsLoaded,
-        loadedWeight,
-        registeredLTO,
-        transmissionFuel,
-        airConditioned,
-        powerWindow,
-        powerLock,
-        powerSideMirror,
-        powerSteering,
-        fourWheelDrive,
-        remarks,
-        dealer_name,
-        dealer_address,
-        dealer_contactno,
-        dealer_agreedprice,
-        variant,
-        accessories,
-        yearAcquired,
-        usedClassification,
-        itemsGoodsLoaded,
-        roadTestRemarks,
-        registeredInLTO,
-        aircondition,
-        agreedPrice,
         monthlySalary,
         otherIncome,
         autoCar,
+        roadTestRemarks,
+        variant,
       } = req.body;
 
       const assetid = generateAssets();
@@ -530,7 +500,7 @@ class LoansController {
               soiid: soiid,
             },
             update: {
-              profile,
+              profile: profile,
               loanprofile,
               employer_name: employer,
               employer_contact: contactNo,
@@ -606,8 +576,6 @@ class LoansController {
             crm_assetsAuto: {
               create: autoCar.map(
                 (car: {
-                  aircondition: any;
-                  loanprofile: any;
                   aquiredCar: any;
                   wheelClass: any;
                   classification: any;
@@ -618,15 +586,31 @@ class LoansController {
                   loadedWeight: any;
                   registeredInLTO: any;
                   transmissionFuel: any;
-                  airConditioned: any;
+                  aircondition: any;
                   powerWindow: any;
                   powerLock: any;
                   powerSideMirror: any;
                   powerSteering: any;
                   fourWheelDrive: any;
                   remarks: any;
+                  loanable_amount: any;
+                  percentage: any;
+                  ao_valuation: any;
+                  crecom_valuation: any;
+                  crecom: any;
+                  dealer_name: any;
+                  dealer_address: any;
+                  dealer_contactno: any;
+                  dealer_agreedprice: any;
+                  electricalCondition: any;
+                  engineCondition: any;
+                  bodyCondition: any;
+                  dealer_accessories: any;
+                  mvFileNo: any; // Additional field
                 }) => ({
                   loanprofile: loanprofile,
+                  mvFileNo: car.mvFileNo,
+
                   aquiredCar: car.aquiredCar,
                   wheelClass: car.wheelClass,
                   classification: car.classification,
@@ -644,6 +628,19 @@ class LoansController {
                   powerSteering: car.powerSteering,
                   fourWheelDrive: car.fourWheelDrive,
                   remarks: car.remarks,
+                  loanable_amount: car.loanable_amount,
+                  percentage: car.percentage,
+                  ao_valuation: car.ao_valuation,
+                  crecom_valuation: car.crecom_valuation,
+                  crecom: car.crecom,
+                  dealer_name: car.dealer_name,
+                  dealer_address: car.dealer_address,
+                  dealer_contactno: car.dealer_contactno,
+                  dealer_agreedprice: car.dealer_agreedprice,
+                  electricalCondition: car.electricalCondition,
+                  engineCondition: car.engineCondition,
+                  bodyCondition: car.bodyCondition,
+                  dealer_accessories: car.dealer_accessories,
                 })
               ),
             },

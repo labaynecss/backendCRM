@@ -1,3 +1,11 @@
+const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat("en-PH", {
+    style: "currency",
+    currency: "PHP",
+    minimumFractionDigits: 2,
+  }).format(amount);
+};
+
 export const mapLoanData = (loan: any) => ({
   id: loan.id,
   loanprofile: loan.loanprofile,
@@ -5,7 +13,7 @@ export const mapLoanData = (loan: any) => ({
   loantype: loan.loantype,
   terms: loan.terms,
   modeofpayment: loan.modeofpayment,
-  amountapplied: loan.amountapplied,
+  amountapplied: formatCurrency(loan.amountapplied),
   prevamount: loan.prevamount,
   previouspn: loan.previouspn,
   personal_loan: loan.personal_loan,
@@ -28,8 +36,8 @@ export const mapLoanData = (loan: any) => ({
 export const flattenSoi = (soi: any) => ({
   soiid: soi.soiid,
   sourcetype: soi.sourcetype,
-  monthlyincome: soi.monthlyincome,
-  otherincome: soi.otherincome,
+  monthlyincome: formatCurrency(soi.monthlyincome),
+  otherincome: formatCurrency(soi.otherincome),
 });
 
 export const flattenClientEducation = (education: any) => ({
@@ -66,7 +74,7 @@ export const flattenProfileGet = (profileGet: any) => {
     crm_clientSocials: profileGet.crm_clientSocials,
     crm_spouse: profileGet.crm_spouse,
     crm_assetsAuto: profileGet.crm_assetsAuto,
-
+    crm_soiEmployment: profileGet.crm_soiEmployment,
     crm_loan_hdr: profileGet.crm_loan_hdr.map(mapLoanData),
     crm_workInformation: profileGet.crm_loan_hdr.flatMap(
       (loanHdr: { crm_workInformation: any }) => loanHdr.crm_workInformation
