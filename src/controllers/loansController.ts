@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Prisma, PrismaClient } from "@prisma/client";
+import { crm_assetAutoInspection, Prisma, PrismaClient } from "@prisma/client";
 import { generateSoiId } from "../utils/generateSoi";
 import { generateAssets } from "../utils/generateAssets";
 
@@ -441,6 +441,7 @@ class LoansController {
         assettype,
         make,
         yearModel,
+        usedClassification,
         monthlySalary,
         otherIncome,
         autoCar,
@@ -577,70 +578,87 @@ class LoansController {
               create: autoCar.map(
                 (car: {
                   aquiredCar: any;
+                  plateNo: any;
+                  conductionSticker: any;
                   wheelClass: any;
                   classification: any;
                   chasisNo: any;
-                  yearAquired: any;
+                  yearAcquired: any;
+                  reference: any;
                   engineNo: any;
                   goodsLoaded: any;
                   loadedWeight: any;
-                  registeredInLTO: any;
+                  registerLTO: any;
                   transmissionFuel: any;
                   aircondition: any;
-                  powerWindow: any;
                   powerLock: any;
                   powerSideMirror: any;
                   powerSteering: any;
                   fourWheelDrive: any;
                   remarks: any;
-                  loanable_amount: any;
                   percentage: any;
-                  ao_valuation: any;
-                  crecom_valuation: any;
+                  aoValuation: any;
+                  crecomValuation: any;
                   crecom: any;
-                  dealer_name: any;
-                  dealer_address: any;
-                  dealer_contactno: any;
-                  dealer_agreedprice: any;
+                  dealername: any;
+                  address: any;
+                  Contactno: any;
+                  agreedPrice: any;
                   electricalCondition: any;
                   engineCondition: any;
                   bodyCondition: any;
                   dealer_accessories: any;
-                  mvFileNo: any; // Additional field
+                  mvFileNo: any;
+                  crm_assetAutoInspection: crm_assetAutoInspection;
+                  ao: any;
+                  usedClassification: any;
+                  mileage: any;
+                  loanableAmount: any;
+                  color: any;
                 }) => ({
                   loanprofile: loanprofile,
-                  mvFileNo: car.mvFileNo,
 
+                  mvFileNo: car.mvFileNo,
                   aquiredCar: car.aquiredCar,
+                  conductionSticker: car.conductionSticker,
                   wheelClass: car.wheelClass,
                   classification: car.classification,
                   chasisNo: car.chasisNo,
-                  yearAquired: car.yearAquired,
+                  yearAquired: car.yearAcquired,
                   engineNo: car.engineNo,
                   goodsLoaded: car.goodsLoaded,
                   loadedWeight: car.loadedWeight,
-                  registeredLTO: car.registeredInLTO,
-                  transmissionFuel: car.transmissionFuel,
-                  airConditioned: car.aircondition,
-                  powerWindow: car.powerWindow,
+                  color: car.color,
+                  registeredLTO: car.registerLTO,
                   powerLock: car.powerLock,
                   powerSideMirror: car.powerSideMirror,
                   powerSteering: car.powerSteering,
                   fourWheelDrive: car.fourWheelDrive,
                   remarks: car.remarks,
-                  loanable_amount: car.loanable_amount,
-                  percentage: car.percentage,
-                  ao_valuation: car.ao_valuation,
-                  crecom_valuation: car.crecom_valuation,
-                  crecom: car.crecom,
-                  dealer_name: car.dealer_name,
-                  dealer_address: car.dealer_address,
-                  dealer_contactno: car.dealer_contactno,
-                  dealer_agreedprice: car.dealer_agreedprice,
+                  dealer_name: car.dealername,
+                  dealer_address: car.address,
+                  dealer_contactno: car.Contactno,
                   electricalCondition: car.electricalCondition,
-                  engineCondition: car.engineCondition,
                   bodyCondition: car.bodyCondition,
                   dealer_accessories: car.dealer_accessories,
+                  crm_assetAutoInspection: {
+                    create: {
+                      reference: car.reference,
+                      loanprofile: loanprofile,
+                      assetId: assetid,
+                      engineCondition: car.engineCondition,
+                      percentage: car.percentage,
+                      ao: car.ao,
+                      ao_valuation: car.aoValuation,
+                      crecom_valuation: car.crecomValuation,
+                      crecom: car.crecom,
+                      useType: car.usedClassification,
+                      mileage: car.mileage,
+                      remarks: car.remarks,
+                      agreedPrice: car.agreedPrice,
+                      loanableAmount: car.loanableAmount,
+                    },
+                  },
                 })
               ),
             },
