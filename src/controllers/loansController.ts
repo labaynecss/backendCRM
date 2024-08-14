@@ -1,46 +1,46 @@
-import { Request, Response } from "express";
-import { crm_assetAutoInspection, Prisma, PrismaClient } from "@prisma/client";
-import { generateSoiId } from "../utils/generateSoi";
-import { generateAssets } from "../utils/generateAssets";
+import { Request, Response } from 'express'
+import { crm_assetAutoInspection, Prisma, PrismaClient } from '@prisma/client'
+import { generateSoiId } from '../utils/generateSoi'
+import { generateAssets } from '../utils/generateAssets'
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
 class LoansController {
   async listofLoans(req: Request, res: Response): Promise<void> {
     try {
       const loans = await prisma.crm_loan_hdr.findMany({
         take: 10,
-      });
-      console.log("Fetch success", loans);
-      res.status(200).json(loans);
+      })
+      console.log('Fetch success', loans)
+      res.status(200).json(loans)
     } catch (err) {
-      console.error("Error retrieving loans:", err);
-      res.status(500).json({ error: "Internal Server Error" });
+      console.error('Error retrieving loans:', err)
+      res.status(500).json({ error: 'Internal Server Error' })
     }
   }
   async updateProduct(req: Request, res: Response): Promise<void> {
     try {
-      const { productid, sourcetype } = req.body;
-      const { profile } = req.params;
-      const soi_id = generateSoiId(sourcetype);
+      const { productid, sourcetype } = req.body
+      const { profile } = req.params
+      const soi_id = generateSoiId(sourcetype)
 
       const updatedLoan = await prisma.crm_loan_hdr.update({
         where: { loanprofile: profile },
         data: {
           productid: productid,
         },
-      });
+      })
       const loanRecord = await prisma.crm_loan_hdr.findUnique({
         where: { loanprofile: profile },
         select: { profile: true },
-      });
+      })
 
       if (!loanRecord) {
-        res.status(404).json({ error: "Loan profile not found" });
-        return;
+        res.status(404).json({ error: 'Loan profile not found' })
+        return
       }
 
-      const profileFromLoan = loanRecord.profile;
+      const profileFromLoan = loanRecord.profile
 
       // Create a new record in crm_soi
       await prisma.crm_soi.create({
@@ -49,12 +49,12 @@ class LoansController {
           soiid: soi_id,
           sourcetype,
         },
-      });
-      console.log("Update success", updatedLoan);
-      res.status(200).json(updatedLoan);
+      })
+      console.log('Update success', updatedLoan)
+      res.status(200).json(updatedLoan)
     } catch (err) {
-      console.error("Error retrieving loans:", err);
-      res.status(500).json({ error: "Internal Server Error" });
+      console.error('Error retrieving loans:', err)
+      res.status(500).json({ error: 'Internal Server Error' })
     }
   }
 
@@ -116,9 +116,9 @@ class LoansController {
         prov_address,
         prov_stay,
         course_id,
-      } = req.body;
+      } = req.body
 
-      console.log("data", req.body);
+      console.log('data', req.body)
 
       const logData: any = {
         profile,
@@ -138,7 +138,7 @@ class LoansController {
           siblingUpdate: null,
           otherUpdate: null,
         },
-      };
+      }
 
       // Update borrower details
       logData.borrowerUpdate = await prisma.crm_client.update({
@@ -162,16 +162,16 @@ class LoansController {
           prov_address,
           perm_brgycode,
         },
-      });
+      })
 
       logData.workInfoUpsert = await prisma.crm_workInformation.upsert({
         where: { loanprofile },
         update: { sssno: sssNo, tinno: TIN },
         create: { profile, loanprofile, sssno: sssNo, tinno: TIN },
-      });
+      })
 
       logData.spouseUpsert = await prisma.crm_spouse.upsert({
-        where: { spouseprofile: spouseprofile ?? "" },
+        where: { spouseprofile: spouseprofile ?? '' },
         update: {
           ...(spouseLastName && { s_lastname: spouseLastName }),
           ...(spouseFirstName && { s_firstname: spouseFirstName }),
@@ -195,7 +195,7 @@ class LoansController {
           },
         },
         create: {
-          spouseprofile: spouseprofile ?? "",
+          spouseprofile: spouseprofile ?? '',
           profile,
           ...(spouseLastName && { s_lastname: spouseLastName }),
           ...(spouseFirstName && { s_firstname: spouseFirstName }),
@@ -210,13 +210,13 @@ class LoansController {
           ...(s_provaddress && { s_provaddress }),
           crm_spouseEducation: {
             create: {
-              s_educLevel: spouseEducationLevel ?? "",
-              s_educSchool: spouseSchool ?? "",
-              s_educCourse: spouseCourse ?? "",
+              s_educLevel: spouseEducationLevel ?? '',
+              s_educSchool: spouseSchool ?? '',
+              s_educCourse: spouseCourse ?? '',
             },
           },
         },
-      });
+      })
 
       logData.socialMediaUpdate = await prisma.$transaction([
         prisma.crm_clientSocials.upsert({
@@ -225,12 +225,12 @@ class LoansController {
           },
           update: {
             socialmedia_account: facebook,
-            socialmedia_type: "Facebook",
+            socialmedia_type: 'Facebook',
           },
           create: {
             profile: profile,
             socialmedia_account: facebook,
-            socialmedia_type: "Facebook",
+            socialmedia_type: 'Facebook',
           },
         }),
         prisma.crm_clientSocials.upsert({
@@ -239,15 +239,15 @@ class LoansController {
           },
           update: {
             socialmedia_account: viber,
-            socialmedia_type: "Viber",
+            socialmedia_type: 'Viber',
           },
           create: {
             profile: profile,
             socialmedia_account: viber,
-            socialmedia_type: "Viber",
+            socialmedia_type: 'Viber',
           },
         }),
-      ]);
+      ])
 
       logData.LoanDataUpdate = await prisma.crm_loan_hdr.update({
         where: { loanprofile },
@@ -255,7 +255,7 @@ class LoansController {
           pres_address,
           pres_stay,
         },
-      });
+      })
 
       logData.clientIdUpdate = await prisma.crm_clientId.update({
         where: { profile },
@@ -268,7 +268,7 @@ class LoansController {
           updatedby,
           updateddatetime: new Date(),
         },
-      });
+      })
 
       logData.educationUpdate = await prisma.crm_clientEducation.update({
         where: { profile },
@@ -277,39 +277,39 @@ class LoansController {
           educ_school: educ_school,
           course: course_id,
         },
-      });
+      })
 
       // Update family details
       logData.familyUpdates.fatherUpdate =
         await prisma.crm_clientFamily.updateMany({
           where: {
             profile: profile,
-            family_relationship: "0",
+            family_relationship: '0',
           },
           data: {
             family_membername: fathername,
             family_age: fatherage,
           },
-        });
+        })
 
       logData.familyUpdates.motherUpdate =
         await prisma.crm_clientFamily.updateMany({
           where: {
             profile: profile,
-            family_relationship: "1",
+            family_relationship: '1',
           },
           data: {
             family_membername: mothername,
             family_age: motherage,
           },
-        });
+        })
 
       if (Array.isArray(siblings) && siblings.length) {
         for (const sibling of siblings) {
           const updateResult = await prisma.crm_clientFamily.updateMany({
             where: {
               profile: profile,
-              family_relationship: "2",
+              family_relationship: '2',
               family_membername: sibling.SDFullname,
             },
             data: {
@@ -318,23 +318,21 @@ class LoansController {
               family_relationship: sibling.SDtypes,
               family_remarks: sibling.SDschool,
             },
-          });
+          })
 
           // Log each update result
-          logData.familyUpdates.siblingUpdates.push(updateResult);
+          logData.familyUpdates.siblingUpdates.push(updateResult)
         }
       } else {
-        console.log("No siblings data provided or empty array.");
+        console.log('No siblings data provided or empty array.')
       }
 
-      res
-        .status(200)
-        .json({ message: "Personal details updated successfully" });
+      res.status(200).json({ message: 'Personal details updated successfully' })
     } catch (error) {
-      console.error("Error updating personal details:", error);
+      console.error('Error updating personal details:', error)
       res
         .status(500)
-        .json({ error: "An error occurred while updating personal details" });
+        .json({ error: 'An error occurred while updating personal details' })
     }
   }
 
@@ -361,10 +359,10 @@ class LoansController {
         agentType,
 
         updateby,
-      } = req.body;
+      } = req.body
 
-      console.log("Request Parameters:", { loanprofile });
-      console.log("Request Body:", req.body);
+      console.log('Request Parameters:', { loanprofile })
+      console.log('Request Body:', req.body)
 
       const loanUpdateResult = await prisma.crm_loan_hdr.update({
         where: { loanprofile },
@@ -382,16 +380,16 @@ class LoansController {
           updatedby: updateby,
           updateddatetime: new Date(), // Add the missing comma here
         },
-      });
+      })
 
-      console.log("Loan Update Result:", loanUpdateResult);
+      console.log('Loan Update Result:', loanUpdateResult)
 
-      res.status(200).json({ message: "Loan details updated successfully" });
+      res.status(200).json({ message: 'Loan details updated successfully' })
     } catch (err) {
-      console.error("Error updating loan details:", err);
+      console.error('Error updating loan details:', err)
       res
         .status(500)
-        .json({ err: "An error occurred while updating loan details" });
+        .json({ err: 'An error occurred while updating loan details' })
     }
   }
 
@@ -447,14 +445,14 @@ class LoansController {
         autoCar,
         roadTestRemarks,
         variant,
-      } = req.body;
+      } = req.body
 
-      const assetid = generateAssets();
+      const assetid = generateAssets()
 
       const soi = await prisma.crm_soi.findFirst({
         where: { loanprofile },
         select: { sourcetype: true },
-      });
+      })
 
       await prisma.$transaction(async (prisma) => {
         await prisma.crm_workInformation.update({
@@ -465,9 +463,9 @@ class LoansController {
             status: employmentStatus,
             job_level: workJoblevel,
           },
-        });
+        })
 
-        if (soi?.sourcetype === "OFW") {
+        if (soi?.sourcetype === 'OFW') {
           await prisma.crm_soiOfw.createMany({
             data: [
               {
@@ -481,8 +479,8 @@ class LoansController {
                 ofw_netsalaryincome,
               },
             ],
-          });
-        } else if (soi?.sourcetype === "Business") {
+          })
+        } else if (soi?.sourcetype === 'Business') {
           await prisma.crm_soiBusiness.createMany({
             data: [
               {
@@ -494,8 +492,8 @@ class LoansController {
                 business_contact,
               },
             ],
-          });
-        } else if (soi?.sourcetype === "Employment") {
+          })
+        } else if (soi?.sourcetype === 'Employment') {
           await prisma.crm_soiEmployment.upsert({
             where: {
               soiid: soiid,
@@ -531,8 +529,8 @@ class LoansController {
               employer_address: businessAddress,
               salary_head: salaryHead,
             },
-          });
-        } else if (soi?.sourcetype === "Allottee") {
+          })
+        } else if (soi?.sourcetype === 'Allottee') {
           await prisma.crm_soiAllottee.createMany({
             data: [
               {
@@ -547,7 +545,7 @@ class LoansController {
                 updateddatetime: new Date(),
               },
             ],
-          });
+          })
         }
 
         //Check if expense_description and amount are defined before mapping
@@ -558,11 +556,11 @@ class LoansController {
               expense_description: description,
               expense_amount: amount[index],
             })
-          );
+          )
 
           await prisma.crm_monthlycashflow.createMany({
             data: cashflowData,
-          });
+          })
         }
 
         await prisma.crm_assets.create({
@@ -577,44 +575,44 @@ class LoansController {
             crm_assetsAuto: {
               create: autoCar.map(
                 (car: {
-                  aquiredCar: any;
-                  plateNo: any;
-                  conductionSticker: any;
-                  wheelClass: any;
-                  classification: any;
-                  chasisNo: any;
-                  yearAcquired: any;
-                  reference: any;
-                  engineNo: any;
-                  goodsLoaded: any;
-                  loadedWeight: any;
-                  registerLTO: any;
-                  transmissionFuel: any;
-                  aircondition: any;
-                  powerLock: any;
-                  powerSideMirror: any;
-                  powerSteering: any;
-                  fourWheelDrive: any;
-                  remarks: any;
-                  percentage: any;
-                  aoValuation: any;
-                  crecomValuation: any;
-                  crecom: any;
-                  dealername: any;
-                  address: any;
-                  Contactno: any;
-                  agreedPrice: any;
-                  electricalCondition: any;
-                  engineCondition: any;
-                  bodyCondition: any;
-                  dealer_accessories: any;
-                  mvFileNo: any;
-                  crm_assetAutoInspection: crm_assetAutoInspection;
-                  ao: any;
-                  usedClassification: any;
-                  mileage: any;
-                  loanableAmount: any;
-                  color: any;
+                  aquiredCar: any
+                  plateNo: any
+                  conductionSticker: any
+                  wheelClass: any
+                  classification: any
+                  chasisNo: any
+                  yearAcquired: any
+                  reference: any
+                  engineNo: any
+                  goodsLoaded: any
+                  loadedWeight: any
+                  registerLTO: any
+                  transmissionFuel: any
+                  aircondition: any
+                  powerLock: any
+                  powerSideMirror: any
+                  powerSteering: any
+                  fourWheelDrive: any
+                  remarks: any
+                  percentage: any
+                  aoValuation: any
+                  crecomValuation: any
+                  crecom: any
+                  dealername: any
+                  address: any
+                  Contactno: any
+                  agreedPrice: any
+                  electricalCondition: any
+                  engineCondition: any
+                  bodyCondition: any
+                  dealer_accessories: any
+                  mvFileNo: any
+                  crm_assetAutoInspection: crm_assetAutoInspection
+                  ao: any
+                  usedClassification: any
+                  mileage: any
+                  loanableAmount: any
+                  color: any
                 }) => ({
                   loanprofile: loanprofile,
 
@@ -663,8 +661,8 @@ class LoansController {
               ),
             },
           },
-        });
-      });
+        })
+      })
       //Monthly Income
       await prisma.crm_soi.update({
         where: {
@@ -675,61 +673,61 @@ class LoansController {
           monthlyincome: monthlySalary,
           otherincome: otherIncome,
         },
-      });
+      })
 
       res
         .status(200)
-        .json({ message: "Salary information updated successfully" });
+        .json({ message: 'Salary information updated successfully' })
     } catch (error) {
-      console.error("Error updating salary information:", error);
+      console.error('Error updating salary information:', error)
       res
         .status(500)
-        .json({ error: "An error occurred while updating salary information" });
+        .json({ error: 'An error occurred while updating salary information' })
     }
   }
 
   async EmploymentHistory(req: Request, res: Response): Promise<void> {
-    const { loanprofile } = req.params;
+    const { loanprofile } = req.params
 
     try {
-      const { employmentHistory, bankAccount, profile } = req.body;
+      const { employmentHistory, bankAccount, profile } = req.body
 
       // Validate that employmentHistory and bankAccount are arrays
       if (!Array.isArray(employmentHistory)) {
         throw new Error(
-          "Invalid input data: Expected array for employmentHistory"
-        );
+          'Invalid input data: Expected array for employmentHistory'
+        )
       }
 
       // Safely process employment history data
       const employmentData = employmentHistory.map((item) => ({
         loanprofile,
         profile: profile,
-        company_agencyid: item.company || "",
-        position: item.position || "",
-        inclusive_datestart: item.startDate || "",
-        inclusive_dateend: item.endDate || "",
+        company_agencyid: item.company || '',
+        position: item.position || '',
+        inclusive_datestart: item.startDate || '',
+        inclusive_dateend: item.endDate || '',
         updateddatetime: new Date(),
-      }));
+      }))
 
       // Validate that bankAccount is an array if it exists
       const bankData = Array.isArray(bankAccount)
         ? bankAccount.map((item) => ({
             loan_profile: loanprofile,
-            bankname: item.bankBranch || "",
-            b_telno: item.bankTel || "",
-            accountname: item.acctName || "",
-            accountno: item.acctTypeAndNo || "",
-            dateopened: item.dateOpened || "",
-            handling: item.handling || "",
-            monthlycredit_month1: item.monthlyCredits?.[0]?.month || "",
-            monthlycredit_month2: item.monthlyCredits?.[1]?.month || "",
-            monthlycredit_month3: item.monthlyCredits?.[2]?.month || "",
-            monthlycredit_value1: item.monthlyCredits?.[0]?.credits || "",
-            monthlycredit_value2: item.monthlyCredits?.[1]?.credits || "",
-            monthlycredit_value3: item.monthlyCredits?.[2]?.credits || "",
+            bankname: item.bankBranch || '',
+            b_telno: item.bankTel || '',
+            accountname: item.acctName || '',
+            accountno: item.acctTypeAndNo || '',
+            dateopened: item.dateOpened || '',
+            handling: item.handling || '',
+            monthlycredit_month1: item.monthlyCredits?.[0]?.month || '',
+            monthlycredit_month2: item.monthlyCredits?.[1]?.month || '',
+            monthlycredit_month3: item.monthlyCredits?.[2]?.month || '',
+            monthlycredit_value1: item.monthlyCredits?.[0]?.credits || '',
+            monthlycredit_value2: item.monthlyCredits?.[1]?.credits || '',
+            monthlycredit_value3: item.monthlyCredits?.[2]?.credits || '',
           }))
-        : [];
+        : []
       const charRefData = [
         {
           where: { loanprofile, charref_name: req.body.charref_name },
@@ -771,7 +769,7 @@ class LoansController {
             updateddatetime: new Date(),
           },
         },
-      ];
+      ]
 
       // Commented out barangay checking data as it seems incomplete
       // const barangayCheckingData = profile.map((prof: any, index: number) => ({
@@ -787,27 +785,27 @@ class LoansController {
       await prisma.$transaction(async (prisma) => {
         await prisma.crm_employmentHistory.createMany({
           data: employmentData,
-        });
+        })
 
         await prisma.crm_bankAccount.createMany({
           data: bankData,
-        });
+        })
 
         for (const charRef of charRefData) {
-          await prisma.crm_characterReference.updateMany(charRef);
+          await prisma.crm_characterReference.updateMany(charRef)
         }
 
         // await prisma.crm_barangayChecking.createMany({
         //   data: barangayCheckingData,
         // });
-      });
+      })
 
-      res.status(200).json({ message: "Loan details updated successfully" });
+      res.status(200).json({ message: 'Loan details updated successfully' })
     } catch (err) {
-      console.error("Error updating employment information:", err);
+      console.error('Error updating employment information:', err)
       res.status(500).json({
-        error: "An error occurred while updating employment information",
-      });
+        error: 'An error occurred while updating employment information',
+      })
     }
   }
 
@@ -826,7 +824,7 @@ class LoansController {
         cob_sourceofincom,
         relation,
         cob_otherinformation,
-      } = req.body;
+      } = req.body
 
       const coborrower = await prisma.crm_coBorrowers.upsert({
         where: { loanprofile },
@@ -857,9 +855,9 @@ class LoansController {
           cob_sourceofincom,
           cob_otherinformation,
         },
-      });
-      console.log("updating coborrower", coborrower);
-      res.status(200).json({ message: "Loan details updated successfully" });
+      })
+      console.log('updating coborrower', coborrower)
+      res.status(200).json({ message: 'Loan details updated successfully' })
     } catch (err) {}
   }
 
@@ -895,36 +893,36 @@ class LoansController {
         crd_mo_returndate,
         crd_ao_returndate,
         crd_returndate,
-      } = req.body;
+      } = req.body
 
-      let updateData = {};
+      let updateData = {}
 
-      if (active_department === "1") {
-        if (mo_status === "Ok to Process") {
+      if (active_department === '1') {
+        if (mo_status === 'Ok to Process') {
           updateData = {
             ao: ao,
             ao_idate: new Date(),
             mo_status: mo_status,
-            active_department: "2",
-          };
+            active_department: '2',
+          }
         } else {
           updateData = {
             mo_status: mo_status,
-          };
+          }
         }
       }
 
       const loanStatus = await prisma.crm_loanStatusReport.update({
         where: { loan_profile: loan_profile },
         data: updateData,
-      });
-      console.log("Updating loan status", loanStatus);
-      res.status(200).json({ message: "Loan status updated successfully" });
+      })
+      console.log('Updating loan status', loanStatus)
+      res.status(200).json({ message: 'Loan status updated successfully' })
     } catch (err) {
-      console.error("Error updating loan status", err);
-      res.status(500).json({ message: "Internal Server Error" });
+      console.error('Error updating loan status', err)
+      res.status(500).json({ message: 'Internal Server Error' })
     }
   }
 }
 
-export default new LoansController();
+export default new LoansController()

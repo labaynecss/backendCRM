@@ -384,6 +384,17 @@ model crm_course {
   crm_clientEducation crm_clientEducation[]
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model crm_creditAuthority {
+  id             Int        @default(autoincrement())
+  empId          String?    @db.NVarChar(50)
+  unsecuredLoan  Decimal?   @db.Decimal(18, 0)
+  collateralLoan Decimal?   @db.Decimal(18, 0)
+  crm_users      crm_users? @relation(fields: [empId], references: [emp_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_creditAuthority_crm_users")
+
+  @@ignore
+}
+
 model crm_department {
   id               Int         @default(autoincrement())
   dept_id          String      @id(map: "PK_crm_department") @db.NVarChar(50)
@@ -447,6 +458,7 @@ model crm_kycScoreCard_hdr {
 model crm_kycScoring {
   id                   Int                   @id(map: "PK_crm_kycScoring_1") @default(autoincrement())
   loanprofile          String                @db.NVarChar(50)
+  matrixValue          String?               @db.NVarChar(50)
   scorecardId          String                @db.NVarChar(50)
   scorecardMatrixCode  String?               @db.NVarChar(50)
   crm_kycScoreCard_dtl crm_kycScoreCard_dtl? @relation(fields: [scorecardMatrixCode], references: [scoreMatrixCode], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_kycScoring_crm_kycScoreCard_dtl")
@@ -503,6 +515,7 @@ model crm_loanStatusReport {
   id                    Int          @default(autoincrement())
   loan_profile          String       @id(map: "PK_crm_loanStatusReport") @db.NVarChar(50)
   branch                String?      @db.NVarChar(50)
+  active_empId          String?      @db.NVarChar(50)
   active_department     String?      @db.NVarChar(50)
   mo                    String?      @db.NVarChar(50)
   mo_idate              DateTime?    @db.DateTime
@@ -773,6 +786,7 @@ model crm_users {
   u_contact            String?                @db.NVarChar(50)
   address              String?                @db.NVarChar(50)
   BRANCH               String?                @db.NVarChar(250)
+  crm_creditAuthority  crm_creditAuthority[]  @ignore
   crm_moduleUserAccess crm_moduleUserAccess[]
   crm_department       crm_department?        @relation(fields: [u_departmentid], references: [dept_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_users_crm_department")
 }
