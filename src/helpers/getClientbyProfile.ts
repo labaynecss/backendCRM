@@ -73,18 +73,19 @@ export const flattenProfileGet = (profileGet: any) => {
     mothersname: profileGet.mothersname,
     crm_clientSocials: profileGet.crm_clientSocials,
     crm_spouse: profileGet.crm_spouse,
-    crm_assetsAuto: profileGet.crm_assetsAuto,
     crm_soiEmployment: profileGet.crm_soiEmployment,
     crm_loan_hdr: profileGet.crm_loan_hdr.map(mapLoanData),
-    crm_workInformation: profileGet.crm_loan_hdr.flatMap(
-      (loanHdr: { crm_workInformation: any }) => loanHdr.crm_workInformation
-    ),
+    crm_assets: profileGet.crm_assets,
     crm_soi: profileGet.crm_soi.map(flattenSoi),
     crm_clientFamily: profileGet.crm_clientFamily,
     crm_characterReference: profileGet.crm_loan_hdr.flatMap(
       (loanHdr: { crm_characterReference: any }) =>
         loanHdr.crm_characterReference
     ),
+    crm_workInformation: profileGet.crm_loan_hdr.flatMap(
+      (loanHdr: any) => loanHdr.crm_workInformation // Assuming each loan header has a 'crm_workInformation' relationship
+    ),
+
     crm_clientEducation: profileGet.crm_clientEducation
       ? flattenClientEducation(profileGet.crm_clientEducation)
       : null,

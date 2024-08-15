@@ -49,11 +49,21 @@ class ClientController {
           },
         },
         crm_clientSocials: true,
-
+        crm_assets: {
+          include: {
+            crm_assetsAuto: {
+              include: {
+                crm_assetAutoInspection: true,
+              },
+            },
+          },
+        },
         crm_spouse: true,
         crm_loan_hdr: {
           include: {
             crm_loanStatusReport: true,
+            crm_soiEmployment: true,
+
             crm_characterReference: true,
             crm_branch: {
               select: {
@@ -63,7 +73,6 @@ class ClientController {
             },
             crm_workInformation: true,
             crm_soi: true,
-            crm_assetsAuto: true,
 
             crm_address_barangay: {
               select: {
@@ -315,6 +324,7 @@ class ClientController {
       const loan_profile = generateloanProfileId();
       const spouseprofile = generateSpouseProfile();
       const active_department = "1";
+      let type = "New";
 
       const [createClient, loans] = await prisma.$transaction([
         prisma.crm_client.create({
@@ -417,7 +427,7 @@ class ClientController {
             profile,
             loanprofile: loan_profile,
             personal_loan: personalLoan,
-            loantype,
+            loantype: type,
             agent_type: agentType,
             terms,
             prevamount,
