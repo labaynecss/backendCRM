@@ -444,6 +444,7 @@ class LoansController {
         otherIncome,
         autoCar,
         roadTestRemarks,
+        sourceType,
         variant,
       } = req.body
 
@@ -563,59 +564,20 @@ class LoansController {
           })
         }
 
-        await prisma.crm_assets.create({
-          data: {
-            assetid: assetid,
-            profile: profile,
-            assettype: assettype,
-            auto_make: make,
-            auto_yearmodel: yearModel,
-            auto_series: variant,
-            auto_remarks: roadTestRemarks,
-            crm_assetsAuto: {
-              create: autoCar.map(
-                (car: {
-                  aquiredCar: any
-                  plateNo: any
-                  conductionSticker: any
-                  wheelClass: any
-                  classification: any
-                  chasisNo: any
-                  yearAcquired: any
-                  reference: any
-                  engineNo: any
-                  goodsLoaded: any
-                  loadedWeight: any
-                  registerLTO: any
-                  transmissionFuel: any
-                  aircondition: any
-                  powerLock: any
-                  powerSideMirror: any
-                  powerSteering: any
-                  fourWheelDrive: any
-                  remarks: any
-                  percentage: any
-                  aoValuation: any
-                  crecomValuation: any
-                  crecom: any
-                  dealername: any
-                  address: any
-                  Contactno: any
-                  agreedPrice: any
-                  electricalCondition: any
-                  engineCondition: any
-                  bodyCondition: any
-                  dealer_accessories: any
-                  mvFileNo: any
-                  crm_assetAutoInspection: crm_assetAutoInspection
-                  ao: any
-                  usedClassification: any
-                  mileage: any
-                  loanableAmount: any
-                  color: any
-                }) => ({
+        for (const car of autoCar) {
+          const assetId = generateAssets()
+          await prisma.crm_assets.create({
+            data: {
+              assetid: assetId,
+              profile,
+              assettype,
+              auto_make: car.make,
+              auto_yearmodel: car.yearModel,
+              auto_series: car.variant,
+              auto_remarks: car.roadTestRemarks,
+              crm_assetsAuto: {
+                create: {
                   loanprofile: loanprofile,
-
                   mvFileNo: car.mvFileNo,
                   aquiredCar: car.aquiredCar,
                   conductionSticker: car.conductionSticker,
@@ -627,10 +589,14 @@ class LoansController {
                   goodsLoaded: car.goodsLoaded,
                   loadedWeight: car.loadedWeight,
                   color: car.color,
+                  plateNo: car.plateNo,
                   registeredLTO: car.registerLTO,
+                  transmissionFuel: car.transmissionFuel,
+                  airConditioned: car.aircondition,
+                  powerWindow: car.powerWindow,
                   powerLock: car.powerLock,
-                  powerSideMirror: car.powerSideMirror,
                   powerSteering: car.powerSteering,
+                  powerSideMirror: car.powerSideMirror,
                   fourWheelDrive: car.fourWheelDrive,
                   remarks: car.remarks,
                   dealer_name: car.dealername,
@@ -638,30 +604,31 @@ class LoansController {
                   dealer_contactno: car.Contactno,
                   electricalCondition: car.electricalCondition,
                   bodyCondition: car.bodyCondition,
-                  dealer_accessories: car.dealer_accessories,
+                  createddatetime: new Date(),
+                  updatedby,
+                  updateddatetime: new Date(),
                   crm_assetAutoInspection: {
                     create: {
                       reference: car.reference,
                       loanprofile: loanprofile,
-                      assetId: assetid,
                       engineCondition: car.engineCondition,
-                      percentage: car.percentage,
+                      percentage: parseFloat(car.percentage),
                       ao: car.ao,
                       ao_valuation: car.aoValuation,
-                      crecom_valuation: car.crecomValuation,
+                      crecom_valuation: parseFloat(car.crecomValuation),
                       crecom: car.crecom,
-                      useType: car.usedClassification,
-                      mileage: car.mileage,
+                      useType: car.useType,
+                      mileage: parseFloat(car.mileage),
                       remarks: car.remarks,
-                      agreedPrice: car.agreedPrice,
-                      loanableAmount: car.loanableAmount,
+                      agreedPrice: parseFloat(car.agreedPrice),
+                      loanableAmount: parseFloat(car.loanableAmount),
                     },
                   },
-                })
-              ),
+                },
+              },
             },
-          },
-        })
+          })
+        }
       })
       //Monthly Income
       await prisma.crm_soi.update({
@@ -671,7 +638,7 @@ class LoansController {
         data: {
           loanprofile,
           monthlyincome: monthlySalary,
-          otherincome: otherIncome,
+          sourcetype: sourceType,
         },
       })
 

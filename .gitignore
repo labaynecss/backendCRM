@@ -2,8 +2,11 @@
 node_modules/
 src/uploads/
 
+# Specific files in prisma directory
+prisma/
+
 # Logs
-logs
+logs/
 *.log
 
 # Environment variables
@@ -18,3 +21,14 @@ jspm_packages/
 
 # Prisma folder
 prisma/
+
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
