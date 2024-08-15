@@ -39,6 +39,38 @@ class UserController {
         return
       }
 
+      let updateData = {
+        USERNAME: USERNAME,
+        PASSWORD: passwordHash,
+        u_lastname: u_lastname,
+        u_firstname: u_firstname,
+        u_middlename: u_middlename,
+        u_email: u_email,
+        u_contact: u_contact,
+        u_suffix: u_suffix,
+        address: address,
+        BRANCH: BRANCH,
+        emp_id: emp_id,
+        u_departmentid: u_departmentid,
+      };
+
+      if (u_departmentid === "3" || u_departmentid === "4") {
+        updateData = {
+          USERNAME: USERNAME,
+          PASSWORD: passwordHash,
+          u_lastname: u_lastname,
+          u_firstname: u_firstname,
+          u_middlename: u_middlename,
+          u_email: u_email,
+          u_contact: u_contact,
+          u_suffix: u_suffix,
+          address: address,
+          BRANCH: u_departmentid,
+          emp_id: emp_id,
+          u_departmentid: u_departmentid,
+        };
+      }
+
       const signup = await prisma.crm_users.create({
         data: {
           USERNAME: USERNAME,
@@ -50,7 +82,7 @@ class UserController {
           u_contact: u_contact,
           u_suffix: u_suffix,
           address: address,
-          BRANCH: BRANCH,
+          BRANCH: u_departmentid,
           emp_id: emp_id,
           u_departmentid: u_departmentid,
         },
