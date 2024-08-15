@@ -510,6 +510,7 @@ class ClientController {
           loan_profile: loan_profile,
           active_department: active_department,
           mo: mo,
+          active_empId: mo,
           mo_idate: new Date(),
         },
       });
