@@ -1,0 +1,819 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model crm_address_barangay {
+  id                           Int                           @default(autoincrement())
+  psgcCode                     String?                       @db.NVarChar(50)
+  brgyDescription              String?                       @db.NVarChar(100)
+  regCode                      String?                       @db.NVarChar(50)
+  provCode                     String?                       @db.NVarChar(50)
+  citymuncode                  String?                       @db.NVarChar(50)
+  brgyCode                     String                        @id(map: "PK_crm_address_barangay") @db.NVarChar(50)
+  crm_address_citymunicipality crm_address_citymunicipality? @relation(fields: [citymuncode], references: [citymuncode], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_address_barangay_crm_address_barangay")
+  crm_client                   crm_client[]
+  crm_coBorrowers              crm_coBorrowers[]
+  crm_loan_hdr                 crm_loan_hdr[]
+}
+
+model crm_address_citymunicipality {
+  id                   Int                    @default(autoincrement())
+  psgcCode             String                 @db.NVarChar(50)
+  citymunDesc          String                 @db.NVarChar(50)
+  regCode              String                 @db.NVarChar(50)
+  provCode             String                 @db.NVarChar(50)
+  citymuncode          String                 @id(map: "PK_crm_address_citymunicipality") @db.NVarChar(50)
+  crm_address_barangay crm_address_barangay[]
+  crm_address_province crm_address_province   @relation(fields: [provCode], references: [provCode], onUpdate: NoAction, map: "FK_crm_address_citymunicipality_crm_address_citymunicipality")
+}
+
+model crm_address_province {
+  id                           Int
+  psgcCode                     String                         @db.NVarChar(50)
+  provDesc                     String                         @db.NVarChar(50)
+  regCode                      String                         @db.NVarChar(50)
+  provCode                     String                         @id(map: "PK_crm_address_province") @db.NVarChar(50)
+  crm_address_citymunicipality crm_address_citymunicipality[]
+  crm_address_region           crm_address_region             @relation(fields: [regCode], references: [regcode], onUpdate: NoAction, map: "FK_crm_address_province_crm_address_region")
+}
+
+model crm_address_region {
+  id                   Int                    @default(autoincrement())
+  psgcCode             String                 @db.NVarChar(50)
+  regdescription       String                 @db.NVarChar(50)
+  regcode              String                 @id(map: "PK_crm_address_region_1") @db.NVarChar(50)
+  crm_address_province crm_address_province[]
+}
+
+model crm_agency {
+  id          Int     @default(autoincrement())
+  agencyid    String  @id(map: "PK_crm_agency") @db.NVarChar(50)
+  agencycode  String? @db.NVarChar(50)
+  agency_name String? @db.NVarChar(50)
+}
+
+model crm_agents {
+  id              Int       @default(autoincrement())
+  agentid         String    @id(map: "PK_crm_agents") @db.NVarChar(50)
+  a_lastname      String?   @db.NVarChar(50)
+  a_firstname     String?   @db.NVarChar(50)
+  a_middlename    String?   @db.NVarChar(50)
+  a_suffix        String?   @db.NVarChar(50)
+  a_birthday      String?   @db.NVarChar(50)
+  a_gender        String?   @db.NVarChar(50)
+  a_mobile        String?   @db.NVarChar(50)
+  a_telephone     String?   @db.NVarChar(50)
+  a_addresscode   String?   @db.NVarChar(50)
+  a_address       String?   @db.NVarChar(50)
+  a_status        Boolean?
+  createdby       String?   @db.NVarChar(50)
+  createddatetime DateTime? @db.DateTime
+  updatedby       String?   @db.NVarChar(50)
+  updateddatetime DateTime? @db.DateTime
+}
+
+model crm_area {
+  id         Int          @default(autoincrement())
+  areaid     Int          @id(map: "PK_crm_area")
+  areaname   String?      @db.NVarChar(50)
+  crm_branch crm_branch[]
+}
+
+model crm_assetAutoInspection {
+  id               Int            @id(map: "PK_crm_assetAutoInspection") @default(autoincrement())
+  loanprofile      String         @db.NVarChar(50)
+  assetId          String         @db.NVarChar(50)
+  engineCondition  String?        @db.NVarChar(50)
+  useType          String?        @db.NVarChar(50)
+  reference        String?        @db.NVarChar(50)
+  mileage          Decimal?       @db.Decimal(18, 0)
+  ao               String?        @db.NVarChar(50)
+  ao_valuation     String?        @db.NVarChar(50)
+  crecom           String?        @db.NVarChar(50)
+  crecom_valuation Decimal?       @db.Decimal(18, 0)
+  loanableAmount   Decimal?       @db.Decimal(18, 0)
+  percentage       Int?
+  remarks          String?        @db.NVarChar(50)
+  agreedPrice      Decimal?       @db.Decimal(18, 0)
+  crm_assetsAuto   crm_assetsAuto @relation(fields: [assetId], references: [asset_autoid], onUpdate: NoAction, map: "FK_crm_assetAutoInspection_crm_assetsAuto")
+  crm_loan_hdr     crm_loan_hdr   @relation(fields: [loanprofile], references: [loanprofile], onUpdate: NoAction, map: "FK_crm_assetAutoInspection_crm_loan_hdr")
+}
+
+model crm_assets {
+  id             Int             @default(autoincrement())
+  profile        String?         @db.NVarChar(50)
+  assetid        String          @id(map: "PK_crm_assets_1") @db.NVarChar(50)
+  assettype      String?         @db.NVarChar(50)
+  auto_make      String?         @db.NVarChar(50)
+  auto_yearmodel String?         @db.NVarChar(50)
+  auto_series    String?         @db.NVarChar(50)
+  auto_remarks   String?         @db.NVarChar(50)
+  crm_client     crm_client?     @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_assets_crm_client")
+  crm_assetsAuto crm_assetsAuto?
+}
+
+model crm_assetsAuto {
+  id                      Int                       @default(autoincrement())
+  asset_autoid            String                    @id(map: "PK_crm_assetsAuto") @db.NVarChar(50)
+  loanprofile             String                    @db.NVarChar(50)
+  mvFileNo                String?                   @db.NVarChar(50)
+  aquiredCar              String?                   @db.NVarChar(50)
+  engineNo                String?                   @db.NVarChar(50)
+  wheelClass              String?                   @db.NVarChar(50)
+  classification          String?                   @db.NVarChar(50)
+  conductionSticker       String?                   @db.NVarChar(50)
+  chasisNo                String?                   @db.NVarChar(50)
+  yearAquired             String?                   @db.VarChar(50)
+  goodsLoaded             String?                   @db.NVarChar(50)
+  loadedWeight            String?                   @db.NVarChar(50)
+  color                   String?                   @db.NVarChar(50)
+  registeredLTO           String?                   @db.NVarChar(50)
+  transmissionFuel        String?                   @db.NVarChar(50)
+  airConditioned          Boolean?
+  powerWindow             Boolean?
+  powerLock               Boolean?
+  powerSideMirror         Boolean?
+  powerSteering           Boolean?
+  fourWheelDrive          Boolean?
+  remarks                 String?                   @db.NVarChar(250)
+  dealer_name             String?                   @db.NVarChar(50)
+  dealer_address          String?                   @db.NVarChar(50)
+  dealer_contactno        String?                   @db.NVarChar(50)
+  electricalCondition     String?                   @db.NVarChar(50)
+  bodyCondition           String?                   @db.NVarChar(50)
+  plateNo                 String?                   @db.NVarChar(50)
+  createdby               String?                   @db.NVarChar(50)
+  createddatetime         DateTime?                 @db.DateTime
+  updatedby               String?                   @db.NVarChar(50)
+  updateddatetime         DateTime?                 @db.DateTime
+  crm_assetAutoInspection crm_assetAutoInspection[]
+  crm_assets              crm_assets                @relation(fields: [asset_autoid], references: [assetid], onUpdate: NoAction, map: "FK_crm_assetsAuto_crm_assets")
+  crm_loan_hdr            crm_loan_hdr              @relation(fields: [loanprofile], references: [loanprofile], onUpdate: NoAction, map: "FK_crm_assetsAuto_crm_loan_hdr")
+}
+
+model crm_assetsRealstate {
+  id                            Int           @default(autoincrement())
+  asset_realstateid             String        @id(map: "PK_crm_assetsRealstate_1") @db.NVarChar(50)
+  loanprofile                   String?       @db.NVarChar(50)
+  realstate_tctnumber           String?       @db.NVarChar(50)
+  realstate_registerowner       String?       @db.NVarChar(50)
+  realstate_address             String?       @db.NVarChar(50)
+  realstate_localitytype        String?       @db.NVarChar(50)
+  realstate_landvalue           Decimal?      @db.Decimal(18, 0)
+  realstate_improvement         String?       @db.NVarChar(50)
+  realstate_landsqm             String?       @db.NVarChar(50)
+  realstate_pricepersqm         String?       @db.NVarChar(50)
+  realstate_totalappraisalvalue Decimal?      @db.Decimal(18, 0)
+  realstate_marketable          String?       @db.NVarChar(50)
+  realstate_marketableprice     Decimal?      @db.Decimal(18, 0)
+  realstate_referencefile       String?       @db.NVarChar(50)
+  realstate_housetype           String?       @db.NVarChar(50)
+  realstate_remarks             String?       @db.NVarChar(50)
+  updatedby                     String?       @db.NVarChar(50)
+  updateddatetime               DateTime?     @db.DateTime
+  crm_loan_hdr                  crm_loan_hdr? @relation(fields: [loanprofile], references: [loanprofile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_assetsRealstate_crm_loan_hdr")
+}
+
+model crm_bankAccount {
+  id                   Int          @default(autoincrement())
+  loan_profile         String       @id(map: "PK_crm_bankaccount") @db.NVarChar(50)
+  bankname             String?      @db.NVarChar(50)
+  b_telno              String?      @db.NVarChar(50)
+  accountname          String?      @db.NVarChar(50)
+  accountno            String?      @db.NVarChar(50)
+  dateopened           DateTime?    @db.Date
+  handling             String?      @db.NVarChar(50)
+  monthlycredit_month1 String?      @db.NVarChar(50)
+  monthlycredit_month2 String?      @db.NVarChar(50)
+  monthlycredit_month3 String?      @db.NVarChar(50)
+  monthlycredit_value1 Decimal?     @db.Decimal(18, 0)
+  monthlycredit_value2 Decimal?     @db.Decimal(18, 0)
+  monthlycredit_value3 Decimal?     @db.Decimal(18, 0)
+  createdby            String?      @db.NVarChar(50)
+  createddatetime      DateTime?    @db.DateTime
+  updatedby            String?      @db.NVarChar(50)
+  updateddatetime      DateTime?    @db.DateTime
+  crm_loan_hdr         crm_loan_hdr @relation(fields: [loan_profile], references: [loanprofile], onUpdate: NoAction, map: "FK_crm_bankaccount_crm_loan_hdr")
+}
+
+model crm_barangayChecking {
+  id                  Int           @id(map: "PK_crm_barangayChecking")
+  profile             String?       @db.NVarChar(50)
+  loanprofile         String?       @db.NVarChar(50)
+  informant           String?       @db.NVarChar(50)
+  informant_contactno String?       @db.NVarChar(50)
+  brgy_position       String?       @db.NVarChar(50)
+  remarks             String?       @db.NVarChar(50)
+  date                DateTime?     @db.DateTime
+  crm_client          crm_client?   @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_barangayChecking_crm_client")
+  crm_loan_hdr        crm_loan_hdr? @relation(fields: [loanprofile], references: [loanprofile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_barangayChecking_crm_loan_hdr")
+}
+
+model crm_branch {
+  id                 Int            @default(autoincrement())
+  branch_code        String         @id(map: "PK_crm_branch") @db.NVarChar(50)
+  branch_description String?        @db.NVarChar(50)
+  areaid             Int?
+  branch_status      Boolean?
+  createdBy          String?        @db.NVarChar(50)
+  createddatetime    DateTime?      @db.DateTime
+  updatedBy          String?        @db.NVarChar(50)
+  updateddatetime    DateTime?      @db.DateTime
+  crm_area           crm_area?      @relation(fields: [areaid], references: [areaid], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_branch_crm_branch")
+  crm_loan_hdr       crm_loan_hdr[]
+}
+
+model crm_businessType {
+  id              Int               @default(autoincrement())
+  business_id     String            @id(map: "PK_crm_businessType") @db.NVarChar(50)
+  refe_code       String?           @db.VarChar(50)
+  busines_type    String?           @db.VarChar(50)
+  business_status Boolean?
+  crm_soiBusiness crm_soiBusiness[]
+}
+
+model crm_characterReference {
+  id                   Int          @id(map: "PK_crm_characterReference") @default(autoincrement())
+  loanprofile          String       @db.NVarChar(50)
+  charref_name         String?      @db.NVarChar(50)
+  charref_address      String?      @db.NVarChar(50)
+  charref_contactno    String?      @db.NVarChar(50)
+  charref_relationship String?      @db.NVarChar(50)
+  charref_verified     String?      @db.NVarChar(50)
+  createdby            String?      @db.NVarChar(50)
+  createddatetime      DateTime?    @db.DateTime
+  updatedby            String?      @db.NVarChar(50)
+  updateddatetime      DateTime?    @db.DateTime
+  crm_loan_hdr         crm_loan_hdr @relation(fields: [loanprofile], references: [loanprofile], onUpdate: NoAction, map: "FK_crm_characterReference_crm_loan_hdr")
+}
+
+model crm_client {
+  id                    Int                     @default(autoincrement())
+  profile               String                  @id(map: "PK_crm_client_1") @db.NVarChar(50)
+  lastname              String?                 @db.NVarChar(50)
+  firstname             String?                 @db.NVarChar(50)
+  middlename            String?                 @db.NVarChar(50)
+  suffix                String?                 @db.NVarChar(10)
+  birthday              String?                 @db.VarChar(50)
+  age                   String?                 @db.NVarChar(50)
+  gender                String?                 @db.NVarChar(50)
+  mobile                String?                 @db.NVarChar(50)
+  telephone             String?                 @db.NVarChar(50)
+  acode                 String?                 @db.NVarChar(50)
+  residence_status      String?                 @db.NVarChar(50)
+  perm_stay             String?                 @db.NVarChar(50)
+  perm_address          String?                 @db.NVarChar(100)
+  perm_brgycode         String?                 @db.NVarChar(50)
+  prov_stay             String?                 @db.NVarChar(50)
+  prov_address          String?                 @db.NVarChar(100)
+  prov_brgycode         String?                 @db.NVarChar(50)
+  civilstatus           String?                 @db.NVarChar(50)
+  religion              String?                 @db.NVarChar(50)
+  email                 String?                 @db.NVarChar(50)
+  mothersname           String?                 @db.NVarChar(50)
+  createdby             String?                 @db.NVarChar(50)
+  createddatetime       DateTime?               @db.DateTime
+  updatedby             String?                 @db.NVarChar(50)
+  updateddatetime       DateTime?               @db.DateTime
+  crm_assets            crm_assets[]
+  crm_barangayChecking  crm_barangayChecking[]
+  crm_address_barangay  crm_address_barangay?   @relation(fields: [prov_brgycode], references: [brgyCode], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_client_crm_address_barangay")
+  crm_clientEducation   crm_clientEducation?
+  crm_clientFamily      crm_clientFamily[]
+  crm_clientId          crm_clientId?
+  crm_clientSocials     crm_clientSocials?
+  crm_employmentHistory crm_employmentHistory[]
+  crm_loan_hdr          crm_loan_hdr[]
+  crm_soi               crm_soi[]
+  crm_soiAllottee       crm_soiAllottee[]
+  crm_soiBusiness       crm_soiBusiness[]
+  crm_soiEmployment     crm_soiEmployment[]
+  crm_soiOfw            crm_soiOfw[]
+  crm_spouse            crm_spouse[]
+}
+
+model crm_clientEducation {
+  id          Int          @default(autoincrement())
+  profile     String       @id(map: "PK_crm_clientEducation") @db.NVarChar(50)
+  educ_level  String?      @db.NVarChar(50)
+  educ_school String?      @db.NVarChar(50)
+  course      String?      @db.NVarChar(50)
+  crm_client  crm_client   @relation(fields: [profile], references: [profile], onUpdate: NoAction, map: "FK_crm_clientEducation_crm_client")
+  crm_course  crm_course?  @relation(fields: [course], references: [course_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_clientEducation_crm_course")
+  crm_schools crm_schools? @relation(fields: [educ_school], references: [school_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_clientEducation_crm_schools")
+}
+
+model crm_clientFamily {
+  id                  Int        @id(map: "PK_crm_clientFamily") @default(autoincrement())
+  profile             String     @db.NVarChar(50)
+  family_relationship String?    @db.NVarChar(50)
+  family_membername   String?    @db.NVarChar(50)
+  family_age          String?    @db.NVarChar(50)
+  family_status       String?    @db.NVarChar(50)
+  family_remarks      String?    @db.NVarChar(50)
+  family_verified     String?    @db.NVarChar(50)
+  crm_client          crm_client @relation(fields: [profile], references: [profile], onUpdate: NoAction, map: "FK_crm_clientFamily_crm_client")
+}
+
+model crm_clientId {
+  id              Int        @default(autoincrement())
+  profile         String     @id(map: "PK_crm_clientId") @db.NVarChar(50)
+  id_type         String?    @db.NVarChar(50)
+  id_no           String?    @db.NVarChar(50)
+  b_expiry        String?    @db.NVarChar(50)
+  id_expiration   String?    @db.NVarChar(50)
+  verified        Boolean?
+  createdby       String?    @db.NVarChar(50)
+  createddatetime DateTime?  @db.DateTime
+  updatedby       String?    @db.NVarChar(50)
+  updateddatetime DateTime?  @db.DateTime
+  crm_client      crm_client @relation(fields: [profile], references: [profile], onUpdate: NoAction, map: "FK_crm_clientId_crm_client")
+}
+
+model crm_clientSocials {
+  id                  Int        @default(autoincrement())
+  profile             String     @id(map: "PK_crm_clientSocials") @db.NVarChar(50)
+  socialmedia_type    String?    @db.NVarChar(50)
+  socialmedia_account String?    @db.NVarChar(50)
+  crm_client          crm_client @relation(fields: [profile], references: [profile], onUpdate: NoAction, map: "FK_crm_clientSocials_crm_client")
+}
+
+model crm_coBorrowers {
+  id                   Int                   @default(autoincrement())
+  loanprofile          String                @id(map: "PK_crm_coBorrowers") @db.NVarChar(50)
+  cob_lastname         String?               @db.NVarChar(50)
+  cob_firstname        String?               @db.NVarChar(50)
+  cob_middlename       String?               @db.NVarChar(50)
+  cob_suffix           String?               @db.NVarChar(50)
+  cob_contactno        String?               @db.NVarChar(50)
+  cob_birthday         String?               @db.NVarChar(50)
+  cob_relationship     String?               @db.NVarChar(50)
+  cob_address          String?               @db.NVarChar(50)
+  cob_brgyCode         String?               @db.NVarChar(50)
+  cob_sourceofincom    String?               @db.NVarChar(50)
+  cob_otherinformation String?               @db.NVarChar(50)
+  crm_address_barangay crm_address_barangay? @relation(fields: [cob_brgyCode], references: [brgyCode], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_coBorrowers_crm_address_barangay")
+  crm_loan_hdr         crm_loan_hdr          @relation(fields: [loanprofile], references: [loanprofile], onUpdate: NoAction, map: "FK_crm_coBorrowers_crm_loan_hdr")
+}
+
+model crm_collectionArea {
+  id                    Int                    @default(autoincrement())
+  area_id               String                 @id(map: "PK_crm_collectionArea") @db.NVarChar(50)
+  collection_id         String?                @db.NVarChar(50)
+  crm_collectionCompany crm_collectionCompany? @relation(fields: [collection_id], references: [collection_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_collectionArea_crm_collectionCompany")
+}
+
+model crm_collectionCompany {
+  id                          Int                    @default(autoincrement())
+  collection_id               String                 @id(map: "PK_crm_collectionCompany") @db.NVarChar(50)
+  collection_company          String                 @db.NVarChar(50)
+  crm_collectionArea          crm_collectionArea[]
+  crm_collectionCompany       crm_collectionCompany  @relation("crm_collectionCompanyTocrm_collectionCompany", fields: [collection_id], references: [collection_id], onUpdate: NoAction, map: "FK_crm_collectionCompany_crm_collectionCompany")
+  other_crm_collectionCompany crm_collectionCompany? @relation("crm_collectionCompanyTocrm_collectionCompany")
+}
+
+model crm_course {
+  id                  Int                   @default(autoincrement())
+  course_id           String                @id(map: "PK_crm_course") @db.NVarChar(50)
+  course_description  String?               @db.NVarChar(100)
+  crm_clientEducation crm_clientEducation[]
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model crm_creditAuthority {
+  id             Int        @default(autoincrement())
+  empId          String    @id(map: "PK_crm_creditAuthority") @db.NVarChar(50)
+  unsecuredLoan  Decimal?   @db.Decimal(18, 0)
+  collateralLoan Decimal?   @db.Decimal(18, 0)
+  crm_users      crm_users? @relation(fields: [empId], references: [emp_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_creditAuthority_crm_users")
+
+}
+
+model crm_department {
+  id               Int         @default(autoincrement())
+  dept_id          String      @id(map: "PK_crm_department") @db.NVarChar(50)
+  dept_description String?     @db.NVarChar(50)
+  dept_module      String?     @db.NVarChar(50)
+  crm_users        crm_users[]
+}
+
+model crm_documentUploaded {
+  id                  Int           @id(map: "PK_crm_documentUploaded") @default(autoincrement())
+  loanprofile         String?       @db.NVarChar(50)
+  file_category       String?       @db.NVarChar(50)
+  filename            String?       @db.NVarChar(50)
+  file_directory      String?       @db.NVarChar(150)
+  document_verified   String?       @db.NVarChar(50)
+  document_verifiedby String?       @db.NVarChar(50)
+  createdby           String?       @db.NVarChar(50)
+  createddatetime     DateTime?     @db.DateTime
+  updatedby           String?       @db.NVarChar(50)
+  updateddatetime     DateTime?     @db.DateTime
+  crm_loan_hdr        crm_loan_hdr? @relation(fields: [loanprofile], references: [loanprofile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_documentUploaded_crm_loan_hdr")
+}
+
+model crm_employmentHistory {
+  id                  Int         @id(map: "PK_crm_employmentHistory") @default(autoincrement())
+  profile             String?     @db.NVarChar(50)
+  company_agencyid    String?     @db.NVarChar(50)
+  position            String?     @db.NVarChar(50)
+  inclusive_datestart String      @db.NVarChar(50)
+  inclusive_dateend   String?     @db.NVarChar(50)
+  createdby           String?     @db.NVarChar(50)
+  createddatetime     DateTime?   @db.DateTime
+  updatedby           String?     @db.NVarChar(50)
+  updateddatetime     DateTime?   @db.DateTime
+  crm_client          crm_client? @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_employmentHistory_crm_client")
+}
+
+model crm_kycScoreCard_dtl {
+  id                  Int              @default(autoincrement())
+  scorecardId         String?          @db.NVarChar(50)
+  scoreMatrixCode     String           @id(map: "PK_crm_kycScoreCard") @db.NVarChar(50)
+  scoreBusinessMatrix String?          @db.NVarChar(50)
+  scoreEmployedMatrix String?          @db.NVarChar(50)
+  scorePoints         Decimal?         @db.Decimal(3, 0)
+  crm_kycScoring      crm_kycScoring[]
+}
+
+model crm_kycScoreCard_hdr {
+  id                   Int              @default(autoincrement())
+  scorecardId          String           @id(map: "PK_crm_kycCredit") @db.NVarChar(50)
+  scorecardDescription String?          @db.NVarChar(50)
+  scorecardCreditCs    String?          @db.NVarChar(50)
+  scorecardType        String?          @db.NVarChar(50)
+  createdBy            String?          @db.NVarChar(50)
+  createdDatetime      DateTime?        @db.DateTime
+  updatedBy            String?          @db.NVarChar(50)
+  updatedDatetime      DateTime?        @db.DateTime
+  crm_kycScoring       crm_kycScoring[]
+}
+
+model crm_kycScoring {
+  id                   Int                   @id(map: "PK_crm_kycScoring_1") @default(autoincrement())
+  loanprofile          String                @db.NVarChar(50)
+  matrixValue          String?               @db.NVarChar(50)
+  scorecardId          String                @db.NVarChar(50)
+  scorecardMatrixCode  String?               @db.NVarChar(50)
+  crm_kycScoreCard_dtl crm_kycScoreCard_dtl? @relation(fields: [scorecardMatrixCode], references: [scoreMatrixCode], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_kycScoring_crm_kycScoreCard_dtl")
+  crm_kycScoreCard_hdr crm_kycScoreCard_hdr  @relation(fields: [scorecardId], references: [scorecardId], onUpdate: NoAction, map: "FK_crm_kycScoring_crm_kycScoreCard_hdr")
+  crm_loan_hdr         crm_loan_hdr          @relation(fields: [loanprofile], references: [loanprofile], onUpdate: NoAction, map: "FK_crm_kycScoring_crm_loan_hdr")
+}
+
+model crm_loan_hdr {
+  id                      Int                       @default(autoincrement())
+  branchid                String?                   @db.NVarChar(50)
+  loanprofile             String                    @id(map: "PK_crm_loan_hdr") @db.NVarChar(50)
+  profile                 String                    @db.NVarChar(50)
+  loantype                String?                   @db.NVarChar(50)
+  terms                   String?                   @db.NVarChar(50)
+  modeofpayment           String?                   @db.NVarChar(50)
+  amountapplied           Decimal?                  @db.Decimal(18, 0)
+  prevamount              String?                   @db.NVarChar(50)
+  previouspn              String?                   @db.NVarChar(50)
+  personal_loan           String?                   @db.NVarChar(50)
+  paymenthistory          String?                   @db.NVarChar(50)
+  productid               String?                   @db.NVarChar(50)
+  productClasses          String?                   @db.NVarChar(50)
+  agentid                 String?                   @db.NVarChar(50)
+  agent_type              String?                   @db.VarChar(2)
+  pres_brgycode           String?                   @db.NVarChar(50)
+  createdby               String?                   @db.NVarChar(50)
+  createddatetime         DateTime?                 @db.DateTime
+  updatedby               String?                   @db.NVarChar(50)
+  updateddatetime         DateTime?                 @db.DateTime
+  pres_address            String?                   @db.NVarChar(100)
+  pres_stay               String?                   @db.NVarChar(50)
+  crm_assetAutoInspection crm_assetAutoInspection[]
+  crm_assetsAuto          crm_assetsAuto[]
+  crm_assetsRealstate     crm_assetsRealstate[]
+  crm_bankAccount         crm_bankAccount?
+  crm_barangayChecking    crm_barangayChecking[]
+  crm_characterReference  crm_characterReference[]
+  crm_coBorrowers         crm_coBorrowers?
+  crm_documentUploaded    crm_documentUploaded[]
+  crm_kycScoring          crm_kycScoring[]
+  crm_address_barangay    crm_address_barangay?     @relation(fields: [pres_brgycode], references: [brgyCode], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_address_barangay")
+  crm_branch              crm_branch?               @relation(fields: [branchid], references: [branch_code], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_branch")
+  crm_client              crm_client                @relation(fields: [profile], references: [profile], onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_client")
+  crm_products            crm_products?             @relation(fields: [productid], references: [productid], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_loan_hdr_crm_products")
+  crm_loanStatusReport    crm_loanStatusReport?
+  crm_soi                 crm_soi[]
+  crm_soiBusiness         crm_soiBusiness[]
+  crm_soiEmployment       crm_soiEmployment[]
+  crm_soiOfw              crm_soiOfw[]
+  crm_workInformation     crm_workInformation?
+}
+
+model crm_loanStatusReport {
+  id                    Int          @default(autoincrement())
+  loan_profile          String       @id(map: "PK_crm_loanStatusReport") @db.NVarChar(50)
+  branch                String?      @db.NVarChar(50)
+  active_empId          String?      @db.NVarChar(50)
+  active_department     String?      @db.NVarChar(50)
+  mo                    String?      @db.NVarChar(50)
+  mo_idate              DateTime?    @db.DateTime
+  mo_submitted          Boolean?
+  mo_submitteddatetime  DateTime?    @db.DateTime
+  mo_status             String?      @db.NVarChar(50)
+  ao                    String?      @db.NVarChar(50)
+  ao_idate              DateTime?    @db.DateTime
+  ao_returndate         DateTime?    @db.DateTime
+  mo_returndate         DateTime?    @db.DateTime
+  ao_verify             Boolean?
+  ao_vdate              DateTime?    @db.DateTime
+  ao_status             String?      @db.NVarChar(50)
+  crecom                String?      @db.NVarChar(50)
+  crecom_idate          DateTime?    @db.DateTime
+  crecom_approvedamount Decimal?     @db.Decimal(18, 0)
+  crecom_approval       Boolean?
+  crecom_approvedate    DateTime?    @db.DateTime
+  crecom_status         String?      @db.NVarChar(50)
+  crd                   String?      @db.NVarChar(50)
+  crd_idate             DateTime?    @db.DateTime
+  crd_dataverify        Boolean?
+  crd_verifydate        DateTime?    @db.DateTime
+  crd_mo_returndate     DateTime?    @db.DateTime
+  crd_ao_returndate     DateTime?    @db.DateTime
+  crd_returndate        DateTime?    @db.DateTime
+  crd_status            String?      @db.NVarChar(50)
+  crm_loan_hdr          crm_loan_hdr @relation(fields: [loan_profile], references: [loanprofile], onUpdate: NoAction, map: "FK_crm_loanStatusReport_crm_loan_hdr")
+}
+
+model crm_moduleStaticAccess {
+  id                   Int       @id(map: "PK_crm_moduleStaticAccess") @default(autoincrement())
+  userGroup            String?   @db.NVarChar(50)
+  userAccess           String?   @db.NVarChar(50)
+  moduleDescription    String?   @db.NVarChar(50)
+  moduleAdmin          Boolean?
+  moduleMarketing      Boolean?
+  moduleAOCI           Boolean?
+  moduleCrecom         Boolean?
+  moduleCRD            Boolean?
+  moduleLoansReleasing Boolean?
+  moduleOtherDept      Boolean?
+  createdBy            String?   @db.NVarChar(50)
+  createdDatetime      DateTime? @db.DateTime
+  updatedBy            String?   @db.NVarChar(50)
+  updatedDatetime      DateTime? @db.DateTime
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model crm_moduleStaticAccess2 {
+  id              Int       @default(autoincrement())
+  userGroup       String?   @db.NVarChar(50)
+  userAccess      String?   @db.NVarChar(50)
+  moduleType      String?   @db.NVarChar(50)
+  module_bAccess  Boolean?
+  createdBy       String?   @db.NVarChar(50)
+  createdDatetime DateTime? @db.DateTime
+  updatedBy       String?   @db.NVarChar(50)
+  updatedDatetime DateTime? @db.DateTime
+
+  @@ignore
+}
+
+model crm_moduleUserAccess {
+  id              Int        @id(map: "PK_crm_moduleUserAccess") @default(autoincrement())
+  emp_id          String?    @db.NVarChar(50)
+  userAccess      String?    @db.NVarChar(50)
+  user_bAccess    Boolean?
+  createdBy       String?    @db.NVarChar(50)
+  createdDatetime DateTime?  @db.DateTime
+  updatedBy       String?    @db.NVarChar(50)
+  updatedDatetime DateTime?  @db.DateTime
+  crm_users       crm_users? @relation(fields: [emp_id], references: [emp_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_moduleUserAccess_crm_users")
+}
+
+model crm_monthlycashflow {
+  id                  Int      @id(map: "PK_crm_monthlycashflow") @default(autoincrement())
+  loanprofile         String?  @db.NVarChar(50)
+  cashflowid          String?  @db.NVarChar(50)
+  expense_description String?  @db.NVarChar(50)
+  expense_amount      Decimal? @db.Decimal(18, 0)
+}
+
+model crm_products {
+  id               Int            @default(autoincrement())
+  productid        String         @id(map: "PK_crm_products") @db.NVarChar(50)
+  prod_description String?        @db.NVarChar(50)
+  prod_type        String?        @db.NVarChar(50)
+  cam              String?        @db.NVarChar(50)
+  active           Boolean?
+  company          String?        @db.NVarChar(50)
+  crm_loan_hdr     crm_loan_hdr[]
+}
+
+model crm_schools {
+  id                  Int                   @default(autoincrement())
+  school_id           String                @id(map: "PK_crm_schools") @db.NVarChar(50)
+  school_name         String?               @db.NVarChar(250)
+  createdby           String?               @db.NVarChar(50)
+  createddatetime     DateTime?             @db.DateTime
+  updatedby           String?               @db.NVarChar(50)
+  updateddatetime     DateTime?             @db.DateTime
+  crm_clientEducation crm_clientEducation[]
+}
+
+model crm_soi {
+  id                Int                @default(autoincrement())
+  soiid             String             @id(map: "PK_crm_soi") @db.NVarChar(50)
+  profile           String?            @db.NVarChar(50)
+  loanprofile       String?            @db.NVarChar(50)
+  sourcetype        String?            @db.NVarChar(50)
+  monthlyincome     String?            @db.NVarChar(150)
+  otherincome       String?            @db.NVarChar(150)
+  crm_client        crm_client?        @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_soi_crm_client")
+  crm_loan_hdr      crm_loan_hdr?      @relation(fields: [loanprofile], references: [loanprofile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_soi_crm_loan_hdr")
+  crm_soiAllottee   crm_soiAllottee?
+  crm_soiBusiness   crm_soiBusiness?
+  crm_soiEmployment crm_soiEmployment?
+  crm_soiOfw        crm_soiOfw?
+}
+
+model crm_soiAllottee {
+  id                         Int         @default(autoincrement())
+  soiid                      String      @id(map: "PK_crm_allottee") @db.NVarChar(50)
+  profile                    String?     @db.NVarChar(50)
+  loanprofile                String      @db.NVarChar(50)
+  allottee_principalemployer String?     @db.NVarChar(50)
+  allottee_agency            String?     @db.NVarChar(50)
+  allottee_address           String?     @db.NVarChar(50)
+  allottee_contactnumber     String?     @db.NVarChar(50)
+  allottee_netsalaryincome   Decimal?    @db.Decimal(18, 0)
+  verified                   Boolean?
+  createdby                  String?     @db.NVarChar(50)
+  createddatetime            DateTime?   @db.DateTime
+  updatedby                  String?     @db.NVarChar(50)
+  updateddatetime            DateTime?   @db.DateTime
+  crm_client                 crm_client? @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_Allottee_crm_client")
+  crm_soi                    crm_soi     @relation(fields: [soiid], references: [soiid], onUpdate: NoAction, map: "FK_crm_soiAllottee_crm_soi")
+}
+
+model crm_soiBusiness {
+  id               Int               @default(autoincrement())
+  soiid            String            @id(map: "PK_crm_soiBusiness_1") @db.NVarChar(50)
+  profile          String?           @db.NVarChar(50)
+  loanprofile      String?           @db.NVarChar(50)
+  business_name    String?           @db.NVarChar(50)
+  business_nature  String?           @db.NVarChar(50)
+  business_address String?           @db.NVarChar(50)
+  business_contact String?           @db.NVarChar(50)
+  net_income       String?           @db.NVarChar(50)
+  crm_businessType crm_businessType? @relation(fields: [business_nature], references: [business_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_soiBusiness_crm_businessType")
+  crm_client       crm_client?       @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_soiBusiness_crm_client")
+  crm_loan_hdr     crm_loan_hdr?     @relation(fields: [loanprofile], references: [loanprofile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_soiBusiness_crm_loan_hdr")
+  crm_soi          crm_soi           @relation(fields: [soiid], references: [soiid], onUpdate: NoAction, map: "FK_crm_soiBusiness_crm_soi")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model crm_soiDoctors {
+  id                          Int      @default(autoincrement())
+  soiid                       String?  @db.NVarChar(50)
+  profile                     String?  @db.NVarChar(50)
+  loanprofile                 String?  @db.NVarChar(50)
+  doctor_clinicName           String?  @db.NVarChar(50)
+  doctor_address              String?  @db.NVarChar(50)
+  doctor_area                 String?  @db.NVarChar(50)
+  doctor_yrsInOperation       Int?
+  doctor_rentExpenseLessor    Decimal? @db.Decimal(18, 0)
+  doctor_natureOfClinic       String?  @db.NVarChar(50)
+  doctor_specialization       String?  @db.NVarChar(50)
+  doctor_avePatientPerDayRate Int?
+  doctor_noOfPatients         Int?
+  doctor_aveMonthlyIncome     Decimal? @db.Decimal(18, 0)
+  doctor_otherClinicInfoAffil String?  @db.NVarChar(100)
+
+  @@ignore
+}
+
+model crm_soiEmployment {
+  id                Int          @default(autoincrement())
+  soiid             String       @id(map: "PK_crm_soiOccupation") @db.NVarChar(50)
+  profile           String?      @db.NVarChar(50)
+  loanprofile       String       @db.NVarChar(50)
+  employer_name     String?      @db.NVarChar(50)
+  employer_nature   String?      @db.NVarChar(50)
+  employer_address  String?      @db.NVarChar(50)
+  company_rank      String?      @db.NVarChar(50)
+  employer_contact  String?      @db.NVarChar(50)
+  salary_head       Decimal?     @db.Decimal(18, 0)
+  net_salaryincome  Decimal?     @db.Decimal(18, 0)
+  gross_salary      Decimal?     @db.Decimal(18, 0)
+  department        String?      @db.NVarChar(50)
+  employer_position String?      @db.NVarChar(50)
+  years_employed    String?      @db.NVarChar(50)
+  existence         String?      @db.NVarChar(50)
+  crm_soi           crm_soi      @relation(fields: [soiid], references: [soiid], onUpdate: NoAction, map: "FK_crm_soiEmployment_crm_soi")
+  crm_client        crm_client?  @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_soiOccupation_crm_client")
+  crm_loan_hdr      crm_loan_hdr @relation(fields: [loanprofile], references: [loanprofile], onUpdate: NoAction, map: "FK_crm_soiOccupation_crm_loan_hdr")
+}
+
+model crm_soiOfw {
+  id                    Int          @default(autoincrement())
+  soiid                 String       @id(map: "PK_crm_soiOfw") @db.NVarChar(50)
+  profile               String?      @db.NVarChar(50)
+  loanprofile           String       @db.NVarChar(50)
+  ofw_principalemployer String?      @db.NVarChar(50)
+  ofw_agency            String?      @db.NVarChar(50)
+  ofw_address           String?      @db.NVarChar(50)
+  ofw_contactnumber     String?      @db.NVarChar(50)
+  ofw_netsalaryincome   Decimal?     @db.Decimal(18, 0)
+  crm_client            crm_client?  @relation(fields: [profile], references: [profile], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_soiOfw_crm_client")
+  crm_loan_hdr          crm_loan_hdr @relation(fields: [loanprofile], references: [loanprofile], onUpdate: NoAction, map: "FK_crm_soiOfw_crm_loan_hdr")
+  crm_soi               crm_soi      @relation(fields: [soiid], references: [soiid], onUpdate: NoAction, map: "FK_crm_soiOfw_crm_soi")
+}
+
+model crm_spouse {
+  id                  Int                  @default(autoincrement())
+  profile             String               @db.NVarChar(50)
+  spouseprofile       String               @id(map: "PK_crm_spouse") @db.NVarChar(50)
+  s_lastname          String?              @db.NVarChar(50)
+  s_firstname         String?              @db.NVarChar(50)
+  s_middlename        String?              @db.NVarChar(50)
+  s_suffix            String?              @db.NVarChar(50)
+  s_birthdate         String?              @db.NVarChar(50)
+  s_gender            String?              @db.NVarChar(50)
+  s_address           String?              @db.NVarChar(50)
+  s_mobile            String?              @db.NVarChar(50)
+  s_telephone         String?              @db.NVarChar(50)
+  s_age               String?              @db.NVarChar(50)
+  s_provaddress       String?              @db.NVarChar(50)
+  crm_client          crm_client           @relation(fields: [profile], references: [profile], onUpdate: NoAction, map: "FK_crm_spouse_crm_client")
+  crm_spouseEducation crm_spouseEducation?
+}
+
+model crm_spouseEducation {
+  id            Int        @default(autoincrement())
+  spouseprofile String     @id(map: "PK_crm_spouseEducation") @db.NVarChar(50)
+  s_educLevel   String     @db.NVarChar(50)
+  s_educSchool  String     @db.NVarChar(50)
+  s_educCourse  String     @db.NVarChar(50)
+  crm_spouse    crm_spouse @relation(fields: [spouseprofile], references: [spouseprofile], onUpdate: NoAction, map: "FK_crm_spouseEducation_crm_spouse")
+}
+
+model crm_systemdefinition {
+  id              Int       @id(map: "PK_crm_systemdefinition") @default(autoincrement())
+  sys_id          String?   @db.NVarChar(50)
+  sys_listindex   String?   @db.NVarChar(50)
+  sys_description String?   @db.NVarChar(50)
+  sys_value       String?   @db.NVarChar(50)
+  sys_status      String?   @db.NVarChar(50)
+  createdby       String?   @db.NVarChar(50)
+  createddatetime DateTime? @db.DateTime
+  updatedby       String?   @db.NVarChar(50)
+  updateddatetime DateTime? @db.DateTime
+}
+
+model crm_users {
+  id                   Int                    @default(autoincrement())
+  emp_id               String                 @id(map: "PK_crm_users") @db.NVarChar(50)
+  USERNAME             String                 @db.NVarChar(50)
+  PASSWORD             String?                @map("_PASSWORD") @db.NVarChar(100)
+  SALT                 String?                @map("_SALT") @db.NVarChar(50)
+  u_lastname           String?                @db.NVarChar(50)
+  u_firstname          String?                @db.NVarChar(50)
+  u_middlename         String?                @db.NVarChar(50)
+  u_suffix             String?                @db.NVarChar(50)
+  u_departmentid       String?                @db.NVarChar(50)
+  u_email              String?                @db.NVarChar(50)
+  u_contact            String?                @db.NVarChar(50)
+  address              String?                @db.NVarChar(50)
+  BRANCH               String?                @db.NVarChar(250)
+  crm_creditAuthority  crm_creditAuthority[]  
+  crm_moduleUserAccess crm_moduleUserAccess[]
+  crm_department       crm_department?        @relation(fields: [u_departmentid], references: [dept_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_users_crm_department")
+  
+}
+
+model crm_workInformation {
+  id              Int          @default(autoincrement())
+  profile         String       @db.NVarChar(50)
+  loanprofile     String       @id(map: "PK_crm_workInformation_1") @db.NVarChar(50)
+  businesstype    String?      @db.NVarChar(50)
+  businessname    String?      @db.NVarChar(50)
+  businessAddress String?      @db.NVarChar(150)
+  businesno       String?      @db.NVarChar(50)
+  position        String?      @db.NVarChar(50)
+  job_level       String?      @db.NVarChar(50)
+  industry        String?      @db.NVarChar(50)
+  sssno           String?      @db.NVarChar(50)
+  tinno           String?      @db.NVarChar(50)
+  ranking         String?      @db.NVarChar(50)
+  years_employed  String?      @db.NVarChar(50)
+  department      String?      @db.NVarChar(50)
+  existence       String?      @db.NVarChar(50)
+  monthlyincome   String?      @db.NVarChar(50)
+  status          String?      @db.NVarChar(50)
+  verified        Boolean?
+  createdby       String?      @db.NVarChar(50)
+  createddatetime DateTime?    @db.DateTime
+  updatedby       String?      @db.NVarChar(50)
+  updateddatetime DateTime?    @db.DateTime
+  crm_loan_hdr    crm_loan_hdr @relation(fields: [loanprofile], references: [loanprofile], onUpdate: NoAction, map: "FK_crm_workInformation_crm_loan_hdr")
+}

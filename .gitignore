@@ -19,6 +19,9 @@ build/
 # Dependency directories
 jspm_packages/
 
+# Prisma folder
+prisma/
+
 
 
 generator client {
