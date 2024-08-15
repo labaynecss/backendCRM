@@ -659,7 +659,7 @@ class LoansController {
     const { loanprofile } = req.params;
 
     try {
-      const { employmentHistory, bankAccount, profile } = req.body;
+      const { employmentHistory, bankAccount, profile, loanprofile } = req.body;
 
       // Validate that employmentHistory and bankAccount are arrays
       if (!Array.isArray(employmentHistory)) {
@@ -670,7 +670,7 @@ class LoansController {
 
       // Safely process employment history data
       const employmentData = employmentHistory.map((item) => ({
-        loanprofile,
+        loanprofile: loanprofile,
         profile: profile,
         company_agencyid: item.company || "",
         position: item.position || "",
