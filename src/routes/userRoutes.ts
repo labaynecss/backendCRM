@@ -38,5 +38,10 @@ router.put(
   Authorization.authorized,
   UserController.UserAccessUpdateEmpID
 );
+router.get(
+  "/users/name/:fullname",
+  Authorization.authorized,
+  UserController.UserSearch
+);
 
 export const userRoutes = router;
