@@ -1,9 +1,5 @@
-const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat("en-PH", {
-    style: "currency",
-    currency: "PHP",
-    minimumFractionDigits: 2,
-  }).format(amount);
+const formatDecimal = (amount: number): string => {
+  return new Intl.NumberFormat().format(amount);
 };
 
 export const mapLoanData = (loan: any) => ({
@@ -13,7 +9,7 @@ export const mapLoanData = (loan: any) => ({
   loantype: loan.loantype,
   terms: loan.terms,
   modeofpayment: loan.modeofpayment,
-  amountapplied: formatCurrency(loan.amountapplied),
+  amountapplied: formatDecimal(loan.amountapplied),
   prevamount: loan.prevamount,
   previouspn: loan.previouspn,
   personal_loan: loan.personal_loan,
@@ -36,8 +32,8 @@ export const mapLoanData = (loan: any) => ({
 export const flattenSoi = (soi: any) => ({
   soiid: soi.soiid,
   sourcetype: soi.sourcetype,
-  monthlyincome: formatCurrency(soi.monthlyincome),
-  otherincome: formatCurrency(soi.otherincome),
+  monthlyincome: formatDecimal(soi.monthlyincome),
+  otherincome: formatDecimal(soi.otherincome),
 });
 
 export const flattenClientEducation = (education: any) => ({
