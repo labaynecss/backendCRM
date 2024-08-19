@@ -1,12 +1,12 @@
-import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
-import { NotFoundError } from "../utils/error";
+import { Request, Response } from 'express'
+import { PrismaClient } from '@prisma/client'
+import { NotFoundError } from '../utils/error'
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
 class AddressController {
   async Address(req: Request, res: Response): Promise<void> {
-    const addresses = await prisma.crm_address_citymunicipality.findMany({
+    const address = await prisma.crm_address_citymunicipality.findMany({
       select: {
         citymunDesc: true,
         citymuncode: true,
@@ -32,19 +32,27 @@ class AddressController {
           },
         },
       },
-      orderBy: {
-        citymunDesc: "desc",
-      },
-    });
+    })
 
-    // Check if data exists
-    if (!addresses || addresses.length === 0) {
-      res.status(404).json({ message: "No addresses found" });
-      return;
+    if (!address || address.length === 0) {
+      throw new NotFoundError('No addresses found')
     }
 
-    console.log("Address value", addresses);
-    res.status(200).json(addresses);
+    // Sort the data
+    const sortedAddress = address.sort((a, b) => {
+      const regionA = a.crm_address_province.crm_address_region.regdescription
+      const regionB = b.crm_address_province.crm_address_region.regdescription
+
+      // Check if either region is "NATIONAL CAPITAL REGION (NCR)"
+      if (regionA === 'NATIONAL CAPITAL REGION (NCR)') return -1
+      if (regionB === 'NATIONAL CAPITAL REGION (NCR)') return 1
+
+      // Compare other regions in ascending order
+      return regionA.localeCompare(regionB)
+    })
+
+    console.log('Address value', sortedAddress)
+    res.status(200).json(sortedAddress)
   }
 
   //   async GetAddressByArea(req: Request, res: Response): Promise<void> {
@@ -88,17 +96,17 @@ class AddressController {
             },
           },
         },
-      });
-      console.log("Fetch success", addresslist);
-      res.status(200).json(addresslist);
+      })
+      console.log('Fetch success', addresslist)
+      res.status(200).json(addresslist)
     } catch (err) {
-      console.error("Error retrieving branches:", err);
-      res.status(500).json({ error: "Internal Server Error" });
+      console.error('Error retrieving branches:', err)
+      res.status(500).json({ error: 'Internal Server Error' })
     }
   }
 
   async createAddress(req: Request, res: Response): Promise<void> {
-    const { psgcCode, citymunDesc, regCode, provCode, citymuncode } = req.body;
+    const { psgcCode, citymunDesc, regCode, provCode, citymuncode } = req.body
 
     try {
       const address = await prisma.crm_address_citymunicipality.create({
@@ -116,13 +124,11 @@ class AddressController {
           provCode: true,
           citymuncode: true,
         },
-      });
-      res
-        .status(201)
-        .json({ message: "Created Address Successfully", address });
+      })
+      res.status(201).json({ message: 'Created Address Successfully', address })
     } catch (err) {
-      console.error("Error retrieving client:", err);
-      res.status(500).json({ error: "Internal Server Error" });
+      console.error('Error retrieving client:', err)
+      res.status(500).json({ error: 'Internal Server Error' })
     }
   }
   // async createClient(req: Request, res: Response): Promise<void> {
@@ -143,4 +149,4 @@ class AddressController {
   // }
 }
 
-export default new AddressController();
+export default new AddressController()

@@ -20,6 +20,7 @@ import { assetsRoutes } from './routes/assetsRoutes'
 import { agencyRoutes } from './routes/agencyRoutes'
 import { scoreRoutes } from './routes/scoreRoutes'
 import { authorityRoutes } from './routes/authorityRoutes'
+import { scorecardRoutes } from './routes/scorecardRoutes'
 
 // import { areaRoutes } from "./routes/areasRoutes";
 //configure env;
@@ -89,3 +90,4 @@ app.use('/api/crmv2', assetsRoutes)
 //james
 app.use('/api/crmv2', scoreRoutes)
 app.use('/api/crmv2', authorityRoutes)
+app.use('/api/crmv2', scorecardRoutes)

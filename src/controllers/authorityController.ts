@@ -1,31 +1,54 @@
 import { Request, Response } from 'express'
 import { PrismaClient } from '@prisma/client'
-import { count } from 'console'
 
 const prisma = new PrismaClient()
 
 class AuthorityController {
   async authorityList(req: Request, res: Response): Promise<void> {
     try {
-      const lists = await prisma.crm_creditAuthority.findMany({
-        select: {
-          id: true,
-          empId: true,
-          unsecuredLoan: true,
-          collateralLoan: true,
+      const authoritylists = await prisma.crm_creditAuthority.findMany({
+        include: {
+          crm_users: {
+            select: {
+              u_lastname: true,
+              u_firstname: true,
+              u_middlename: true,
+            },
+          },
         },
+      })
+
+      // Use flatMap to process each authority and flatten the structure
+      const processedAuthorities = authoritylists.flatMap((authority) => {
+        const fullName = [
+          authority.crm_users?.u_lastname,
+          authority.crm_users?.u_firstname,
+          authority.crm_users?.u_middlename,
+        ]
+          .filter(Boolean) // Filter out null or undefined values
+          .join(', ') // Join the names with commas
+
+        // Return an array with the processed authority to flatten the structure
+        return {
+          fullName, // Add the fullName to each authority object
+          ...authority,
+        }
       })
 
       // Count the total number of authorities
       const countApprover = await prisma.crm_creditAuthority.count()
-      // console.log('Fetch success', lists)
 
-      res.status(200).json({ data: lists, total: [{ countApprover }] })
+      res.status(200).json({
+        data: processedAuthorities, // Ensure the processedAuthorities are sent in the `data` key
+        total: [{ countApprover }],
+      })
+      console.log(processedAuthorities)
     } catch (err) {
-      console.error('Error retrieving score:', err)
+      console.error('Error retrieving authority list:', err)
       res.status(500).json({ error: 'Internal Server Error' })
     }
   }
+
   public async createAuthority(req: Request, res: Response): Promise<void> {
     try {
       const { empId, unsecuredLoan, collateralLoan } = req.body
@@ -36,7 +59,7 @@ class AuthorityController {
       })
 
       if (existingAuthority) {
-        res.status(400).json({ error: ' already exists.' })
+        res.status(400).json({ error: 'Authority already exists.' })
         return
       }
 
