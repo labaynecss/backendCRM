@@ -384,7 +384,6 @@ model crm_course {
   crm_clientEducation crm_clientEducation[]
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model crm_creditAuthority {
   id             Int       @default(autoincrement())
   empId          String    @id(map: "PK_crm_creditAuthority") @db.NVarChar(50)

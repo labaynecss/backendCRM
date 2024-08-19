@@ -25,108 +25,98 @@ class UserController {
         u_contact,
         u_departmentid,
       } = req.body
+
       const salted = await bcrypt.genSalt()
       const emp_id = generateEmployee()
       const passwordHash = await bcrypt.hash(PASSWORD, salted)
+
+      // Check if the user already exists
       const existingUser = await prisma.crm_users.findFirst({
-        where: {
-          OR: [{ emp_id }],
-        },
+        where: { OR: [{ emp_id }] },
       })
 
       if (existingUser) {
-        res.status(400).json({ error: ' already exists.' })
+        res.status(400).json({ error: 'User already exists.' })
         return
       }
 
-      let updateData = {
-        USERNAME: USERNAME,
+      // Prepare the common data for the user
+      const userData = {
+        USERNAME,
         PASSWORD: passwordHash,
-        u_lastname: u_lastname,
-        u_firstname: u_firstname,
-        u_middlename: u_middlename,
-        u_email: u_email,
-        u_contact: u_contact,
-        u_suffix: u_suffix,
-        address: address,
-        BRANCH: BRANCH,
-        emp_id: emp_id,
-        u_departmentid: u_departmentid,
-      };
-
-      if (u_departmentid === "3" || u_departmentid === "4") {
-        updateData = {
-          USERNAME: USERNAME,
-          PASSWORD: passwordHash,
-          u_lastname: u_lastname,
-          u_firstname: u_firstname,
-          u_middlename: u_middlename,
-          u_email: u_email,
-          u_contact: u_contact,
-          u_suffix: u_suffix,
-          address: address,
-          BRANCH: u_departmentid,
-          emp_id: emp_id,
-          u_departmentid: u_departmentid,
-        };
+        u_lastname,
+        u_firstname,
+        u_middlename,
+        u_email,
+        u_contact,
+        u_suffix,
+        address,
+        BRANCH,
+        emp_id,
+        u_departmentid,
       }
 
-      const signup = await prisma.crm_users.create({
-        data: {
-          USERNAME: USERNAME,
-          PASSWORD: passwordHash,
-          u_lastname: u_lastname,
-          u_firstname: u_firstname,
-          u_middlename: u_middlename,
-          u_email: u_email,
-          u_contact: u_contact,
-          u_suffix: u_suffix,
-          address: address,
-          BRANCH: u_departmentid,
-          emp_id: emp_id,
-          u_departmentid: u_departmentid,
-        },
-      })
+      // Special handling if the department is '3' (CreCom) or '4'
+      if (u_departmentid === '3' || u_departmentid === '4') {
+        userData.BRANCH = u_departmentid // Override the branch if needed
+      }
 
+      // Create the user first
+      const signup = await prisma.crm_users.create({ data: userData })
+
+      // Create the authority data if the department is '3'
+      let createAuthority = null
+      if (u_departmentid === '3') {
+        createAuthority = await prisma.crm_creditAuthority.create({
+          data: {
+            empId: emp_id,
+            unsecuredLoan: 0,
+            collateralLoan: 0,
+          },
+        })
+      }
+
+      // Retrieve the department module name
       const department = await prisma.crm_department.findUnique({
-        where: {
-          dept_id: u_departmentid,
-        },
-        select: {
-          dept_module: true,
-        },
+        where: { dept_id: u_departmentid },
+        select: { dept_module: true },
       })
 
-      const moduleName = department?.dept_module as keyof crm_moduleStaticAccess
+      const moduleName =
+        department?.dept_module as keyof typeof prisma.crm_moduleStaticAccess
 
+      // Fetch default roles based on department modules
       const defaultRoles = await prisma.crm_moduleStaticAccess.findMany({
-        where: {
-          [moduleName]: true,
-        },
-        select: {
-          userAccess: true,
-        },
+        where: { [moduleName]: true },
+        select: { userAccess: true },
       })
 
+      // Prepare access data for the user
       const accessData = defaultRoles.map((role) => ({
-        emp_id: emp_id,
+        emp_id,
         userAccess: role.userAccess,
         user_bAccess: true,
       }))
 
+      // Create user access
       const createAccess = await prisma.crm_moduleUserAccess.createMany({
         data: accessData,
       })
 
+      // Generate tokens
       const access_token = generateToken(signup.USERNAME)
       const refresh_token = generateRefreshToken(signup.USERNAME)
 
+      // Set tokens in cookies
       res.cookie('token', access_token, { httpOnly: true })
       res.cookie('refresh_token', refresh_token, { httpOnly: true })
+
+      // Send response with all created data
       res.status(201).json({
         message: 'Created User Successfully',
         signup,
         createAccess,
+        createAuthority,
       })
     } catch (err) {
       console.error(err)

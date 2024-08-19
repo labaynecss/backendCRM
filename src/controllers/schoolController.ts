@@ -1,12 +1,12 @@
-import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
+import { Request, Response } from 'express'
+import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
 class SchoolController {
   async schoolList(req: Request, res: Response): Promise<void> {
     try {
-      const { school_name } = req.params;
+      const { school_name } = req.params
       const lists = await prisma.crm_schools.findMany({
         where: {
           school_name: {
@@ -18,35 +18,55 @@ class SchoolController {
           school_id: true,
         },
         take: 100,
-      });
-      console.log("Fetch success", lists);
-      res.status(200).json(lists);
+      })
+      console.log('Fetch success', lists)
+      res.status(200).json(lists)
     } catch (err) {
-      console.error("Error retrieving schoollist:", err);
-      res.status(500).json({ error: "Internal Server Error" });
+      console.error('Error retrieving schoollist:', err)
+      res.status(500).json({ error: 'Internal Server Error' })
+    }
+  }
+
+  async searchedSchool(req: Request, res: Response): Promise<void> {
+    try {
+      const { school_id } = req.params
+      const lists = await prisma.crm_schools.findFirst({
+        where: {
+          school_name: {
+            contains: school_id,
+          },
+        },
+
+        take: 100,
+      })
+      console.log('Fetch success', lists)
+      res.status(200).json(lists)
+    } catch (err) {
+      console.error('Error retrieving schoollist:', err)
+      res.status(500).json({ error: 'Internal Server Error' })
     }
   }
   async courselist(req: Request, res: Response): Promise<void> {
     try {
-      const {course_description} = req.params
+      const { course_description } = req.params
       const courses = await prisma.crm_course.findMany({
-        where:{
+        where: {
           course_description: {
-            contains: course_description
-          }
+            contains: course_description,
+          },
         },
         select: {
           course_id: true,
           course_description: true,
         },
         take: 100,
-      });
+      })
 
-      console.log("Fetch success", courses);
-      res.status(200).json(courses);
+      console.log('Fetch success', courses)
+      res.status(200).json(courses)
     } catch (err) {
-      console.error("Error retrieving course:", err);
-      res.status(500).json({ error: "Internal Server Error" });
+      console.error('Error retrieving course:', err)
+      res.status(500).json({ error: 'Internal Server Error' })
     }
   }
 
@@ -78,4 +98,4 @@ class SchoolController {
   //   }
   // }
 }
-export default new SchoolController();
+export default new SchoolController()
