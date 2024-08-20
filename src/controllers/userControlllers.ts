@@ -24,6 +24,7 @@ class UserController {
         BRANCH,
         u_contact,
         u_departmentid,
+        emp_mobile,
       } = req.body;
 
       const salted = await bcrypt.genSalt();
@@ -54,6 +55,7 @@ class UserController {
         BRANCH,
         emp_id,
         u_departmentid,
+        emp_mobile,
       };
 
       // Special handling if the department is '3' (CreCom) or '4'
@@ -141,7 +143,7 @@ class UserController {
         address,
         BRANCH,
         u_departmentid,
-        u_contact,
+        emp_mobile,
       } = req.body;
 
       const salt = await bcrypt.genSalt();
@@ -171,6 +173,7 @@ class UserController {
           u_suffix: u_suffix,
           BRANCH: BRANCH,
           u_departmentid: u_departmentid,
+          emp_mobile: emp_mobile,
         },
       });
 
@@ -333,12 +336,12 @@ class UserController {
           u_firstname: true,
           u_lastname: true,
           u_departmentid: true,
-          u_contact: true,
           address: true,
           u_email: true,
           u_middlename: true,
           u_suffix: true,
           BRANCH: true,
+          emp_mobile: true,
         },
       });
 

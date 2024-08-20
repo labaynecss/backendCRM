@@ -326,6 +326,40 @@ class ClientController {
       const active_department = "1";
       let type = "New";
 
+      const educSchoolValue = await prisma.crm_schools.findFirst({
+        where: {
+          school_name: educ_school,
+        },
+        select: {
+          school_id: true,
+        },
+      });
+      const s_educSchoolValue = await prisma.crm_schools.findFirst({
+        where: {
+          school_name: s_educSchool,
+        },
+        select: {
+          school_id: true,
+        },
+      });
+
+      const educCourseValue = await prisma.crm_course.findFirst({
+        where: {
+          course_description: course,
+        },
+        select: {
+          course_id: true,
+        },
+      });
+      const s_educCourseValue = await prisma.crm_course.findFirst({
+        where: {
+          course_description: s_educCourse,
+        },
+        select: {
+          course_id: true,
+        },
+      });
+
       const [createClient, loans] = await prisma.$transaction([
         prisma.crm_client.create({
           data: {
@@ -355,8 +389,8 @@ class ClientController {
             crm_clientEducation: {
               create: {
                 educ_level: educationLevel,
-                educ_school: educ_school,
-                course: course,
+                educ_school: educSchoolValue?.school_id,
+                course: educCourseValue?.course_id,
               },
             },
             crm_spouse: {
@@ -375,8 +409,8 @@ class ClientController {
                 crm_spouseEducation: {
                   create: {
                     s_educLevel: s_educLevel ?? "",
-                    s_educCourse: s_educCourse ?? "",
-                    s_educSchool: s_educSchool ?? "",
+                    s_educCourse: s_educCourseValue?.course_id ?? "",
+                    s_educSchool: s_educSchoolValue?.school_id ?? "",
                   },
                 },
               },
