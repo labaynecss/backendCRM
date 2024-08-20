@@ -6,17 +6,16 @@ const prisma = new PrismaClient();
 class FileController {
   async Documents(req: Request, res: Response): Promise<void> {
     try {
-      const  {loanprofile} = req.params
+      const { loanprofile } = req.params;
       const documents = await prisma.crm_documentUploaded.findMany({
         where: {
-          loanprofile: loanprofile
+          loanprofile: loanprofile,
         },
         select: {
           file_category: true,
           file_directory: true,
-          loanprofile: true
-        
-        }
+          loanprofile: true,
+        },
       });
       const documentsWithUrls = documents.map((doc) => ({
         ...doc,
@@ -35,19 +34,25 @@ class FileController {
     try {
       const files = req.files as Express.Multer.File[];
       if (!files || files.length === 0) {
-        res.status(400).json({ message: 'No files uploaded' });
+        res.status(400).json({ message: "No files uploaded" });
         return;
       }
 
-      const { loanprofile, file_category, document_verified, 
-        document_verifiedby, createdby, updatedby } = req.body;
+      const {
+        loanprofile,
+        file_category,
+        document_verified,
+        document_verifiedby,
+        createdby,
+        updatedby,
+      } = req.body;
 
       const uploadedFiles = [];
       for (const file of files) {
         const newDocument = await prisma.crm_documentUploaded.create({
           data: {
             loanprofile,
-            file_category ,
+            file_category,
             filename: file.originalname,
             file_directory: `/uploads/${file.filename}`,
             document_verified,
@@ -62,7 +67,7 @@ class FileController {
       }
 
       res.status(200).json({
-        message: 'Files uploaded successfully',
+        message: "Files uploaded successfully",
         files: uploadedFiles,
       });
     } catch (err) {

@@ -16,7 +16,6 @@ model crm_address_barangay {
   citymuncode                  String?                       @db.NVarChar(50)
   brgyCode                     String                        @id(map: "PK_crm_address_barangay") @db.NVarChar(50)
   crm_address_citymunicipality crm_address_citymunicipality? @relation(fields: [citymuncode], references: [citymuncode], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_address_barangay_crm_address_barangay")
-  crm_client                   crm_client[]
   crm_coBorrowers              crm_coBorrowers[]
   crm_loan_hdr                 crm_loan_hdr[]
 }
@@ -259,7 +258,7 @@ model crm_client {
   firstname             String?                 @db.NVarChar(50)
   middlename            String?                 @db.NVarChar(50)
   suffix                String?                 @db.NVarChar(10)
-  birthday              String?                 @db.VarChar(50)
+  birthday              DateTime?               @db.Date
   age                   String?                 @db.NVarChar(50)
   gender                String?                 @db.NVarChar(50)
   mobile                String?                 @db.NVarChar(50)
@@ -282,7 +281,6 @@ model crm_client {
   updateddatetime       DateTime?               @db.DateTime
   crm_assets            crm_assets[]
   crm_barangayChecking  crm_barangayChecking[]
-  crm_address_barangay  crm_address_barangay?   @relation(fields: [prov_brgycode], references: [brgyCode], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_client_crm_address_barangay")
   crm_clientEducation   crm_clientEducation?
   crm_clientFamily      crm_clientFamily[]
   crm_clientId          crm_clientId?
@@ -783,6 +781,11 @@ model crm_users {
   u_contact            String?                @db.NVarChar(50)
   address              String?                @db.NVarChar(50)
   BRANCH               String?                @db.NVarChar(250)
+  emp_mobile           String?                @db.NVarChar(50)
+  createdBy            String?                @db.NVarChar(50)
+  createdDatetime      DateTime?              @db.DateTime
+  updatedBy            String?                @db.NVarChar(50)
+  updatedDatetime      DateTime?              @db.DateTime
   crm_creditAuthority  crm_creditAuthority?
   crm_moduleUserAccess crm_moduleUserAccess[]
   crm_department       crm_department?        @relation(fields: [u_departmentid], references: [dept_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_crm_users_crm_department")

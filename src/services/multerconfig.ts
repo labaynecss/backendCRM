@@ -4,8 +4,8 @@ import path from "path";
 // Configure storage for multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "src/uploads/"); // for production
-    // cb(null, "/uploads/"); // for deploy in 190
+    // cb(null, "src/uploads/"); // for production
+    cb(null, "/uploads/"); // for deploy in 190
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`);
