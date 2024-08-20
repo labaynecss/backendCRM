@@ -1,14 +1,14 @@
 const formatDecimal = (amount: number): string => {
   return new Intl.NumberFormat().format(amount);
 };
-const formatDate = (dateString: string | number | Date) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-};
+// const formatDate = (dateString: string | number | Date) => {
+//   const date = new Date(dateString);
+//   return date.toLocaleDateString("en-US", {
+//     year: "numeric",
+//     month: "numeric",
+//     day: "numeric",
+//   });
+// };
 
 export const mapLoanData = (loan: any) => ({
   id: loan.id,
@@ -58,7 +58,7 @@ export const flattenProfileGet = (profileGet: any) => {
     firstname: profileGet.firstname,
     middlename: profileGet.middlename,
     suffix: profileGet.suffix,
-    birthday: formatDate(profileGet.birthday),
+    birthday: profileGet.birthday,
     age: profileGet.age,
     gender: profileGet.gender,
     mobile: profileGet.mobile,
