@@ -96,6 +96,9 @@ export const flattenProfileGet = (profileGet: any) => {
     crm_address_barangay: profileGet.crm_loan_hdr.flatMap(
       (loanHdr: { crm_address_barangay: any }) => loanHdr.crm_address_barangay
     ),
+    crm_coBorrowers: profileGet.crm_loan_hdr.flatMap(
+      (loanHdr: { crm_coBorrowers: any }) => loanHdr.crm_coBorrowers
+    ),
     crm_branch: profileGet.crm_loan_hdr.flatMap(
       (loanHdr: { crm_branch: any }) => loanHdr.crm_branch
     ), // Assuming a relation or processing path exists here

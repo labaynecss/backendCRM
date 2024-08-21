@@ -23,6 +23,12 @@ class FileController {
           doc.file_directory
         }`,
       }));
+      // const documentsWithUrls = documents.map((doc) => ({
+      //   ...doc,
+      //   file_directory: `${req.protocol}://${req.get("host")}/${
+      //     doc.file_directory
+      //   }`,
+      // })); // for deployment
       res.status(200).json(documentsWithUrls);
     } catch (err) {
       console.error("Error retrieving documents:", err);

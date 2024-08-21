@@ -65,6 +65,7 @@ class ClientController {
             crm_soiEmployment: true,
 
             crm_characterReference: true,
+            crm_coBorrowers: true,
             crm_branch: {
               select: {
                 branch_code: true,
